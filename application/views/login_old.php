@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Sign In - KNC Business Management System </title>
+  <title>Sign In - vTwo Enterpries Business Management System </title>
 
   <link rel="stylesheet" href="<?= base_url('resources/tempcss/login.css') ?>">
 

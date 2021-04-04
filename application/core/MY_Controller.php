@@ -62,7 +62,7 @@ class Admin_Controller extends MY_Controller
 
 	public function render_template($page = null,$title, $data = array())
 	{
-		$this->data['page_title']=$title." | K N C";
+		$this->data['page_title']=$title." | vTwo Enterpries";
 
 		$this->load->view('partials/header',$this->data);
 		$this->load->view('partials/navbar');

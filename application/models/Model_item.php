@@ -10,17 +10,15 @@ class Model_item extends CI_Model
     public function getItemData($itemId = null)
     {
         if ($itemId) {
-            $sql = "SELECT it.intItemID,it.vcItemName,mu.intMeasureUnitID,mu.vcMeasureUnit,t.intItemTypeID,t.vcItemTypeName,IFNULL(it.decStockInHand,'N/A') AS decStockInHand,it.decReOrderLevel,it.decUnitPrice,REPLACE(it.rv,' ','-') as rv FROM item as it
+            $sql = "SELECT it.intItemID,it.vcItemName,mu.intMeasureUnitID,mu.vcMeasureUnit,IFNULL(it.decStockInHand,'N/A') AS decStockInHand,it.decReOrderLevel,it.decUnitPrice,REPLACE(it.rv,' ','-') as rv FROM item as it
             inner join measureunit as mu on mu.intMeasureUnitID = it.intMeasureUnitID
-            inner join itemtype as t on t.intItemTypeID = it.intItemTypeID
             WHERE IsActive = 1 AND it.intItemID = ? ";
             $query = $this->db->query($sql, array($itemId));
             return $query->row_array();
         }
      
-        $sql = "SELECT it.intItemID,it.vcItemName,mu.intMeasureUnitID,mu.vcMeasureUnit,t.intItemTypeID,t.vcItemTypeName,IFNULL(it.decStockInHand,'N/A') AS decStockInHand,it.decReOrderLevel,IFNULL(it.decUnitPrice,'N/A') AS decUnitPrice,it.rv FROM item as it
+        $sql = "SELECT it.intItemID,it.vcItemName,mu.intMeasureUnitID,mu.vcMeasureUnit,IFNULL(it.decStockInHand,'N/A') AS decStockInHand,it.decReOrderLevel,IFNULL(it.decUnitPrice,'N/A') AS decUnitPrice,it.rv FROM item as it
         inner join measureunit as mu on mu.intMeasureUnitID = it.intMeasureUnitID
-        inner join itemtype as t on t.intItemTypeID = it.intItemTypeID
         where  IsActive = 1
         order by it.vcItemName asc";
         $query = $this->db->query($sql, array(1));
@@ -30,18 +28,16 @@ class Model_item extends CI_Model
     public function getItemDataByItemTypeID($itemTypeId)
     {
         if ($itemTypeId == 0) { //ALL Item
-            $sql = "SELECT it.intItemID,it.vcItemName,mu.intMeasureUnitID,mu.vcMeasureUnit,t.intItemTypeID,t.vcItemTypeName,IFNULL(it.decStockInHand,'N/A') AS decStockInHand,it.decReOrderLevel,IFNULL(it.decUnitPrice,'N/A') AS decUnitPrice,it.rv FROM item as it
+            $sql = "SELECT it.intItemID,it.vcItemName,mu.intMeasureUnitID,mu.vcMeasureUnit,IFNULL(it.decStockInHand,'N/A') AS decStockInHand,it.decReOrderLevel,IFNULL(it.decUnitPrice,'N/A') AS decUnitPrice,it.rv FROM item as it
             inner join measureunit as mu on mu.intMeasureUnitID = it.intMeasureUnitID
-            inner join itemtype as t on t.intItemTypeID = it.intItemTypeID
             where  IsActive = 1
             order by it.vcItemName asc";
             $query = $this->db->query($sql, array(1));
             return $query->result_array();
         }
         if ($itemTypeId) {
-            $sql = "SELECT it.intItemID,it.vcItemName,mu.intMeasureUnitID,mu.vcMeasureUnit,t.intItemTypeID,t.vcItemTypeName,IFNULL(it.decStockInHand,'N/A') AS decStockInHand,it.decReOrderLevel,IFNULL(it.decUnitPrice,'N/A') AS decUnitPrice,it.rv FROM item as it
+            $sql = "SELECT it.intItemID,it.vcItemName,mu.intMeasureUnitID,mu.vcMeasureUnit,IFNULL(it.decStockInHand,'N/A') AS decStockInHand,it.decReOrderLevel,IFNULL(it.decUnitPrice,'N/A') AS decUnitPrice,it.rv FROM item as it
                 inner join measureunit as mu on mu.intMeasureUnitID = it.intMeasureUnitID
-                inner join itemtype as t on t.intItemTypeID = it.intItemTypeID
                 WHERE IsActive = 1 AND t.intItemTypeID = ? 
                 order by it.vcItemName asc ";
                 $query = $this->db->query($sql, array($itemTypeId));
@@ -51,9 +47,8 @@ class Model_item extends CI_Model
 
     public function getOnlyRawItemData()
     {
-        $sql = "SELECT it.intItemID,it.vcItemName,mu.intMeasureUnitID,mu.vcMeasureUnit,t.intItemTypeID,t.vcItemTypeName,it.decStockInHand,it.decReOrderLevel,it.decUnitPrice,REPLACE(it.rv,' ','-') as rv FROM item as it
+        $sql = "SELECT it.intItemID,it.vcItemName,mu.intMeasureUnitID,mu.vcMeasureUnit,it.decStockInHand,it.decReOrderLevel,it.decUnitPrice,REPLACE(it.rv,' ','-') as rv FROM item as it
         inner join measureunit as mu on mu.intMeasureUnitID = it.intMeasureUnitID
-        inner join itemtype as t on t.intItemTypeID = it.intItemTypeID
         where  IsActive = 1 AND it.intItemTypeID = 1
         order by it.vcItemName asc";
         $query = $this->db->query($sql, array(1));

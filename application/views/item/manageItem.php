@@ -30,7 +30,7 @@
 						<button type="button" class="btn btn-info btn-flat" id="btnAddItem" data-toggle="modal" data-target="#addItemModal"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Add Item</button>
 					<?php } ?>
 
-					<div class="form-group">
+					<!-- <div class="form-group">
 						<label>Item Type :</label>
 						<select class="form-control select2" style="width: 100%;" id="cmbItemType" name="cmbItemType">
 							<option value="0" selected hidden>All Types</option>
@@ -38,7 +38,7 @@
                                     <option value="<?= $v['intItemTypeID'] ?>"><?= $v['vcItemTypeName'] ?></option>
                                 <?php } ?>
 						</select>
-					</div>
+					</div> -->
 
 				</div>
 			</div>
@@ -51,7 +51,7 @@
 								<tr>
 									<th>Item Name</th>
 									<th>Measure Unit</th>
-									<th>Item Type</th>
+									<!-- <th>Item Type</th> -->
 									<th>Stock Qty</th>
 									<th>Re-Order Level</th>
 									<th>Unit Price</th>
@@ -94,19 +94,19 @@
 							</select>
 						</div>
 
-						<div class="form-group">
+						<!-- <div class="form-group">
 							<label>Item Type</label>
 							<select class="form-control select2" style="width: 100%;" id="item_type" name="item_type">
 								<option value="0" disabled selected hidden>Select Item Type</option>
 								<?php foreach ($itemType as $row) { ?>
 									<option value="<?= $row->intItemTypeID ?>"><?= $row->vcItemTypeName ?></option>
 								<?php } ?>
-							</select>
-						</div>
+							</select> -->
+						<!-- </div>
 
 						<div id="GenerateUnitPriceTextBox">
 
-						</div>
+						</div> -->
 
 						<div class="form-group">
 							<label for="txtItemName">Item Re-Order Level</label>
@@ -154,11 +154,10 @@
 								<?php } ?>
 							</select>
 						</div>
-
+						<!-- 
 						<div class="form-group">
 							<label>Item Type</label>
 							<select class="form-control select2" style="width: 100%;" id="edit_item_type" name="edit_item_type">
-								<!-- <option value="0" disabled selected hidden>Select Item Type</option> -->
 								<?php foreach ($itemType as $row) { ?>
 									<option value="<?php echo $row->intItemTypeID ?>"><?php echo $row->vcItemTypeName ?></option>
 								<?php } ?>
@@ -167,7 +166,7 @@
 
 						<div id="EditGenerateUnitPriceTextBox">
 
-						</div>
+						</div> -->
 
 						<div class="form-group">
 							<label for="txtItemName">Item Re-Order Level</label>

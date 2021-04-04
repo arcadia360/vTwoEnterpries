@@ -45,15 +45,13 @@ class Model_dashboard extends CI_Model
         $sql = "";
         if ($branch_id == 0) {
             $sql = "SELECT 
-                I.vcItemName,I.decStockInHand,IT.vcItemTypeName
+                I.vcItemName,I.decStockInHand
                 FROM item AS I
-                INNER JOIN  itemtype AS IT ON I.intItemTypeID = IT.intItemTypeID
                 WHERE I.decReOrderLevel > I.decStockInHand AND I.IsActive = 1";
             $query = $this->db->query($sql);
         } else {
-            $sql = "SELECT I.vcItemName,I.decStockInHand,IT.vcItemTypeName
+            $sql = "SELECT I.vcItemName,I.decStockInHand
             FROM item AS I
-            INNER JOIN  itemtype AS IT ON I.intItemTypeID = IT.intItemTypeID
             INNER JOIN branchstock AS BS ON I.intItemID = BS.intItemID
             WHERE I.decReOrderLevel > I.decStockInHand AND I.IsActive = 1 AND BS.intBranchID = ?";
             $query = $this->db->query($sql, array($branch_id));

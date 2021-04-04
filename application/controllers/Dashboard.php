@@ -17,7 +17,7 @@ class Dashboard extends Admin_Controller
 		// $pending_dispatch_count = $this->model_dashboard->getPendingDispatchCount();
 		// $reorder_item_count = $this->model_dashboard->getReOrderItemCount();
 
-		$this->data['page_title'] = 'K N C | Business Management System';
+		$this->data['page_title'] = 'vTwo Enterpries | Business Management System';
 		$this->data['approval_pending_grn_count'] = $approval_pending_grn_count;
 
 		$this->load->view('partials/header', $this->data);
@@ -50,7 +50,7 @@ class Dashboard extends Admin_Controller
 
 			$notification .= '<a href="#" class="dropdown-item">
 		                    	<p class="notify-title"><i class="fas fa-file mr-2"></i>&nbsp;Re-Order Level Exceeded !</p>
-		                    	<p class="notify-message">You have re-order level exceed item "' . $value['vcItemName'] . '"<span class="float-right text-muted text-sm">Your SIH is ' . $value['decStockInHand'] .  '</span></p>
+		                    	<p class="notify-message">You have re-order level exceed item " test  "<span class="float-right text-muted text-sm">Your SIH is ' . $value['decStockInHand'] .  '</span></p>
 							</a>
 							<div class="dropdown-divider"></div>';
 			$ROLCount++;

@@ -493,7 +493,7 @@
         <div class="Glow">
             <div id="inviteContainer">
                 <div class="logoContainer">
-                    <p class="logo loader">KNC</p>
+                    <p class="logo loader">vTwo Enterpries</p>
                     <p class="text">
                         BUSINESS MANAGEMENT SYSTEM <br>
                     </p>

@@ -27,8 +27,8 @@ class Item extends Admin_Controller
 
 		
 		$this->data["measureUnit"] = $this->Model_measureunit->getMeasureUnitData(null, false);
-		$this->data["itemType"] = $this->Model_measureunit->getItemTypeData(null, false);
-		$this->data["itemTypeAll"] = $this->Model_measureunit->getItemTypeData(null, true);
+		// $this->data["itemType"] = $this->Model_measureunit->getItemTypeData(null, false);
+		// $this->data["itemTypeAll"] = $this->Model_measureunit->getItemTypeData(null, true);
 
 		$this->render_template('item/manageItem','Manage Item',$this->data);
 	}
@@ -75,7 +75,6 @@ class Item extends Admin_Controller
 			$result['data'][$key] = array(
 				$value['vcItemName'],
 				$value['vcMeasureUnit'],
-				$value['vcItemTypeName'],
 				$value['decStockInHand'],
 				$ReorderLevl,
 				$UnitPrice,
@@ -132,7 +131,6 @@ class Item extends Admin_Controller
 			$result['data'][$key] = array(
 				$value['vcItemName'],
 				$value['vcMeasureUnit'],
-				$value['vcItemTypeName'],
 				$value['decStockInHand'],
 				$ReorderLevl,
 				$UnitPrice,
@@ -190,11 +188,6 @@ class Item extends Admin_Controller
 
 		$this->form_validation->set_rules('Item_name', 'Item Name', 'trim|required|is_unique[item.vcItemName]');
 		$this->form_validation->set_rules('measure_unit', 'Measure Unit', 'trim|required');
-		$this->form_validation->set_rules('item_type', 'Item Type', 'trim|required');
-		if($this->input->post('edit_item_type') == 2)
-		{
-			$this->form_validation->set_rules('edit_unit_price', 'Measure Unit', 'trim|required');
-		}
 		
 		$this->form_validation->set_error_delimiters('<p class="text-danger">', '</p>');
 
@@ -203,7 +196,6 @@ class Item extends Admin_Controller
 				'vcItemName' => $this->input->post('Item_name'),
 				'intMeasureUnitID' => $this->input->post('measure_unit'),
 				'decReOrderLevel' => $this->input->post('re_order'),
-				'intItemTypeID' => $this->input->post('item_type'),
 				'decUnitPrice' => $this->input->post('unit_price'),
 				'intUserID' => $this->session->userdata('user_id'),
 			);

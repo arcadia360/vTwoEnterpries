@@ -7,7 +7,7 @@
 						<img src="<?php echo base_url('resources/img/AdminLTELogo.png') ?>" alt="AdminLTE Logo" class="img-circle elevation-2" style="opacity: .8">
 					</div> -->
             <div class="info">
-                <span class="brand-text font-weight-light d-block">KNC</span>
+                <span class="brand-text font-weight-light d-block">vTwo Enterpries</span>
                 <span class="brand-text font-weight-light d-block" style="font-size: 0.8em;">Business Management</span>
                 <span class="brand-text font-weight-light d-block" style="font-size: 0.8em;">System</span>
             </div>

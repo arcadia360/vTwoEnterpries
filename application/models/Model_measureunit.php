@@ -47,17 +47,17 @@ class Model_measureunit extends CI_Model
     }
 
     /* get the get Item Type Data data */
-    public function getItemTypeData($id = null, $isArray)
-    {
-        $sql = "SELECT intItemTypeID,vcItemTypeName FROM itemtype";
-        $query = $this->db->query($sql);
-        if ($isArray == true) {
-            return $query->result_array();
-        } else {
-            $result = $query->result();
-            return $result;
-        }
-    }
+    // public function getItemTypeData($id = null, $isArray)
+    // {
+    //     $sql = "SELECT intItemTypeID,vcItemTypeName FROM itemtype";
+    //     $query = $this->db->query($sql);
+    //     if ($isArray == true) {
+    //         return $query->result_array();
+    //     } else {
+    //         $result = $query->result();
+    //         return $result;
+    //     }
+    // }
 
     public function update($data, $id)
     {
