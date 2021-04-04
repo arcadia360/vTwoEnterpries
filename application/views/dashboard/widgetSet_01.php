@@ -28,7 +28,7 @@
 		        <div class="small-box bg-success">
 		            <div class="inner">
 		                <h3>0</h3>
-		                <p>Pending Requistion Approvals</p>
+		                <p>Pending Customer Payments</p>
 		            </div>
 		            <div class="icon">
 		                <i class="fas fa-hourglass-half"></i>
@@ -42,7 +42,7 @@
 		        <div class="small-box bg-warning">
 		            <div class="inner">
 		                <h3>0</h3>
-		                <p>Pending Dispatch Collections</p>
+		                <p>N/A</p>
 		            </div>
 		            <div class="icon">
 		                <i class="fas fa-people-carry"></i>

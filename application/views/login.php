@@ -493,7 +493,7 @@
         <div class="Glow">
             <div id="inviteContainer">
                 <div class="logoContainer">
-                    <p class="logo loader">vTwo Enterpries</p>
+                    <p class="logo loader">VTwo<br>Enterprises</p>
                     <p class="text">
                         BUSINESS MANAGEMENT SYSTEM <br>
                     </p>

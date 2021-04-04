@@ -7,7 +7,7 @@
 						<img src="<?php echo base_url('resources/img/AdminLTELogo.png') ?>" alt="AdminLTE Logo" class="img-circle elevation-2" style="opacity: .8">
 					</div> -->
             <div class="info">
-                <span class="brand-text font-weight-light d-block">vTwo Enterpries</span>
+                <span class="brand-text font-weight-light d-block">VTwo Enterpries</span>
                 <span class="brand-text font-weight-light d-block" style="font-size: 0.8em;">Business Management</span>
                 <span class="brand-text font-weight-light d-block" style="font-size: 0.8em;">System</span>
             </div>
@@ -90,14 +90,14 @@
                                 <p>&nbsp;&nbsp;Measure Unit</p>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
                             <a href="<?= base_url('Utilities/CuttingOrder') ?>" class="nav-link <?php if ($this->uri->segment(2) == "CuttingOrder") {
                                                                                                     echo 'active';
                                                                                                 } ?>">
                                 <i class="fas fa-balance-scale-right"></i>
                                 <p>&nbsp;&nbsp;Cutting Order</p>
                             </a>
-                        </li>
+                        </li> -->
                     </ul>
                 </li>
                 <li class="nav-item has-treeview <?php if ($this->uri->segment(2) == "CustomersList" || $this->uri->segment(2) == "manageCustomerUnitPriceConfig") {
@@ -144,14 +144,14 @@
                     </a>
                 </li>
 
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a href="<?php echo base_url('Branch/index') ?>" class="nav-link <?php if ($this->uri->segment(1) == "Branch") {
                                                                                             echo 'active';
                                                                                         } ?>">
                         <i class="fas fa-store"></i>
                         <p>&nbsp;&nbsp;Branch</p>
                     </a>
-                </li>
+                </li> -->
 
                 <li class="nav-item">
                     <a href="<?php echo base_url('Item/index') ?>" class="nav-link <?php if ($this->uri->segment(1) == "Item") {
@@ -226,7 +226,7 @@
                 </li>
 
 
-                <li class="nav-item has-treeview <?php if ($this->uri->segment(2) == "RequestItem" || $this->uri->segment(2) == "ViewRequest") {
+                <!-- <li class="nav-item has-treeview <?php if ($this->uri->segment(2) == "RequestItem" || $this->uri->segment(2) == "ViewRequest") {
                                                         echo 'menu-open';
                                                     } ?>">
                     <a href="#" class="nav-link">
@@ -258,7 +258,7 @@
                             </a>
                         </li>
                     </ul>
-                </li>
+                </li> -->
 
                 <li class="nav-item has-treeview <?php if ($this->uri->segment(2) == "CreateGRN" || $this->uri->segment(2) == "ViewGRN" || $this->uri->segment(2) == "EditGRN" || $this->uri->segment(2) == "ViewGRNDetails" || $this->uri->segment(2) == "ApproveOrRejectGRN") {
                                                         echo 'menu-open';
@@ -291,7 +291,7 @@
 
                 <?php
                 if ($_SESSION['Is_main_branch'] == 1) { ?>
-                    <li class="nav-item has-treeview <?php if ($this->uri->segment(2) == "CreateDispatch" || $this->uri->segment(2) == "ViewDispatch" || $this->uri->segment(2) == "CollectDispatchedItems") {
+                    <!-- <li class="nav-item has-treeview <?php if ($this->uri->segment(2) == "CreateDispatch" || $this->uri->segment(2) == "ViewDispatch" || $this->uri->segment(2) == "CollectDispatchedItems") {
                                                             echo 'menu-open';
                                                         } ?>">
                         <a href="#" class="nav-link">
@@ -326,7 +326,7 @@
                                 </a>
                             </li>
                         </ul>
-                    </li>
+                    </li> -->
                 <?php
                 }
                 ?>
