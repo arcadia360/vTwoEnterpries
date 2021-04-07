@@ -90,6 +90,26 @@
                                 <p>&nbsp;&nbsp;Measure Unit</p>
                             </a>
                         </li>
+
+                        <li class="nav-item">
+                            <a href="<?= base_url('Utilities/MainCategory') ?>" class="nav-link <?php if ($this->uri->segment(2) == "MainCategory") {
+                                                                                                    echo 'active';
+                                                                                                } ?>">
+                                <i class="fas fa-balance-scale-right"></i>
+                                <p>&nbsp;&nbsp;Main Category</p>
+                            </a>
+                        </li>
+
+                        
+                        <li class="nav-item">
+                            <a href="<?= base_url('Utilities/SubCategory') ?>" class="nav-link <?php if ($this->uri->segment(2) == "SubCategory") {
+                                                                                                    echo 'active';
+                                                                                                } ?>">
+                                <i class="fas fa-balance-scale-right"></i>
+                                <p>&nbsp;&nbsp;Sub Category</p>
+                            </a>
+                        </li>
+
                         <!-- <li class="nav-item">
                             <a href="<?= base_url('Utilities/CuttingOrder') ?>" class="nav-link <?php if ($this->uri->segment(2) == "CuttingOrder") {
                                                                                                     echo 'active';

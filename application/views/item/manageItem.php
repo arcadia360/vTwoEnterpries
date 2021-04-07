@@ -94,19 +94,20 @@
 							</select>
 						</div>
 
-						<!-- <div class="form-group">
-							<label>Item Type</label>
-							<select class="form-control select2" style="width: 100%;" id="item_type" name="item_type">
-								<option value="0" disabled selected hidden>Select Item Type</option>
-								<?php foreach ($itemType as $row) { ?>
-									<option value="<?= $row->intItemTypeID ?>"><?= $row->vcItemTypeName ?></option>
-								<?php } ?>
-							</select> -->
-						<!-- </div>
+						<div class="form-group">
+							<label>Main Categories</label>
+							<select class="form-control select2" style="width: 100%;" id="main_cat" name="main_cat">
+								<option value="0" disabled selected hidden>Select Main Categories</option>
+								<!-- <?php foreach ($itemType as $row) { ?> -->
+								<option value="1">Test</option>
+								<!-- <?php } ?> -->
+							</select>
+						</div>
 
-						<div id="GenerateUnitPriceTextBox">
-
-						</div> -->
+						<div class="form-group">
+							<label for="txtItemName">Unit Price</label>
+							<input type="text" class="form-control only-decimal" id="unit_price" name="unit_price" placeholder="Enter Unit Price">
+						</div>
 
 						<div class="form-group">
 							<label for="txtItemName">Item Re-Order Level</label>
@@ -154,19 +155,21 @@
 								<?php } ?>
 							</select>
 						</div>
-						<!-- 
+
 						<div class="form-group">
-							<label>Item Type</label>
-							<select class="form-control select2" style="width: 100%;" id="edit_item_type" name="edit_item_type">
-								<?php foreach ($itemType as $row) { ?>
-									<option value="<?php echo $row->intItemTypeID ?>"><?php echo $row->vcItemTypeName ?></option>
-								<?php } ?>
+							<label>Main Categories</label>
+							<select class="form-control select2" style="width: 100%;" id="main_cat" name="main_cat">
+								<option value="0" disabled selected hidden>Select Main Categories</option>
+								<!-- <?php foreach ($itemType as $row) { ?> -->
+								<option value="1">Test</option>
+								<!-- <?php } ?> -->
 							</select>
 						</div>
 
-						<div id="EditGenerateUnitPriceTextBox">
-
-						</div> -->
+						<div class="form-group">
+							<label for="txtItemName">Unit Price</label>
+							<input type="text" class="form-control only-decimal" id="unit_price" name="unit_price" placeholder="Enter Unit Price">
+						</div>
 
 						<div class="form-group">
 							<label for="txtItemName">Item Re-Order Level</label>

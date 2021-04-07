@@ -12,6 +12,7 @@ class Utilities extends Admin_Controller
         $this->load->model('model_measureunit');
         $this->load->model('model_item');
         $this->load->model('model_cuttingorder');
+        $this->load->model('model_utility');
 
         // $user_group_data = $this->model_groups->getUserGroupData();
         // $this->data['user_groups_data'] = $user_group_data;
@@ -709,6 +710,83 @@ class Utilities extends Admin_Controller
         $data = $this->model_cuttingorder->getCuttingOrderHeaderData($intCuttingOrderHeaderID = null);
         echo json_encode($data);
     }
+
+    //-----------------------------------
+    // Main Category
+    //-----------------------------------
+    public function MainCategory()
+    {
+
+        if (!$this->isAdmin) {
+            if (!in_array('viewMainCategory', $this->permission)) {
+                redirect('dashboard', 'refresh');
+            }
+        }
+        // $this->load->view('partials/header');
+        // $this->load->view('measureunit/manageMeasureUnit');
+        // $this->load->view('partials/footer');
+
+        $this->render_template('utilities/manageMainCategory', 'Manage Main Category', $this->data);
+    }
+
+    public function fetchMainCategoryData()
+    {
+        
+        if (!$this->isAdmin) {
+            if (!in_array('viewMainCategory', $this->permission)) {
+                redirect('dashboard', 'refresh');
+            }
+        }
+
+        $result = array('data' => array());
+
+        $data = $this->model_utility->getMainCategoryData(null, true);
+        foreach ($data as $key => $value) {
+
+            // button
+            $buttons = '';
+
+            if ($this->isAdmin) {
+                $buttons .= '<button type="button" class="btn btn-default" onclick="editMeasureUnit(' . $value['intMeasureUnitID'] . ')" data-toggle="modal" data-target="#editMeasureUnitModal"><i class="fas fa-edit"></i></button>';
+                $buttons .= ' <button type="button" class="btn btn-default" onclick="removeMeasureUnit(' . $value['intMeasureUnitID'] . ')" data-toggle="modal" data-target="#removeMeasureUnithModal"><i class="fa fa-trash"></i></button>';
+            } else {
+                if (in_array('editMeasureUnit', $this->permission)) {
+                    $buttons .= '<button type="button" class="btn btn-default" onclick="editMeasureUnit(' . $value['intMeasureUnitID'] . ')" data-toggle="modal" data-target="#editMeasureUnitModal"><i class="fas fa-edit"></i></button>';
+                }
+
+                if (in_array('deleteMeasureUnit', $this->permission)) {
+                    $buttons .= ' <button type="button" class="btn btn-default" onclick="removeMeasureUnit(' . $value['intMeasureUnitID'] . ')" data-toggle="modal" data-target="#removeMeasureUnithModal"><i class="fa fa-trash"></i></button>';
+                }
+            }
+
+            $result['data'][$key] = array(
+                $value['vcMeasureUnit'],
+                $buttons
+            );
+        }
+
+        echo json_encode($result);
+    }
+
+    //-----------------------------------
+    // Sub Category
+    //-----------------------------------
+    public function SubCategory()
+    {
+
+        if (!$this->isAdmin) {
+            if (!in_array('viewSubCategory', $this->permission)) {
+                redirect('dashboard', 'refresh');
+            }
+        }
+        // $this->load->view('partials/header');
+        // $this->load->view('measureunit/manageMeasureUnit');
+        // $this->load->view('partials/footer');
+
+        $this->render_template('utilities/manageSubCategory', 'Manage Sub Category', $this->data);
+    }
+
+
 
     //-----------------------------------
     // Database Backup
