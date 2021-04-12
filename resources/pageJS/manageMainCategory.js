@@ -4,13 +4,13 @@ $(document).ready(function() {
 
 
     manageTable = $('#manageTable').DataTable({
-        'ajax': 'fetchMeasureUnitData',
+        'ajax': 'fetchMainCategoryData',
         'order': []
     });
 
 
     // submit the create from 
-    $("#createunitForm").unbind('submit').on('submit', function() {
+    $("#createMainCategory").unbind('submit').on('submit', function() {
         var form = $(this);
 
         // remove the text-danger
@@ -30,11 +30,11 @@ $(document).ready(function() {
                     toastr["success"](response.messages);
 
                     // hide the modal
-                    $("#addMeasureUnitModal").modal('hide');
+                    $("#addMainCategoryModal").modal('hide');
 
                     // reset the form
-                    $("#createunitForm")[0].reset();
-                    $("#createunitForm .form-group").removeClass('has-error').removeClass('has-success');
+                    $("#createMainCategory")[0].reset();
+                    $("#createMainCategory .form-group").removeClass('has-error').removeClass('has-success');
 
                 } else {
 
@@ -54,10 +54,10 @@ $(document).ready(function() {
                         toastr["warning"](response.messages);
 
                         // hide the modal
-                        $("#addMeasureUnitModal").modal('hide');
+                        $("#addMainCategoryModal").modal('hide');
                         // reset the form
-                        $("#createunitForm")[0].reset();
-                        $("#createunitForm .form-group").removeClass('has-error').removeClass('has-success');
+                        $("#createMainCategory")[0].reset();
+                        $("#createMainCategory .form-group").removeClass('has-error').removeClass('has-success');
                     }
                 }
             }
@@ -69,16 +69,16 @@ $(document).ready(function() {
 
 });
 
-function editMeasureUnit(id) {
+function editMainCategory(id) {
     $.ajax({
-        url: 'fetchMeasureUnitDataById/' + id,
+        url: 'fetchMainCategoryDataById/' + id,
         type: 'post',
         dataType: 'json',
         success: function(response) {
 
-            $("#edit_unit_name").val(response.vcMeasureUnit);
+            $("#edit_mainCat_name").val(response.vcMainCategory);
 
-            $("#updateMeasureUnitForm").unbind('submit').bind('submit', function() {
+            $("#updateMainCategoryForm").unbind('submit').bind('submit', function() {
                 var form = $(this);
 
                 // remove the text-danger
@@ -98,9 +98,9 @@ function editMeasureUnit(id) {
                             toastr["success"](response.messages);
 
                             // hide the modal
-                            $("#editMeasureUnitModal").modal('hide');
-                            $("#updateMeasureUnitForm")[0].reset();
-                            $("#updateMeasureUnitForm .form-group").removeClass('has-error').removeClass('has-success');
+                            $("#editMainCategoryModal").modal('hide');
+                            $("#editMainCategoryModal")[0].reset();
+                            $("#editMainCategoryModal .form-group").removeClass('has-error').removeClass('has-success');
 
                         } else {
 
@@ -121,9 +121,9 @@ function editMeasureUnit(id) {
                                 toastr["error"](response.messages);
 
                                 // hide the modal
-                                $("#editMeasureUnitModal").modal('hide');
-                                $("#updateMeasureUnitForm")[0].reset();
-                                $("#updateMeasureUnitForm .form-group").removeClass('has-error').removeClass('has-success');
+                                $("#editMainCategoryModal").modal('hide');
+                                $("#editMainCategoryModal")[0].reset();
+                                $("#editMainCategoryModal .form-group").removeClass('has-error').removeClass('has-success');
                             }
                         }
                     }

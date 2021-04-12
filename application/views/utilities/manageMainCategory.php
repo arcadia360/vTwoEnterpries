@@ -79,17 +79,17 @@
 </div>
 <!-- edit MeasureUni modal -->
 <!-- edit Branch modal -->
-<div class="modal fade" id="editMeasureUnitModal" tabindex="-1" role="dialog" aria-labelledby="editMeasureUnitModal" aria-hidden="true">
+<div class="modal fade" id="editMainCategoryModal" tabindex="-1" role="dialog" aria-labelledby="editMainCategoryModal" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editMeasureUnitModal">Edit Branch</h5>
+                <h5 class="modal-title" id="editMainCategoryModal">Edit Branch</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
 
-            <form role="form" action="<?php echo base_url('Utilities/updateMainCategory') ?>" method="post" id="updateMeasureUnitForm">
+            <form role="form" action="<?php echo base_url('Utilities/updateMainCategory') ?>" method="post" id="updateMainCategoryForm">
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="branch_name">Main Category Name</label>

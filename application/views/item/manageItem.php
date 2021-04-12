@@ -51,7 +51,8 @@
 								<tr>
 									<th>Item Name</th>
 									<th>Measure Unit</th>
-									<!-- <th>Item Type</th> -->
+									<th>Main Category</th>
+									<th>Sub Category</th>
 									<th>Stock Qty</th>
 									<th>Re-Order Level</th>
 									<th>Unit Price</th>
@@ -97,10 +98,16 @@
 						<div class="form-group">
 							<label>Main Categories</label>
 							<select class="form-control select2" style="width: 100%;" id="main_cat" name="main_cat">
-								<option value="0" disabled selected hidden>Select Main Categories</option>
-								<!-- <?php foreach ($itemType as $row) { ?> -->
-								<option value="1">Test</option>
-								<!-- <?php } ?> -->
+								<option value="0" disabled selected hidden>Select Main Categorie</option>
+								<?php foreach ($main_cat as $row) { ?>
+									<<option value="<?= $row->intMainCategoryID ?>"><?= $row->vcMainCategory ?></option>
+									<?php } ?>
+							</select>
+						</div>
+
+						<div class="form-group">
+							<label>Sub Categories</label>
+							<select class="form-control select2" style="width: 100%;" id="sub_cat" name="sub_cat">
 							</select>
 						</div>
 
@@ -158,17 +165,24 @@
 
 						<div class="form-group">
 							<label>Main Categories</label>
-							<select class="form-control select2" style="width: 100%;" id="main_cat" name="main_cat">
-								<option value="0" disabled selected hidden>Select Main Categories</option>
-								<!-- <?php foreach ($itemType as $row) { ?> -->
-								<option value="1">Test</option>
-								<!-- <?php } ?> -->
+							<select class="form-control select2" style="width: 100%;" id="edit_main_cat" name="edit_main_cat">
+								<!-- <option value="0" disabled selected hidden>Select Main Categories</option> -->
+								<?php foreach ($main_cat as $row) { ?>
+									<<option value="<?= $row->intMainCategoryID ?>"><?= $row->vcMainCategory ?></option>
+									<?php } ?>
+							</select>
+						</div>
+
+						<div class="form-group">
+							<label>Sub Categories</label>
+							<select class="form-control select2" style="width: 100%;" id="edit_sub_cat" name="edit_sub_cat">
+							<option value='0'>Select Sub Categorie</option>
 							</select>
 						</div>
 
 						<div class="form-group">
 							<label for="txtItemName">Unit Price</label>
-							<input type="text" class="form-control only-decimal" id="unit_price" name="unit_price" placeholder="Enter Unit Price">
+							<input type="text" class="form-control only-decimal" id="edit_unit_price" name="edit_unit_price" placeholder="Enter Unit Price">
 						</div>
 
 						<div class="form-group">
@@ -182,7 +196,7 @@
 					</div>
 
 					<div class="modal-footer">
-						<button type="submit" class="btn btn-success btn-flat"><i class="fas fa-download" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Update Item</button>
+						<button type="submit" id="btnUpdateItem"  class="btn btn-success btn-flat"><i class="fas fa-download" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Update Item</button>
 					</div>
 
 				</form>

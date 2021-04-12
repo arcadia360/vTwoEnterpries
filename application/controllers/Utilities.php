@@ -729,6 +729,96 @@ class Utilities extends Admin_Controller
         $this->render_template('utilities/manageMainCategory', 'Manage Main Category', $this->data);
     }
 
+    public function createMainCategory()
+    {
+        if (!$this->isAdmin) {
+            if (!in_array('createMainCategory', $this->permission)) {
+                redirect('dashboard', 'refresh');
+            }
+        }
+
+        $response = array();
+
+        $this->form_validation->set_rules('MainCat_name', 'Main Category Name', 'trim|required|is_unique[maincategory.vcMainCategory]');
+
+        $this->form_validation->set_error_delimiters('<p class="text-danger">', '</p>');
+
+        if ($this->form_validation->run() == TRUE) {
+            $data = array(
+                'vcMainCategory	' => $this->input->post('MainCat_name'),
+
+            );
+            $create = $this->model_utility->createMainCategory($data);
+            if ($create == true) {
+                $response['success'] = true;
+                $response['messages'] = 'Succesfully created';
+            } else {
+                $response['success'] = false;
+                $response['messages'] = 'Error in the database while creating the brand information';
+            }
+        } else {
+            $response['success'] = false;
+            foreach ($_POST as $key => $value) {
+                $response['messages'][$key] = form_error($key);
+            }
+        }
+
+        echo json_encode($response);
+    }
+
+    public function updateMainCategory($id)
+    {
+        if (!$this->isAdmin) {
+            if (!in_array('editMainCategory', $this->permission)) {
+                redirect('dashboard', 'refresh');
+            }
+        }
+
+
+        $response = array();
+
+        if ($id) {
+            $this->form_validation->set_rules('edit_mainCat_name', 'Main Category Name', 'trim|required|is_unique[maincategory.vcMainCategory]');
+
+
+            $this->form_validation->set_error_delimiters('<p class="text-danger">', '</p>');
+
+            if ($this->form_validation->run() == TRUE) {
+                $data = array(
+                    'vcMainCategory' => $this->input->post('edit_mainCat_name'),
+                );
+                $update = $this->model_utility->updateMainCategory($data, $id);
+                if ($update == true) {
+                    $response['success'] = true;
+                    $response['messages'] = 'Succesfully updated';
+                } else {
+                    $response['success'] = false;
+                    $response['messages'] = 'Error in the database while updated the brand information';
+                }
+            } else {
+                $response['success'] = false;
+                foreach ($_POST as $key => $value) {
+                    $response['messages'][$key] = form_error($key);
+                }
+            }
+        } else {
+            $response['success'] = false;
+            $response['messages'] = 'Error please refresh the page again!!';
+        }
+
+        echo json_encode($response);
+    }
+
+    public function fetchMainCategoryDataById($id)
+    {
+        if ($id) {
+            $data = $this->model_utility->getMainCategoryData($id, true);
+            echo json_encode($data);
+        }
+
+        return false;
+    }
+
     public function fetchMainCategoryData()
     {
         
@@ -747,20 +837,20 @@ class Utilities extends Admin_Controller
             $buttons = '';
 
             if ($this->isAdmin) {
-                $buttons .= '<button type="button" class="btn btn-default" onclick="editMeasureUnit(' . $value['intMeasureUnitID'] . ')" data-toggle="modal" data-target="#editMeasureUnitModal"><i class="fas fa-edit"></i></button>';
-                $buttons .= ' <button type="button" class="btn btn-default" onclick="removeMeasureUnit(' . $value['intMeasureUnitID'] . ')" data-toggle="modal" data-target="#removeMeasureUnithModal"><i class="fa fa-trash"></i></button>';
+                $buttons .= '<button type="button" class="btn btn-default" onclick="editMainCategory(' . $value['intMainCategoryID'] . ')" data-toggle="modal" data-target="#editMainCategoryModal"><i class="fas fa-edit"></i></button>';
+                // $buttons .= ' <button type="button" class="btn btn-default" onclick="removeMainCategory(' . $value['intMainCategoryID'] . ')" data-toggle="modal" data-target="#removeMainCategoryModal"><i class="fa fa-trash"></i></button>';
             } else {
-                if (in_array('editMeasureUnit', $this->permission)) {
-                    $buttons .= '<button type="button" class="btn btn-default" onclick="editMeasureUnit(' . $value['intMeasureUnitID'] . ')" data-toggle="modal" data-target="#editMeasureUnitModal"><i class="fas fa-edit"></i></button>';
+                if (in_array('editMainCategory', $this->permission)) {
+                    $buttons .= '<button type="button" class="btn btn-default" onclick="editMainCategory(' . $value['intMainCategoryID'] . ')" data-toggle="modal" data-target="#editMainCategoryModal"><i class="fas fa-edit"></i></button>';
                 }
 
-                if (in_array('deleteMeasureUnit', $this->permission)) {
-                    $buttons .= ' <button type="button" class="btn btn-default" onclick="removeMeasureUnit(' . $value['intMeasureUnitID'] . ')" data-toggle="modal" data-target="#removeMeasureUnithModal"><i class="fa fa-trash"></i></button>';
+                if (in_array('deleteMainCategory', $this->permission)) {
+                    // $buttons .= ' <button type="button" class="btn btn-default" onclick="removeMainCategory(' . $value['intMainCategoryID'] . ')" data-toggle="modal" data-target="#removeMainCategoryModal"><i class="fa fa-trash"></i></button>';
                 }
             }
 
             $result['data'][$key] = array(
-                $value['vcMeasureUnit'],
+                $value['vcMainCategory'],
                 $buttons
             );
         }
@@ -783,7 +873,141 @@ class Utilities extends Admin_Controller
         // $this->load->view('measureunit/manageMeasureUnit');
         // $this->load->view('partials/footer');
 
+
+        $main_cat_data = $this->model_utility->getMainCategoryData(null, false);
+        $this->data['main_cat_data'] = $main_cat_data;
+
+
         $this->render_template('utilities/manageSubCategory', 'Manage Sub Category', $this->data);
+    }
+
+    public function fetchSubCategoryData()
+    {
+        if (!$this->isAdmin) {
+            if (!in_array('viewSubCategory', $this->permission)) {
+                redirect('dashboard', 'refresh');
+            }
+        }
+
+        $result = array('data' => array());
+
+        $data = $this->model_utility->getSubCategoryData(null, true);
+        foreach ($data as $key => $value) {
+
+            // button
+            $buttons = '';
+
+            if ($this->isAdmin) {
+                $buttons .= '<button type="button" class="btn btn-default" onclick="editSubCategory(' . $value['intSubCategoryID'] . ')" data-toggle="modal" data-target="#editSubCategoryModal"><i class="fas fa-edit"></i></button>';
+                // $buttons .= ' <button type="button" class="btn btn-default" onclick="removeMainCategory(' . $value['intMainCategoryID'] . ')" data-toggle="modal" data-target="#removeMainCategoryModal"><i class="fa fa-trash"></i></button>';
+            } else {
+                if (in_array('editSubCategory', $this->permission)) {
+                    $buttons .= '<button type="button" class="btn btn-default" onclick="editSubCategory(' . $value['intSubCategoryID'] . ')" data-toggle="modal" data-target="#editSubCategoryModal"><i class="fas fa-edit"></i></button>';
+                }
+
+                if (in_array('deleteSubCategory', $this->permission)) {
+                    // $buttons .= ' <button type="button" class="btn btn-default" onclick="removeMainCategory(' . $value['intMainCategoryID'] . ')" data-toggle="modal" data-target="#removeMainCategoryModal"><i class="fa fa-trash"></i></button>';
+                }
+            }
+
+            $result['data'][$key] = array(
+                $value['vcMainCategory'],
+                $value['vcSubCategory'],
+                $buttons
+            );
+        }
+
+        echo json_encode($result);
+    }
+
+    public function fetchSubCategoryDataById($id)
+    {
+        if ($id) {
+            $data = $this->model_utility->getSubCategoryData($id, true);
+            echo json_encode($data);
+        }
+
+        return false;
+    }
+
+    public function createSubCategory()
+    {
+        if (!$this->isAdmin) {
+            if (!in_array('createSubCategory', $this->permission)) {
+                redirect('dashboard', 'refresh');
+            }
+        }
+
+        $response = array();
+
+        $this->form_validation->set_rules('subCat_name', 'Sub category Name', 'trim|required|is_unique[subcategory.vcSubcategory]');
+
+        $this->form_validation->set_error_delimiters('<p class="text-danger">', '</p>');
+
+        if ($this->form_validation->run() == TRUE) {
+            $data = array(
+                'intMainCategoryID' => $this->input->post('main_cat'),
+                'vcSubcategory' => $this->input->post('subCat_name'),
+
+            );
+            $create = $this->model_utility->createSubCategory($data);
+            if ($create == true) {
+                $response['success'] = true;
+                $response['messages'] = 'Succesfully created';
+            } else {
+                $response['success'] = false;
+                $response['messages'] = 'Error in the database while creating the brand information';
+            }
+        } else {
+            $response['success'] = false;
+            foreach ($_POST as $key => $value) {
+                $response['messages'][$key] = form_error($key);
+            }
+        }
+
+        echo json_encode($response);
+    }
+
+    public function updateSubCategory($id)
+    {
+        if (!$this->isAdmin) {
+            if (!in_array('editSubCategory', $this->permission)) {
+                redirect('dashboard', 'refresh');
+            }
+        }
+
+        $response = array();
+
+        if ($id) {
+            $this->form_validation->set_rules('edit_SubCat_name', 'Sub Category Name', 'trim|required');
+
+            $this->form_validation->set_error_delimiters('<p class="text-danger">', '</p>');
+
+            if ($this->form_validation->run() == TRUE) {
+                $data = array(
+                    'intMainCategoryID' => $this->input->post('edit_main_cat'),
+                    'vcSubcategory' => $this->input->post('edit_SubCat_name'),
+                );
+                $update = $this->model_utility->updateSubCategory($data, $id);
+                if ($update == true) {
+                    $response['success'] = true;
+                    $response['messages'] = 'Succesfully updated';
+                } else {
+                    $response['success'] = false;
+                    $response['messages'] = 'Error in the database while updated the brand information';
+                }
+            } else {
+                $response['success'] = false;
+                foreach ($_POST as $key => $value) {
+                    $response['messages'][$key] = form_error($key);
+                }
+            }
+        } else {
+            $response['success'] = false;
+            $response['messages'] = 'Error please refresh the page again!!';
+        }
+
+        echo json_encode($response);
     }
 
 

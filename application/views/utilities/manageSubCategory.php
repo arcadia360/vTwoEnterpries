@@ -34,6 +34,7 @@
                         <table id="manageTable" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
+                                    <th>Main Category</th>
                                     <th>Sub Category</th>
                                     <th style="width: 300px;">Action</th>
                                 </tr>
@@ -64,12 +65,22 @@
                 <form role="form" action="<?php echo base_url('Utilities/createSubCategory') ?>" method="post" id="createSubCategory">
                     <div class="modal-body">
                         <div class="form-group">
+                            <label>Main Category</label>
+                            <select class="form-control select2" style="width: 100%;" id="main_cat" name="main_cat">
+                                <option value="0" disabled selected hidden>Select Main Category</option>
+                                <?php foreach ($main_cat_data as $row) { ?>
+                                    <option value="<?= $row->intMainCategoryID ?>"><?= $row->vcMainCategory ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
                             <label for="Unit_name">Sub Category Name</label>
-                            <input type="text" class="form-control" id="SubCat_name" name="SubCat_name" placeholder="Enter Sub Category Name" autofocus autocomplete="off">
+                            <input type="text" class="form-control" id="subCat_name" name="subCat_name" placeholder="Enter Sub Category Name" autofocus autocomplete="off">
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-success btn-flat"><i class="fas fa-download" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Save Sub Category</button>
+                        <button type="submit" id="btnSaveSubCat" class="btn btn-success btn-flat"><i class="fas fa-download" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Save Sub Category</button>
                     </div>
 
             </div>
@@ -79,27 +90,36 @@
 </div>
 <!-- edit MeasureUni modal -->
 <!-- edit Branch modal -->
-<div class="modal fade" id="editMeasureUnitModal" tabindex="-1" role="dialog" aria-labelledby="editMeasureUnitModal" aria-hidden="true">
+<div class="modal fade" id="editSubCategoryModal" tabindex="-1" role="dialog" aria-labelledby="editSubCategoryModal" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editMeasureUnitModal">Edit Branch</h5>
+                <h5 class="modal-title" id="editSubCategoryModal">Edit Sub Category</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
 
-            <form role="form" action="<?php echo base_url('Utilities/updateSubCategory') ?>" method="post" id="updateMeasureUnitForm">
+            <form role="form" action="<?php echo base_url('Utilities/updateSubCategory') ?>" method="post" id="updateSubCategoryForm">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="branch_name">Sub Category Name</label>
-                        <input type="text" class="form-control" id="edit_mainCat_name" name="edit_mainCat_name" placeholder="Enter Sub Category Name" autocomplete="off">
+                        <label>Main Category</label>
+                        <select class="form-control select2" style="width: 100%;" id="edit_main_cat" name="edit_main_cat">
+                            <option value="0" disabled selected hidden>Select Main Category</option>
+                            <?php foreach ($main_cat_data as $row) { ?>
+                                <option value="<?= $row->intMainCategoryID ?>"><?= $row->vcMainCategory ?></option>
+                            <?php } ?>
+                        </select>
                     </div>
 
+                    <div class="form-group">
+                        <label for="branch_name">Sub Category Name</label>
+                        <input type="text" class="form-control" id="edit_SubCat_name" name="edit_SubCat_name" placeholder="Enter Sub Category Name" autocomplete="off">
+                    </div>
                 </div>
 
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-success btn-flat"><i class="fas fa-download" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Update Sub Category</button>
+                    <button type="submit"  id="btnUpdateSubCat" class="btn btn-success btn-flat"><i class="fas fa-download" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Update Sub Category</button>
                 </div>
 
             </form>

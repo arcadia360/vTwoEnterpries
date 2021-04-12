@@ -10,16 +10,21 @@ class Model_item extends CI_Model
     public function getItemData($itemId = null)
     {
         if ($itemId) {
-            $sql = "SELECT it.intItemID,it.vcItemName,mu.intMeasureUnitID,mu.vcMeasureUnit,IFNULL(it.decStockInHand,'N/A') AS decStockInHand,it.decReOrderLevel,it.decUnitPrice,REPLACE(it.rv,' ','-') as rv FROM item as it
+            $sql = "SELECT it.intItemID,it.vcItemName,mu.intMeasureUnitID,mu.vcMeasureUnit,m.vcMainCategory, s.vcSubCategory,IFNULL(it.decStockInHand,'N/A') AS decStockInHand,it.decReOrderLevel,it.decUnitPrice,REPLACE(it.rv,' ','-') as rv FROM item as it
             inner join measureunit as mu on mu.intMeasureUnitID = it.intMeasureUnitID
-            WHERE IsActive = 1 AND it.intItemID = ? ";
+            inner join subcategory as s on it.intSubCategoryID = s.intSubCategoryID
+            inner join maincategory m on s.intMainCategoryID = m.intMainCategoryID
+            WHERE it.IsActive = 1 AND it.intItemID = ? ";
             $query = $this->db->query($sql, array($itemId));
             return $query->row_array();
         }
      
-        $sql = "SELECT it.intItemID,it.vcItemName,mu.intMeasureUnitID,mu.vcMeasureUnit,IFNULL(it.decStockInHand,'N/A') AS decStockInHand,it.decReOrderLevel,IFNULL(it.decUnitPrice,'N/A') AS decUnitPrice,it.rv FROM item as it
+        $sql = "SELECT it.intItemID,it.vcItemName,mu.intMeasureUnitID,mu.vcMeasureUnit,m.vcMainCategory, s.vcSubCategory, IFNULL(it.decStockInHand,'N/A') AS decStockInHand,it.decReOrderLevel,IFNULL(it.decUnitPrice,'N/A') AS decUnitPrice,REPLACE(it.rv,' ','-') as rv 
+        FROM item as it
         inner join measureunit as mu on mu.intMeasureUnitID = it.intMeasureUnitID
-        where  IsActive = 1
+        inner join subcategory as s on it.intSubCategoryID = s.intSubCategoryID
+        inner join maincategory m on s.intMainCategoryID = m.intMainCategoryID
+        where  it.IsActive = 1
         order by it.vcItemName asc";
         $query = $this->db->query($sql, array(1));
         return $query->result_array();
@@ -136,7 +141,7 @@ class Model_item extends CI_Model
     public function insertItemHitory($intEnteredBy, $id)
     {
         $this->db->trans_start();
-        $sql = "SELECT intItemID, vcItemName, intMeasureUnitID, dtCreatedDate, intUserID, decStockInHand, IsActive, decReOrderLevel, intItemTypeID, decUnitPrice,dtLastModifiedDate FROM item WHERE intitemID = ? ";
+        $sql = "SELECT intItemID, vcItemName, intMeasureUnitID, dtCreatedDate, intUserID, decStockInHand, IsActive, decReOrderLevel, intSubCategoryID, decUnitPrice,dtLastModifiedDate FROM item WHERE intitemID = ? ";
         $query = $this->db->query($sql, array($id));
         if ($query->num_rows()) {
             $this->db->insert('item_his', $query->row_array());
@@ -167,5 +172,14 @@ class Model_item extends CI_Model
             $delete = $this->db->update('item', $data);
             return ($delete == true) ? true : false;
         }
+    }
+
+    public function getMainCatWiseSubCat($MainCatID)
+    {
+        $sql = "SELECT S.intSubcategoryID ,M.vcMainCategory,S.vcSubcategory FROM maincategory AS M
+        INNER JOIN subcategory AS S ON M.intMainCategoryID = S.intMainCategoryID
+        WHERE M.intMainCategoryID = ?";
+        $query = $this->db->query($sql, array($MainCatID));
+        return $query->result_array();
     }
 }

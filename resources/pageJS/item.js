@@ -1,33 +1,25 @@
 var manageTable;
 
-$(document).ready(function() {
+$(document).ready(function () {
 
-    $('#item_type').on('change', function() {
-        GenerateUnitPriceTextBox();
+    $('#main_cat').on('change', function () {
+        GetMainCatWiseSubCat();
     });
 
-    $('#edit_item_type').on('change', function() {
-        EditGenerateUnitPriceTextBox();
+    $('#edit_main_cat').on('change', function () {
+        EditGetMainCatWiseSubCat();
     });
 
-    $('#cmbItemType').on('change', function () {
-        FilterItems()
-    
-    });
 
-    $("#btnSaveItem").click(function () {
-        if ($("#measure_unit :selected").val() == 0) {
-            toastr["error"]("Please select a Measure Unit !");
-            return;
-        }
-        if ($("#item_type :selected").val() == 0) {
-            toastr["error"]("Please select a Item Type !");
-            return;
-        }
-   
-    });
+    // $("#btnUpdateItem").click(function () {
+    //     alert("yuaay");
+    //     if ($("#edit_sub_cat :selected").val() < 0) {
+    //         toastr["error"]("Please select a sub category !");
+    //         return;
+    //     }
+    // });
 
-    $("#addItemModal").on("hidden.bs.modal", function(){
+    $("#addItemModal").on("hidden.bs.modal", function () {
         $("#Item_name").val("");
         $("#unit_price").val("");
         $("#re_order").val("");
@@ -35,9 +27,26 @@ $(document).ready(function() {
 
         $('#measure_unit').val('0'); // Select the option with a value of '0'
         $('#measure_unit').trigger('change'); // Notify any JS components that the value changed
-        $('#item_type').val('0'); // Select the option with a value of '0'
-        $('#item_type').trigger('change'); // Notify any JS components that the value changed
+        $('#main_cat').val('0'); // Select the option with a value of '0'
+        $('#main_cat').trigger('change'); // Notify any JS components that the value changed
+        $('#sub_cat').val('0'); // Select the option with a value of '0'
+        $('#sub_cat').trigger('change'); // Notify any JS components that the value changed
     });
+
+    $("#editItemModal").on("hidden.bs.modal", function () {
+        $("#edit_Item_name").val("");
+        $("#edit_unit_price").val("");
+        $("#edit_re_order").val("");
+
+
+        $('#edit_measure_unit').val('0'); // Select the option with a value of '0'
+        $('#edit_measure_unit').trigger('change'); // Notify any JS components that the value changed
+        $('#edit_main_cat').val('0'); // Select the option with a value of '0'
+        $('#edit_main_cat').trigger('change'); // Notify any JS components that the value changed
+        $('#edit_sub_cat').val('0'); // Select the option with a value of '0'
+        $('#edit_sub_cat').trigger('change'); // Notify any JS components that the value changed
+    });
+
     manageTable = $('#manageTable').DataTable({
         'ajax': 'fetchItemData',
         'order': [],
@@ -50,60 +59,75 @@ $(document).ready(function() {
 
 
     // submit the create from 
-    $("#createitemForm").unbind('submit').on('submit', function() {
+    $("#createitemForm").unbind('submit').on('submit', function () {
 
-      
+
         var form = $(this);
 
         // remove the text-danger
         $(".text-danger").remove();
+        if ($("#measure_unit :selected").val() == 0) {
+            toastr["error"]("Please select a Measure Unit !");
+            // return;
+        }
+        else if ($("#main_cat :selected").val() == 0) {
+            toastr["error"]("Please select a main category !");
+            // return;
+        }
+        else if ($("#sub_cat :selected").val() == 0) {
+            toastr["error"]("Please select a sub category !");
+            // return;
+        }
+        else {
 
-        $.ajax({
-            url: form.attr('action'),
-            type: form.attr('method'),
-            data: form.serialize(), // /converting the form data into array and sending it to server
-            dataType: 'json',
-            success: function(response) {
+            $.ajax({
+                url: form.attr('action'),
+                type: form.attr('method'),
+                data: form.serialize(), // /converting the form data into array and sending it to server
+                dataType: 'json',
+                success: function (response) {
 
-                manageTable.ajax.reload(null, false);
+                    manageTable.ajax.reload(null, false);
 
-                if (response.success === true) {
+                    if (response.success === true) {
 
-                    toastr["success"](response.messages);
-
-                    // hide the modal
-                    $("#addItemModal").modal('hide');
-
-                    // reset the form
-                    $("#createitemForm")[0].reset();
-                    $("#createitemForm .form-group").removeClass('has-error').removeClass('has-success');
-
-                } else {
-
-                    if (response.messages instanceof Object) {
-                        $.each(response.messages, function(index, value) {
-                            var id = $("#" + index);
-
-                            id.closest('.form-group')
-                                .removeClass('has-error')
-                                .removeClass('has-success')
-                                .addClass(value.length > 0 ? 'has-error' : 'has-success');
-
-                            id.after(value);
-
-                        });
-                    } else {
-                        toastr["error"](response.messages);
+                        toastr["success"](response.messages);
 
                         // hide the modal
                         $("#addItemModal").modal('hide');
+
                         // reset the form
                         $("#createitemForm")[0].reset();
                         $("#createitemForm .form-group").removeClass('has-error').removeClass('has-success');
+
+                    } else {
+
+                        if (response.messages instanceof Object) {
+                            $.each(response.messages, function (index, value) {
+                                var id = $("#" + index);
+
+                                id.closest('.form-group')
+                                    .removeClass('has-error')
+                                    .removeClass('has-success')
+                                    .addClass(value.length > 0 ? 'has-error' : 'has-success');
+
+                                id.after(value);
+
+                            });
+                        } else {
+                            toastr["error"](response.messages);
+
+                            // hide the modal
+                            $("#addItemModal").modal('hide');
+                            // reset the form
+                            $("#createitemForm")[0].reset();
+                            $("#createitemForm .form-group").removeClass('has-error').removeClass('has-success');
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
+
 
         return false;
     });
@@ -111,80 +135,125 @@ $(document).ready(function() {
 
 });
 
-function editItem(id) {
-    
+
+
+function GetMainCatWiseSubCat() {
+    var MainCatID = $("#main_cat :selected").val();
     $.ajax({
-        async : false,
+        url: 'getMainCatWiseSubCat/' + MainCatID,
+        type: 'post',
+        dataType: 'json',
+        success: function (response) {
+            var html = "<option value='0'>Select Sub Categorie</option>";
+            for (var i = 0; i < response.length; i++) {
+
+                html += "<option value='" + response[i]['intSubcategoryID'] + "'>" + response[i]['vcSubcategory'] + "</option>";
+            }
+            $("#sub_cat").html("");
+            $("#sub_cat").append(html);
+        },
+        error: function (data) { }
+    });
+}
+
+
+function EditGetMainCatWiseSubCat() {
+    var MainCatID = $("#edit_main_cat :selected").val();
+    $.ajax({
+        url: 'getMainCatWiseSubCat/' + MainCatID,
+        type: 'post',
+        dataType: 'json',
+        success: function (response) {
+            var html = "<option value='0'>Select Sub Categorie</option>";
+            for (var i = 0; i < response.length; i++) {
+
+                html += "<option value='" + response[i]['intSubcategoryID'] + "'>" + response[i]['vcSubcategory'] + "</option>";
+            }
+            $("#edit_sub_cat").html("");
+            $("#edit_sub_cat").append(html);
+        },
+        error: function (data) { }
+    });
+}
+
+function editItem(id) {
+
+    $.ajax({
+        async: false,
         url: 'fetchItemDataById/' + id,
         type: 'post',
         dataType: 'json',
-        success: function(response) {
+        success: function (response) {
 
             $("#edit_item_name").val(response.vcItemName);
             $('#edit_measure_unit').val(response.intMeasureUnitID);
             $('#edit_measure_unit').trigger('change');
 
-            $('#edit_item_type').val(response.intItemTypeID);
-            $('#edit_item_type').trigger('change');
-
             $("#edit_re_order").val(response.decReOrderLevel);
-            $("#edit_rv").val(response.rv);
-            if (response.intItemTypeID) {
-                EditGenerateUnitPriceTextBox();
-            }
+
             $('#edit_unit_price').val(response.decUnitPrice);
 
             // submit the edit from 
-            $("#updateItemForm").unbind('submit').bind('submit', function() {
+            $("#updateItemForm").unbind('submit').bind('submit', function () {
                 var form = $(this);
 
                 // remove the text-danger
                 $(".text-danger").remove();
 
-                $.ajax({
-                    url: form.attr('action') + '/' + id,
-                    type: form.attr('method'),
-                    data: form.serialize(), // /converting the form data into array and sending it to server
-                    dataType: 'json',
-                    success: function(response) {
+                 if ($("#edit_sub_cat :selected").val() == 0) {
+                    toastr["error"]("Please select a sub category !");
+                    // return;
+                }
+                else 
+                {
+                    $.ajax({
+                        async: false,
+                        url: form.attr('action') + '/' + id,
+                        type: form.attr('method'),
+                        data: form.serialize(), // /converting the form data into array and sending it to server
+                        dataType: 'json',
+                        success: function (response) {
 
-                        manageTable.ajax.reload(null, false);
+                            manageTable.ajax.reload(null, false);
 
-                        if (response.success === true) {
+                            if (response.success === true) {
 
-                            toastr["success"](response.messages);
-
-                            // hide the modal
-                            $("#editItemModal").modal('hide');
-                            $("#updateItemForm")[0].reset();
-                            $("#updateItemForm .form-group").removeClass('has-error').removeClass('has-success');
-
-                        } else {
-
-                            if (response.messages instanceof Object) {
-                                $.each(response.messages, function(index, value) {
-                                    var id = $("#" + index);
-
-                                    id.closest('.form-group')
-                                        .removeClass('has-error')
-                                        .removeClass('has-success')
-                                        .addClass(value.length > 0 ? 'has-error' : 'has-success');
-
-                                    id.after(value);
-
-                                });
-                            } else {
-
-                                toastr["error"](response.messages);
+                                toastr["success"](response.messages);
 
                                 // hide the modal
                                 $("#editItemModal").modal('hide');
                                 $("#updateItemForm")[0].reset();
                                 $("#updateItemForm .form-group").removeClass('has-error').removeClass('has-success');
+
+                            } else {
+
+                                if (response.messages instanceof Object) {
+                                    $.each(response.messages, function (index, value) {
+                                        var id = $("#" + index);
+
+                                        id.closest('.form-group')
+                                            .removeClass('has-error')
+                                            .removeClass('has-success')
+                                            .addClass(value.length > 0 ? 'has-error' : 'has-success');
+
+                                        id.after(value);
+
+                                    });
+                                } else {
+
+                                    toastr["error"](response.messages);
+
+                                    // hide the modal
+                                    $("#editItemModal").modal('hide');
+                                    $("#updateItemForm")[0].reset();
+                                    $("#updateItemForm .form-group").removeClass('has-error').removeClass('has-success');
+                                }
                             }
                         }
-                    }
-                });
+                    });
+
+                }
+
 
                 return false;
             });
@@ -256,7 +325,7 @@ function removeItem(id) {
     if (id) {
 
         // submit the edit from 
-        $("#removeItemForm").unbind('submit').bind('submit', function() {
+        $("#removeItemForm").unbind('submit').bind('submit', function () {
             var form = $(this);
 
             // remove the text-danger
@@ -270,7 +339,7 @@ function removeItem(id) {
                     intItemID: id
                 },
                 dataType: 'json',
-                success: function(response) {
+                success: function (response) {
 
                     manageTable.ajax.reload(null, false);
 
