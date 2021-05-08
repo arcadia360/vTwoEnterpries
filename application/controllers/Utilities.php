@@ -821,7 +821,7 @@ class Utilities extends Admin_Controller
 
     public function fetchMainCategoryData()
     {
-        
+
         if (!$this->isAdmin) {
             if (!in_array('viewMainCategory', $this->permission)) {
                 redirect('dashboard', 'refresh');
@@ -1009,7 +1009,146 @@ class Utilities extends Admin_Controller
 
         echo json_encode($response);
     }
+    //-----------------------------------
+    // Manage Sales Rep
+    //-----------------------------------
 
+    public function manageSalesRep()
+    {
+        if (!$this->isAdmin) {
+            if (!in_array('viewSalesRep', $this->permission)) {
+                redirect('dashboard', 'refresh');
+            }
+        }
+
+        $this->render_template('Utilities/manageSalesRep', 'Manage Sales Rep',  $this->data);
+    }
+
+    public function saveSalesRep()
+    {
+        if (!$this->isAdmin) {
+            if (!in_array('createSalesRep', $this->permission)) {
+                redirect('dashboard', 'refresh');
+            }
+        }
+
+        $response = array();
+
+        date_default_timezone_set('Asia/Colombo');
+        $nowDateTime = date('Y-m-d h:i:s');
+
+        $data = array(
+            'vcSalesRepName' => $this->input->post('salesRep_name'),
+            'vcContactNo' => $this->input->post('contact_no'),
+            'vcAddress' => $this->input->post('address'),
+            'dtCreatedDate' => $nowDateTime,
+        );
+        $create = $this->model_utility->saveSalesRep($data);
+        if ($create == true) {
+            $response['success'] = true;
+            $response['messages'] = 'Succesfully created';
+        } else {
+            $response['success'] = false;
+            $response['messages'] = 'Error in the database while creating the brand information';
+        }
+        echo json_encode($response);
+    }
+
+    public function updateSalesRep($intSalesRepID)
+    {
+        if (!$this->isAdmin) {
+            if (!in_array('updateSalesRep', $this->permission)) {
+                redirect('dashboard', 'refresh');
+            }
+        }
+
+        $response = array();
+
+        $data = array(
+            'vcSalesRepName' => $this->input->post('edit_salesRep_name'),
+            'vcContactNo' => $this->input->post('edit_contact_no'),
+            'vcAddress' => $this->input->post('edit_address'),
+        );
+        $create = $this->model_utility->updateSalesRep($data,$intSalesRepID);
+        if ($create == true) {
+            $response['success'] = true;
+            $response['messages'] = 'Update Succesfully !';
+        } else {
+            $response['success'] = false;
+            $response['messages'] = 'Error in the database while creating the brand information';
+        }
+        echo json_encode($response);
+    }
+
+    public function removeSalesRep($intSalesRepID = null)
+    {
+        if (!$this->isAdmin) {
+            if (!in_array('deleteSalesRep', $this->permission)) {
+                redirect('dashboard', 'refresh');
+            }
+        }
+
+        $intSalesRepID = $this->input->post('intSalesRepID');
+        $response = array();
+        if ($intSalesRepID) {
+
+            $delete = $this->model_utility->removeSalesRep($intSalesRepID);
+
+            if ($delete == true) {
+                $response['success'] = true;
+                $response['messages'] = "Successfully removed !";
+            } else {
+                $response['success'] = false;
+                $response['messages'] = "Error in the database while removing the brand information";
+            }
+        } else {
+            $response['success'] = false;
+            $response['messages'] = "Refersh the page again!!";
+        }
+        echo json_encode($response);
+    }
+
+    public function fetchSalesRepData($intSalesRepID = null)
+    {
+        $result = array('data' => array());
+
+        $data = $this->model_utility->getfetchSalesRepData($intSalesRepID);
+        foreach ($data as $key => $value) {
+
+            $buttons = '';
+
+            if ($this->isAdmin) {
+                $buttons .= '<button type="button" class="btn btn-default" onclick="editSalesRep(' . $value['intSalesRepID'] . ')" data-toggle="modal" data-target="#editSalesRepModal"><i class="fas fa-edit"></i></button>';
+                $buttons .= ' <button type="button" class="btn btn-default" onclick="removeSalesRep(' . $value['intSalesRepID'] . ')" data-toggle="modal" data-target="#removeSalesRepModal"><i class="fa fa-trash"></i></button>';
+            } else {
+                if (in_array('editBranch', $this->permission)) {
+                    $buttons .= '<button type="button" class="btn btn-default" onclick="editSalesRep(' . $value['intSalesRepID'] . ')" data-toggle="modal" data-target="#editSalesRepModal"><i class="fas fa-edit"></i></button>';
+                }
+                if (in_array('deleteBranch', $this->permission)) {
+                    $buttons .= ' <button type="button" class="btn btn-default" onclick="removeSalesRep(' . $value['intSalesRepID'] . ')" data-toggle="modal" data-target="#removeSalesRepModal"><i class="fa fa-trash"></i></button>';
+                }
+            }
+
+            $result['data'][$key] = array(
+                $value['vcSalesRepName'],
+                $value['vcContactNo'],
+                $value['vcAddress'],
+                $buttons
+            );
+        }
+
+        echo json_encode($result);
+    }
+
+    public function fetchSalesRepDataById($intSalesRepID)
+    {
+        if ($intSalesRepID) {
+            $data = $this->model_utility->getfetchSalesRepData($intSalesRepID);
+            echo json_encode($data);
+        }
+
+        return false;
+    }
 
 
     //-----------------------------------

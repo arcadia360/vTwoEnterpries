@@ -151,7 +151,14 @@
 
                 </li>
 
-
+                <li class="nav-item">
+                    <a href="<?php echo base_url('Utilities/manageSalesRep') ?>" class="nav-link <?php if ($this->uri->segment(1) == "SalesRep") {
+                                                                                            echo 'active';
+                                                                                        } ?>">
+                        <i class="fa fa-truck" aria-hidden="true"></i>
+                        <p>&nbsp;&nbsp;Sales Rep</p>
+                    </a>
+                </li>
 
 
 
