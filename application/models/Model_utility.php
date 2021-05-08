@@ -58,7 +58,7 @@ class Model_utility extends CI_Model
         }
     }
 
-    public function updateMainCategory($data,$id)
+    public function updateMainCategory($data, $id)
     {
         if ($data && $id) {
             $this->db->where('intMainCategoryID', $id);
@@ -67,7 +67,7 @@ class Model_utility extends CI_Model
         }
     }
 
-    public function updateSubCategory($data,$id)
+    public function updateSubCategory($data, $id)
     {
         if ($data && $id) {
             $this->db->where('intSubcategoryID', $id);
@@ -108,5 +108,48 @@ class Model_utility extends CI_Model
         }
     }
 
+    public function saveSalesRep($data)
+    {
+        if ($data) {
+            $insert = $this->db->insert('salesrep', $data);
+            return ($insert == true) ? true : false;
+        }
+    }
     
+    public function updateSalesRep($data,$id)
+    {
+        if ($data && $id) {
+            $this->db->where('intSalesRepID', $id);
+            $update = $this->db->update('salesrep', $data);
+            return ($update == true) ? true : false;
+        }
+    }
+
+    
+    public function removeSalesRep($id)
+    {
+        if ($id) {
+            $data = [
+                'IsActive' => '0',
+            ];
+            $this->db->where('intSalesRepID', $id);
+            $delete = $this->db->update('salesrep', $data);
+            return ($delete == true) ? true : false;
+        }
+    }
+
+
+
+    public function getfetchSalesRepData($intSalesRepID = null)
+    {
+        if ($intSalesRepID) {
+            $sql = "SELECT intSalesRepID, vcSalesRepName, vcContactNo, vcAddress, dtCreatedDate, IsActive FROM salesrep WHERE intSalesRepID = ? AND IsActive = 1";
+            $query = $this->db->query($sql, array($intSalesRepID));
+            return $query->row_array();
+        }
+
+        $sql = "SELECT intSalesRepID, vcSalesRepName, vcContactNo, vcAddress, dtCreatedDate, IsActive FROM salesrep WHERE IsActive = 1";
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
 }
