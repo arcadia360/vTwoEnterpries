@@ -11,12 +11,12 @@ class Model_grn extends CI_Model
     {
         $this->db->trans_start();
 
-        $query = $this->db->query("SELECT fnGenerateGRNNo() AS GRNNo");
-        $ret = $query->row();
-        $GRNNo = $ret->GRNNo;
+        // $query = $this->db->query("SELECT fnGenerateGRNNo() AS GRNNo");
+        // $ret = $query->row();
+        // $GRNNo = $ret->GRNNo;
 
 
-        // $GRNNo = "Test-001";
+        $GRNNo = "Test-001";
 
         $insertDetails = false;
 
@@ -45,7 +45,8 @@ class Model_grn extends CI_Model
                 'intItemID' => $this->input->post('itemID')[$i],
                 'decQty' => $this->input->post('itemQty')[$i],
                 'decUnitPrice' => $this->input->post('unitPrice')[$i],
-                'decTotalPrice' => $this->input->post('totalPrice')[$i]
+                'decTotalPrice' => $this->input->post('totalPrice')[$i],
+                'decAvailableQty' => $this->input->post('itemQty')[$i]
             );
             $insertDetails = $this->db->insert('GRNDetail', $items);
         }

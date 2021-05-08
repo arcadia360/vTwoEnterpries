@@ -28,7 +28,7 @@ class GRN extends Admin_Controller
         }
 
         $supplier_data = $this->model_supplier->getSupplierData();
-        $item_data = $this->model_item->getOnlyRawItemData();
+        $item_data = $this->model_item->getItemData();
         $payment_data = $this->model_issue->getPaymentTypes();
         $this->data['payment_data'] = $payment_data;
         $this->data['supplier_data'] = $supplier_data;
