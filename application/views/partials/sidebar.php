@@ -56,7 +56,7 @@
                     </a>
                 </li>
 
-                <li class="nav-item has-treeview <?php if ($this->uri->segment(1) == "User" || $this->uri->segment(2) == "UserGroup" || $this->uri->segment(2) == "MeasureUnit" || $this->uri->segment(2) == "CuttingOrder") {
+                <li class="nav-item has-treeview <?php if ($this->uri->segment(1) == "User" || $this->uri->segment(2) == "UserGroup" || $this->uri->segment(2) == "MeasureUnit" || $this->uri->segment(2) =="MainCategory" || $this->uri->segment(2) =="SubCategory" || $this->uri->segment(2) == "manageSalesRep") {
                                                         echo 'menu-open';
                                                     } ?>">
                     <a href="#" class="nav-link">
@@ -100,7 +100,7 @@
                             </a>
                         </li>
 
-                        
+
                         <li class="nav-item">
                             <a href="<?= base_url('Utilities/SubCategory') ?>" class="nav-link <?php if ($this->uri->segment(2) == "SubCategory") {
                                                                                                     echo 'active';
@@ -110,15 +110,16 @@
                             </a>
                         </li>
 
-                        <!-- <li class="nav-item">
-                            <a href="<?= base_url('Utilities/CuttingOrder') ?>" class="nav-link <?php if ($this->uri->segment(2) == "CuttingOrder") {
-                                                                                                    echo 'active';
-                                                                                                } ?>">
-                                <i class="fas fa-balance-scale-right"></i>
-                                <p>&nbsp;&nbsp;Cutting Order</p>
+                        <li class="nav-item">
+                            <a href="<?php echo base_url('Utilities/manageSalesRep') ?>" class="nav-link <?php if ($this->uri->segment(2) == "manageSalesRep") {
+                                                                                                                echo 'active';
+                                                                                                            } ?>">
+                                <i class="fa fa-truck" aria-hidden="true"></i>
+                                <p>&nbsp;&nbsp;Sales Rep</p>
                             </a>
-                        </li> -->
-                    </ul>
+                        </li>
+
+                      </ul>
                 </li>
                 <li class="nav-item has-treeview <?php if ($this->uri->segment(2) == "CustomersList" || $this->uri->segment(2) == "manageCustomerUnitPriceConfig") {
                                                         echo 'menu-open';
@@ -151,14 +152,13 @@
 
                 </li>
 
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a href="<?php echo base_url('Utilities/manageSalesRep') ?>" class="nav-link <?php if ($this->uri->segment(1) == "SalesRep") {
-                                                                                            echo 'active';
-                                                                                        } ?>">
+                                                                                                    } ?>">
                         <i class="fa fa-truck" aria-hidden="true"></i>
                         <p>&nbsp;&nbsp;Sales Rep</p>
                     </a>
-                </li>
+                </li> -->
 
 
 
@@ -226,8 +226,8 @@
                         </li>
                         <li class="nav-item">
                             <a href="<?php echo base_url('Receipt/ViewReceipt') ?>" class="nav-link <?php if ($this->uri->segment(2) == "viewReceipt") {
-                                                                                                                            echo 'active';
-                                                                                                                        } ?>">
+                                                                                                        echo 'active';
+                                                                                                    } ?>">
                                 <i class="fas fa-user"></i>
                                 <p>&nbsp;&nbsp;&nbsp;View Customer Credit Settlement</p>
                             </a>
@@ -254,8 +254,8 @@
 
 
                 <!-- <li class="nav-item has-treeview <?php if ($this->uri->segment(2) == "RequestItem" || $this->uri->segment(2) == "ViewRequest") {
-                                                        echo 'menu-open';
-                                                    } ?>">
+                                                            echo 'menu-open';
+                                                        } ?>">
                     <a href="#" class="nav-link">
                         <i class="fas fa-layer-group"></i>
                         <p>&nbsp;&nbsp;&nbsp;Request
@@ -319,8 +319,8 @@
                 <?php
                 if ($_SESSION['Is_main_branch'] == 1) { ?>
                     <!-- <li class="nav-item has-treeview <?php if ($this->uri->segment(2) == "CreateDispatch" || $this->uri->segment(2) == "ViewDispatch" || $this->uri->segment(2) == "CollectDispatchedItems") {
-                                                            echo 'menu-open';
-                                                        } ?>">
+                                                                echo 'menu-open';
+                                                            } ?>">
                         <a href="#" class="nav-link">
                             <i class="fas fa-layer-group"></i>
                             <p>&nbsp;&nbsp;&nbsp;Dispatch
