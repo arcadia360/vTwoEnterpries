@@ -11,12 +11,12 @@ class Model_grn extends CI_Model
     {
         $this->db->trans_start();
 
-        // $query = $this->db->query("SELECT fnGenerateGRNNo() AS GRNNo");
-        // $ret = $query->row();
-        // $GRNNo = $ret->GRNNo;
+        $query = $this->db->query("SELECT fnGenerateGRNNo() AS GRNNo");
+        $ret = $query->row();
+        $GRNNo = $ret->GRNNo;
 
 
-        $GRNNo = "Test-001";
+        // $GRNNo = "Test-001";
 
         $insertDetails = false;
 
@@ -83,12 +83,12 @@ class Model_grn extends CI_Model
                         GH.dtRejectedOn,
                         REPLACE(GH.rv,' ','-') as rv 
                     FROM 
-                        KNC.GRNHeader AS GH
-                        INNER JOIN KNC.Supplier AS S ON GH.intSupplierID = S.intSupplierID
-                        INNER JOIN KNC.User AS CreatedUser ON GH.intUserID = CreatedUser.intUserID
+                        GRNHeader AS GH
+                        INNER JOIN Supplier AS S ON GH.intSupplierID = S.intSupplierID
+                        INNER JOIN User AS CreatedUser ON GH.intUserID = CreatedUser.intUserID
                         INNER JOIN paymenttype AS P ON GH.intPaymentTypeID = P.intPaymentTypeID
-                        LEFT OUTER JOIN KNC.User AS ApprovedUser ON GH.intApprovedBy = ApprovedUser.intUserID
-                        LEFT OUTER JOIN KNC.User AS RejectedUser ON GH.intRejectedBy = RejectedUser.intUserID
+                        LEFT OUTER JOIN User AS ApprovedUser ON GH.intApprovedBy = ApprovedUser.intUserID
+                        LEFT OUTER JOIN User AS RejectedUser ON GH.intRejectedBy = RejectedUser.intUserID
                     WHERE GH.IsActive = 1 AND GH.intGRNHeaderID = ? 
                     ORDER BY GH.intGRNHeaderID ";
 
@@ -146,7 +146,7 @@ class Model_grn extends CI_Model
         }
 
 
-        $sql  = $sql . $dateFilter . $statusFilter. "GROUP BY GH.intGRNHeaderID  ORDER BY GH.intGRNHeaderID";
+        $sql  = $sql . $dateFilter . $statusFilter . "GROUP BY GH.intGRNHeaderID  ORDER BY GH.intGRNHeaderID";
 
         $query = $this->db->query($sql, array($FromDate, $ToDate));
         return $query->result_array();
@@ -166,9 +166,9 @@ class Model_grn extends CI_Model
                     MU.intMeasureUnitID,
                     MU.vcMeasureUnit
                 FROM 
-                    KNC.GRNDetail AS GD
-                    INNER JOIN KNC.Item AS I ON GD.intItemID = I.intItemID
-                    INNER JOIN KNC.MeasureUnit AS MU ON I.intMeasureUnitID = MU.intMeasureUnitID
+                    GRNDetail AS GD
+                    INNER JOIN Item AS I ON GD.intItemID = I.intItemID
+                    INNER JOIN MeasureUnit AS MU ON I.intMeasureUnitID = MU.intMeasureUnitID
                 WHERE 
                     GD.intGRNHeaderID = ?";
 
@@ -190,7 +190,7 @@ class Model_grn extends CI_Model
 
         $editDetails = false;
         $now = new DateTime();
-        
+
         $data = array(
             'vcInvoiceNo' => $this->input->post('invoice_no'),
             'intSupplierID' => $this->input->post('supplier'),
@@ -225,18 +225,20 @@ class Model_grn extends CI_Model
         return ($editDetails == true) ? true : false;
     }
 
-    public function canRemoveGRN($intGRNHeaderID){
+    public function canRemoveGRN($intGRNHeaderID)
+    {
         $sql = "
                 SELECT * FROM GRNHeader WHERE intGRNHeaderID = ? AND intApprovedBy IS NULL AND intRejectedBy IS NULL";
         $query = $this->db->query($sql, array($intGRNHeaderID));
         if ($query->result_array() != null) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
-    public function removeGRN($intGRNHeaderID){
+    public function removeGRN($intGRNHeaderID)
+    {
         if ($intGRNHeaderID) {
             $data = [
                 'IsActive' => '0',
@@ -247,7 +249,8 @@ class Model_grn extends CI_Model
         }
     }
 
-    public function approveGRN($intGRNHeaderID){
+    public function approveGRN($intGRNHeaderID)
+    {
         $this->db->trans_start();
         date_default_timezone_set('Asia/Colombo');
         $now = date('Y-m-d H:i:s');
@@ -259,13 +262,13 @@ class Model_grn extends CI_Model
         $this->db->where('intGRNHeaderID', $intGRNHeaderID);
         $update = $this->db->update('GRNHeader', $data);
 
-        $sql = "UPDATE Item AS I
-                INNER JOIN GRNDetail AS GD ON GD.intItemID = I.intItemID
-                SET I.decStockInHand = (I.decStockInHand + GD.decQty)
-                WHERE GD.intGRNHeaderID = ?";
+        // $sql = "UPDATE Item AS I
+        //         INNER JOIN GRNDetail AS GD ON GD.intItemID = I.intItemID
+        //         SET I.decStockInHand = (I.decStockInHand + GD.decQty)
+        //         WHERE GD.intGRNHeaderID = ?";
 
-        $update = $this->db->query($sql, array($intGRNHeaderID));
-          
+        // $update = $this->db->query($sql, array($intGRNHeaderID));
+
         $this->db->trans_complete();
         return ($update == true) ? true : false;
     }
@@ -286,5 +289,4 @@ class Model_grn extends CI_Model
         $this->db->trans_complete();
         return ($update == true) ? true : false;
     }
-
 }
