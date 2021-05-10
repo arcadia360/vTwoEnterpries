@@ -1,7 +1,12 @@
 var AdvanceAmount = 0;
 var CreditBuyAmount = 0;
 var AvailableCredit = 0;
+var Item = function () {
+    this.intItemID = 0;
+}
+var row_id = 1;
 $(document).ready(function () {
+
 
 
 
@@ -25,7 +30,7 @@ $(document).ready(function () {
         // getcmbItemDate();
     });
 
-    getcmbItemData(); 
+    getcmbItemData();
 
 
     $(document).on('keyup', 'input[type=search]', function (e) {
@@ -37,7 +42,7 @@ $(document).ready(function () {
     });
 
     $("#cmbItem").on('select2:close', function (event) {
-        
+
         $("input[name=txtQty],input[name=txtTotalPrice]").val("");
         $('#txtQty').focus();
         getItemDetailsByCustomerID();
@@ -77,7 +82,13 @@ $(document).ready(function () {
     // });
 
     $('#txtQty,#txtUnitPrice').keyup(function (event) {
-        CalculateTotal();
+        CalculateTotal() ;
+        CalItemWiseDiscount();
+    });
+
+    $('#txtDiscountPercentage').keyup(function (event) {
+        CalItemWiseDiscount();
+
     });
 
     $('#txtDiscount').keyup(function (event) {
@@ -137,10 +148,26 @@ $(document).ready(function () {
         var unitPrice = $("#txtUnitPrice").val();
         var qty = $("#txtQty").val()
 
+
         if (unitPrice != "" && qty != "") {
             var total = unitPrice * qty;
-            $("#txtTotalPrice").val(currencyFormat(total));
         }
+        $("#txtWithouDiscount").val(currencyFormat(total));
+    }
+
+    function CalItemWiseDiscount() {
+        var unitPrice = $("#txtUnitPrice").val();
+        var qty = $("#txtQty").val()
+        var discountPercentage = $("#txtDiscountPercentage").val();
+
+        if (discountPercentage != "") {
+            var DiscoutedPrice = ((unitPrice * qty) - ((discountPercentage / 100) * (unitPrice * qty)));
+
+        }
+        else {
+            var DiscoutedPrice = unitPrice * qty;
+        }
+        $("#txtTotalPrice").val(currencyFormat(DiscoutedPrice));
     }
 
 
@@ -156,34 +183,7 @@ $(document).ready(function () {
 
     });
 
-    function remove() {
-        $(".red").click(function () {
-            // var itemID = $(this).closest("tr").find('td.itemID').text();
-            // var itemName = $(this).closest("tr").find('td.itemName').text();
 
-            var itemID = $(this).closest("tr").find('.itemID').val();
-            var itemName = $(this).closest("tr").find('.itemName').val();
-
-            var IsAlreadyIncluded = false;
-
-            $("#cmbItem option").each(function () {
-                if (itemID == $(this).val()) {
-                    IsAlreadyIncluded = true;
-                    return false;
-                }
-            });
-
-            if (!IsAlreadyIncluded) {
-                var cmbItem = $('#cmbItem');
-                cmbItem.append(
-                    $('<option></option>').val(itemID).html(itemName)
-                );
-                $(this).closest("tr").remove();
-            }
-            CalculateItemCount();
-            CalculateGrandTotal();
-        });
-    }
 
     remove();
 
@@ -218,7 +218,7 @@ $(document).ready(function () {
     });
 
 
-    var row_id = 1;
+
 
     function AddToGrid(IsMouseClick = false) {
 
@@ -226,14 +226,14 @@ $(document).ready(function () {
             toastr["error"]("Please select customer !");
             return;
         }
-        
+
         else {
             if ($("#txtQty").val() > 0) {
 
                 if ($('#txtStockQty').val() == 0) {
                     if (IsMouseClick) {
                         $('#txtQty').val(null);
-                        toastr["error"]("You can't dispatch this. Because this item stock quantity is zero!");
+                        toastr["error"]("You can't issue this. Because this item stock quantity is zero!");
                     }
                 } else if (parseFloat($('#txtQty').val()) > parseFloat($('#txtStockQty').val())) {
                     if (IsMouseClick) {
@@ -248,39 +248,44 @@ $(document).ready(function () {
                         var unitPrice = $("input[name=txtUnitPrice]").val();
                         var qty = $("input[name=txtQty]").val();
                         var Rv = $("input[name=txtRv]").val();
+                        var discountPercentage = $("input[name=txtDiscountPercentage]").val();
                         var total = unitPrice * qty;
+                        var withOutDiscount = $("input[name=txtWithouDiscount]").val();
+                        var TotalPriceDiscounted =  $("input[name=txtTotalPrice]").val();
 
-                        $(".first-tr").after('<tr>' +
-                            '<td hidden>' +
-                            '<input type="text" class="form-control itemID disable-typing" name="itemID[]" id="itemID_' + row_id + '" value="' + itemID + '" readonly>' +
-                            '</td>' +
-                            '<td>' +
-                            '<input type="text" class="form-control itemName disable-typing" name="itemName[]" id="itemName_' + row_id + '" value="' + item + '" readonly>' +
-                            '</td>' +
-                            '<td>' +
-                            '<input type="text" class="form-control disable-typing" style="text-align:right;" name="unitPrice[]" id="unitPrice_' + row_id + '" value="' + parseFloat(unitPrice).toFixed(2) + '" readonly>' +
-                            '</td>' +
-                            '<td>' +
-                            '   <input type="text" class="form-control disable-typing" style="text-align:center;" name="stockQty[]" id="stockQty_' + row_id + '"  value="' + stockQty + '" readonly>' +
-                            '</td>' +
-                            '<td>' +
-                            '   <input type="text" class="form-control disable-typing" style="text-align:center;" name="unit[]" id="unit_' + row_id + '"  value="' + measureUnit + '" readonly>' +
-                            '</td>' +
-                            '<td>' +
-                            '<input type="text" class="form-control disable-typing" style="text-align:right;" name="itemQty[]" id="itemQty_' + row_id + '"  value="' + qty + '" readonly>' +
-                            '</td>' +
-                            '<td>' +
-                            '<input type="text" class="form-control total disable-typing" style="text-align:right;" name="totalPrice[]" id="totalPrice_' + row_id + '"  value="' + parseFloat(total).toFixed(2) + '" readonly>' +
-                            '</td>' +
-                            '<td hidden>' +
-                            '<input type="text" style="cursor: pointer;" class="form-control Rv disable-typing" name="Rv[]" id="Rv_' + row_id + '" value="' + Rv + '" readonly>' +
-                            '</td>' +
-                            '<td class="static">' +
-                            '<span class="button red center-items"><i class="fas fa-times"></i></span>' +
-                            '</td>' +
-                            '</tr>');
+                        firstInFirstOut(itemID, item, measureUnit, stockQty, unitPrice, qty, discountPercentage, withOutDiscount, total,TotalPriceDiscounted);
 
-                        row_id++;
+                        // $(".first-tr").after('<tr>' +
+                        //     '<td hidden>' +
+                        //     '<input type="text" class="form-control itemID disable-typing" name="itemID[]" id="itemID_' + row_id + '" value="' + itemID + '" readonly>' +
+                        //     '</td>' +
+                        //     '<td>' +
+                        //     '<input type="text" class="form-control itemName disable-typing" name="itemName[]" id="itemName_' + row_id + '" value="' + item + '" readonly>' +
+                        //     '</td>' +
+                        //     '<td>' +
+                        //     '<input type="text" class="form-control disable-typing" style="text-align:right;" name="unitPrice[]" id="unitPrice_' + row_id + '" value="' + parseFloat(unitPrice).toFixed(2) + '" readonly>' +
+                        //     '</td>' +
+                        //     '<td>' +
+                        //     '   <input type="text" class="form-control disable-typing" style="text-align:center;" name="stockQty[]" id="stockQty_' + row_id + '"  value="' + stockQty + '" readonly>' +
+                        //     '</td>' +
+                        //     '<td>' +
+                        //     '   <input type="text" class="form-control disable-typing" style="text-align:center;" name="unit[]" id="unit_' + row_id + '"  value="' + measureUnit + '" readonly>' +
+                        //     '</td>' +
+                        //     '<td>' +
+                        //     '<input type="text" class="form-control disable-typing" style="text-align:right;" name="itemQty[]" id="itemQty_' + row_id + '"  value="' + qty + '" readonly>' +
+                        //     '</td>' +
+                        //     '<td>' +
+                        //     '<input type="text" class="form-control total disable-typing" style="text-align:right;" name="totalPrice[]" id="totalPrice_' + row_id + '"  value="' + parseFloat(total).toFixed(2) + '" readonly>' +
+                        //     '</td>' +
+                        //     '<td hidden>' +
+                        //     '<input type="text" style="cursor: pointer;" class="form-control Rv disable-typing" name="Rv[]" id="Rv_' + row_id + '" value="' + Rv + '" readonly>' +
+                        //     '</td>' +
+                        //     '<td class="static">' +
+                        //     '<span class="button red center-items"><i class="fas fa-times"></i></span>' +
+                        //     '</td>' +
+                        //     '</tr>');
+
+                        // row_id++;
                         remove();
                         $("#cmbItem :selected").remove();
 
@@ -301,31 +306,189 @@ $(document).ready(function () {
         }
     }
 
+    function remove() {
+        $(".red").click(function () {
 
-    function CalculateGrandTotal() {
-        if ($('#itemTable tr').length > 2) { // Because table header and item add row in here
-            var discount = $("#txtDiscount").val();
-            var total = 0;
-            $('#itemTable tbody tr').each(function () {
-                var value = parseFloat($(this).closest("tr").find('.total').val());
-                if (!isNaN(value)) {
-                    total += value;
+            alert("yesssssssssssss");
+
+            var itemID = $(this).closest("tr").find('.itemID').val();
+            var itemName = $(this).closest("tr").find('.itemName').val();
+
+            var IsAlreadyIncluded = false;
+
+            $("#cmbItem option").each(function () {
+                if (itemID == $(this).val()) {
+                    IsAlreadyIncluded = true;
+                    return false;
                 }
             });
 
-            discount == "" ? discount = 0 : discount;
-
-            $("#subTotal").val(currencyFormat(total));
-            $("#grandTotal").val(currencyFormat(total - discount));
-
-        } else {
-            debugger;
-            $("#subTotal").val("0.00");
-            $("#txtDiscount").val("0.00");
-            $("#grandTotal").val("0.00");
-        }
+            if (!IsAlreadyIncluded) {
+                var cmbItem = $('#cmbItem');
+                cmbItem.append(
+                    $('<option></option>').val(itemID).html(itemName)
+                );
+                $(this).closest("tr").remove();
+            }
+            CalculateItemCount();
+            CalculateGrandTotal();
+        });
     }
+
+
+    function firstInFirstOut(itemID, item, measureUnit, stockQty, unitPrice, qty, discountPercentage, withOutDiscount, total,TotalPriceDiscounted) {
+        debugger;
+        var model = new Item();
+        model.intItemID = itemID;
+
+
+
+        ajaxCall('Item/getfirstInFirstOut', model, function (response) {
+
+            // $("#itemCount").text("Item Count : " + response.length);
+
+            var itemQty = qty;
+
+            for (let index = 0; index < response.length; index++) {
+                debugger;
+                var htmlElement = '';
+                if (itemQty > 0) {
+                    if (parseFloat(response[index].decAvailableQty) >= itemQty && itemQty > 0) {
+                        $(".first-tr").after('<tr>' +
+                            '<td hidden>' +
+                            '<input type="text" class="form-control itemID disable-typing" name="itemID[]" id="itemID_' + row_id + '" value="' + itemID + '" readonly>' +
+                            '</td>' +
+                            '<td hidden>' +
+                            '<input type="text" class="form-control disable-typing" name="grnDetailID[]" id="grnDetailID_' + row_id + '" value="' + response[index].intGrnDetailID + '" readonly>' +
+                            '</td>' +
+                            '<td>' +
+                            '<input type="text" class="form-control itemName disable-typing" name="itemName[]" id="itemName_' + row_id + '" value="' + response[index].intGrnDetailID + "**" + item + '" readonly>' +
+                            '</td>' +
+                            '<td>' +
+                            '<input type="text" class="form-control unitPrice disable-typing" style="text-align:right;" name="unitPrice[]" id="unitPrice_' + row_id + '" value="' + parseFloat(unitPrice).toFixed(2) + '" readonly>' +
+                            '</td>' +
+                            '<td>' +
+                            '   <input type="text" class="form-control disable-typing" style="text-align:center;" name="stockQty[]" id="stockQty_' + row_id + '"  value="' + stockQty + '" readonly>' +
+                            '</td>' +
+                            '<td>' +
+                            '   <input type="text" class="form-control disable-typing" style="text-align:center;" name="unit[]" id="unit_' + row_id + '"  value="' + measureUnit + '" readonly>' +
+                            '</td>' +
+                            '<td>' +
+                            '<input type="text" class="form-control  qty disable-typing" style="text-align:right;" name="itemQty[]" id="itemQty_' + row_id + '"  value="' + itemQty + '" readonly>' +
+                            '</td>' +
+                            '<td>' +
+                            '<input type="text" class="form-control disable-typing" style="text-align:right;" name="discountPercentage[]" id="discountPercentage_' + row_id + '"  value="' + discountPercentage + '" readonly>' +
+                            '</td>' +
+                            '<td>' +
+                            '<input type="text" style="cursor: pointer;" class="form-control withoutDiscount disable-typing" name="withoutDiscount[]" id="withoutDiscount_' + row_id + '" value="' + withOutDiscount + '" readonly>' +
+                            '</td>' +
+                            '<td>' +
+                            '<input type="text" class="form-control total disable-typing" style="text-align:right;" name="totalPrice[]" id="totalPrice_' + row_id + '"  value="' + parseFloat(TotalPriceDiscounted).toFixed(2) + '" readonly>' +
+                            '</td>' +
+                            '<td hidden>' +
+                            '<input type="text" style="cursor: pointer;" class="form-control Rv disable-typing" name="Rv[]" id="Rv_' + row_id + '" value="' + response[index].rv + '" readonly>' +
+                            '</td>' +
+                            '<td class="static">' +
+                            '<span class="button red center-items"><i class="fas fa-times"></i></span>' +
+                            '</td>' +
+                            '</tr>');
+
+                        row_id++;
+                        itemQty = 0;
+                    } else {
+
+
+                        $(".first-tr").after('<tr>' +
+                            '<td hidden>' +
+                            '<input type="text" class="form-control itemID disable-typing" name="itemID[]" id="itemID_' + row_id + '" value="' + itemID + '" readonly>' +
+                            '</td>' +
+                            '<td hidden>' +
+                            '<input type="text" class="form-control disable-typing" name="grnDetailID[]" id="grnDetailID_' + row_id + '" value="' + response[index].intGrnDetailID + '" readonly>' +
+                            '</td>' +
+                            '<td>' +
+                            '<input type="text" class="form-control itemName disable-typing" name="itemName[]" id="itemName_' + row_id + '" value="' + response[index].intGrnDetailID + "-" + item + '" readonly>' +
+                            '</td>' +
+                            '<td>' +
+                            '<input type="text" class="form-control unitPrice disable-typing" style="text-align:right;" name="unitPrice[]" id="unitPrice_' + row_id + '" value="' + parseFloat(unitPrice).toFixed(2) + '" readonly>' +
+                            '</td>' +
+                            '<td>' +
+                            '   <input type="text" class="form-control disable-typing" style="text-align:center;" name="stockQty[]" id="stockQty_' + row_id + '"  value="' + stockQty + '" readonly>' +
+                            '</td>' +
+                            '<td>' +
+                            '   <input type="text" class="form-control disable-typing" style="text-align:center;" name="unit[]" id="unit_' + row_id + '"  value="' + measureUnit + '" readonly>' +
+                            '</td>' +
+                            '<td>' +
+                            '<input type="text" class="form-control qty disable-typing" style="text-align:right;" name="itemQty[]" id="itemQty_' + row_id + '"  value="' + parseFloat(response[index].decAvailableQty) + '" readonly>' +
+                            '</td>' +
+                            '<td>' +
+                            '<input type="text" class="form-control disable-typing" style="text-align:right;" name="discountPercentage[]" id="discountPercentage_' + row_id + '"  value="' + discountPercentage + '" readonly>' +
+                            '</td>' +
+                            '<td>' +
+                            '<input type="text" style="cursor: pointer;" class="form-control withoutDiscount disable-typing" name="withoutDiscount[]" id="withoutDiscount_' + row_id + '" value="' + withOutDiscount + '" readonly>' +
+                            '</td>' +
+                            '<td>' +
+                            '<input type="text" class="form-control total disable-typing" style="text-align:right;" name="totalPrice[]" id="totalPrice_' + row_id + '"  value="' + parseFloat(TotalPriceDiscounted).toFixed(2) + '" readonly>' +
+                            '</td>' +
+                            '<td hidden>' +
+                            '<input type="text" style="cursor: pointer;" class="form-control Rv disable-typing" name="Rv[]" id="Rv_' + row_id + '" value="' + response[index].rv + '" readonly>' +
+                            '</td>' +
+                            '<td class="static">' +
+                            '<span class="button red center-items" onclick="removeItem(202)"><i class="fas fa-times"></i></span>' +
+                            '</td>' +
+                            '</tr>');
+
+                        row_id++;
+                        itemQty = itemQty - parseFloat(response[index].decAvailableQty);
+
+                    }
+
+                }
+
+            }
+            CalculateItemCount();
+            CalculateGrandTotal();
+
+        });
+
+
+
+    }
+
 });
+
+function removeItem(itemID) {
+    debugger;
+    var itemID = itemID;
+    var itemName = "abccc";
+
+    var IsAlreadyIncluded = false;
+
+    $("#cmbItem option").each(function () {
+        if (itemID == $(this).val()) {
+            IsAlreadyIncluded = true;
+            return false;
+        }
+    });
+
+    if (!IsAlreadyIncluded) {
+        var cmbItem = $('#cmbItem');
+        cmbItem.append(
+            $('<option></option>').val(itemID).html(itemName)
+        );
+
+        $(".first-tr").after(each(function () {
+            if (itemID == $(this).closest("tr").find('.itemID').val()) {
+                $(this).closest("tr").remove();
+            }
+        }));
+
+
+    }
+    CalculateItemCount();
+    CalculateGrandTotal();
+}
+
+
 
 function getDetailByCustomerID() {
     var customerID = $("#cmbcustomer option:selected").val();
@@ -339,6 +502,7 @@ function getDetailByCustomerID() {
                 $("#credit_limit").val(response.decCreditLimit);
                 $("#available_limit").val(response.decAvailableCredit);
                 $("#advance_payment").val(response.decAdvanceAmount);
+
 
                 AdvanceAmount = parseFloat(response.decAdvanceAmount)
                 CreditBuyAmount = parseFloat(response.decCreditBuyAmount)
@@ -359,6 +523,45 @@ function getDetailByCustomerID() {
     }
 }
 
+function CalculateGrandTotal() {
+    if ($('#itemTable tr').length > 2) { // Because table header and item add row in here
+        var discount = $("#txtDiscount").val();
+        var unitPrice = $("#txtUnitPrice").val();
+        var qty = $("#txtQty").val();
+        var discountPercentage = $("#txtDiscountPercentage").val();
+        var total = 0;
+        var loopwithouDiscountSum = 0;
+        $('#itemTable tbody tr').each(function () {
+            var value = parseFloat($(this).closest("tr").find('.total').val());
+            var withoutDiscount = parseFloat($(this).closest("tr").find('.withoutDiscount').val());
+            if (!isNaN(value)) {
+                total += value;
+            }
+            if (!isNaN(withoutDiscount)) {
+                loopwithouDiscountSum += withoutDiscount;
+            }
+        });
+
+        alert(loopwithouDiscountSum);
+
+        discount == "" ? discount = 0 : discount;
+
+        var totalDiscount =loopwithouDiscountSum - total;
+
+        var DiscoutedPrice = ((discountPercentage / 100) * (unitPrice * qty));
+
+        $("#subTotal").val(currencyFormat(total));
+        $("#grandTotal").val(currencyFormat(DiscoutedPrice));
+        $("#txtDiscount").val(currencyFormat(totalDiscount));
+
+    } else {
+        debugger;
+        $("#subTotal").val("0.00");
+        $("#txtDiscount").val("0.00");
+        $("#grandTotal").val("0.00");
+    }
+}
+
 
 function getItemDetailsByCustomerID() {
 
@@ -376,6 +579,7 @@ function getItemDetailsByCustomerID() {
                 $("#txtStockQty").val(response.decStockInHand);
                 $("#txtMeasureUnit").val(response.vcMeasureUnit);
                 $("#txtRv").val(response.rv);
+                $("#txtDiscountPercentage").val(0);
 
                 // if (response.decStockInHand == 'N/A') {
                 //     toastr["error"]("Please Check Stock");
@@ -461,7 +665,7 @@ function chkCreditLimit() {
 function getcmbItemData() {
     $.ajax({
         async: false,
-        url: 'getOnlyFinishItemData',
+        url: 'getStockAvailableItemData',
         type: 'post',
         dataType: 'json',
         success: function (response) {
@@ -526,7 +730,7 @@ $('#btnSubmit').click(function () {
 
         arcadiaConfirmAlert("You want to be able to create this !", function (button) {
             var form = $("#createIssue");
-     
+
             $.ajax({
                 async: false,
                 type: form.attr('method'),
@@ -542,7 +746,7 @@ $('#btnSubmit').click(function () {
                         document.body.innerHTML = response.issueNote;
                         window.print();
                         location.reload();
-            
+
                         // $('#printpage', window.parent.document).hide();
                     } else {
                         toastr["error"](response.messages);
