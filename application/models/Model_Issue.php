@@ -59,6 +59,7 @@ class Model_issue extends CI_Model
         $data = array(
             'vcIssueNo' => $IssueNo,
             'intCustomerID' => $this->input->post('cmbcustomer'),
+            'intSalesRepID' => $this->input->post('cmbSalesRep'),
             'dtIssueDate' => date('Y-m-d', strtotime(str_replace('-', '/', $this->input->post('issuedDate')))),
             'intUserID' => $this->session->userdata('user_id'),
             'intPaymentTypeID' =>  $paymentType,
@@ -133,17 +134,17 @@ class Model_issue extends CI_Model
             $insertDetails = $this->db->insert('IssueDetail', $items);
             $IssueDetailID = $this->db->insert_id();
 
-            $Logdata = array(
-                'intItemID' => $itemData['intItemID'],
-                'intTransactionLogTypeID' => 3, //Item Issue
-                'vcPerformColumn' => 'intIssueDetailID',
-                'intPerformID' => $IssueDetailID,
-                'decPreviousQty' => $itemData['decStockInHand'],
-                'decCurrentQty' => $itemData['decStockInHand'] - $decIssuQty,
-                'intLoggedBy' => $this->session->userdata('user_id'),
-            );
+            // $Logdata = array(
+            //     'intItemID' => $itemData['intItemID'],
+            //     'intTransactionLogTypeID' => 3, //Item Issue
+            //     'vcPerformColumn' => 'intIssueDetailID',
+            //     'intPerformID' => $IssueDetailID,
+            //     'decPreviousQty' => $itemData['decStockInHand'],
+            //     'decCurrentQty' => $itemData['decStockInHand'] - $decIssuQty,
+            //     'intLoggedBy' => $this->session->userdata('user_id'),
+            // );
 
-            $insertLog = $this->db->insert('itemtransactionlog', $Logdata);
+            // $insertLog = $this->db->insert('itemtransactionlog', $Logdata);
 
             $sql = "UPDATE Item AS I
             SET I.decStockInHand = (I.decStockInHand - " . $decIssuQty . ")
