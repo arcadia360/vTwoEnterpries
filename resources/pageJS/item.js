@@ -48,7 +48,7 @@ $(document).ready(function () {
     });
 
     manageTable = $('#manageTable').DataTable({
-        'ajax': 'fetchItemData',
+        'ajax': 'getStockAvailableItemData',
         'order': [],
         "bDestroy": true,
         "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
