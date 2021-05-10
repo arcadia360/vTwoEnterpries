@@ -107,10 +107,19 @@
                             </select>
                         </div>
                         <div class="form-group col-md-3">
+                            <label for="customer">Sales Rep</label>
+                            <select class="form-control select2" style="width: 100%;" id="cmbSalesRep" name="cmbSalesRep">
+                                <option value="0" disabled selected hidden>Select Sales Rep</option>
+                                <?php foreach ($sales_rep_data as $k => $v) { ?>
+                                    <option value="<?= $v['intSalesRepID'] ?>"><?= $v['vcSalesRepName'] ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-2">
                             <label for="credit_limit">Credit Limit</label>
                             <input type="text" class="form-control" id="credit_limit" name="credit_limit" autocomplete="off" style="cursor: not-allowed; color:#000000;" disabled />
                         </div>
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-2">
                             <label for="credit_limit">Credit Balace</label>
                             <input type="text" class="form-control" id="available_limit" name="available_limit" autocomplete="off" style="cursor: not-allowed; color:#000000;" disabled />
                         </div>
@@ -119,7 +128,7 @@
                             <label class="form-check-label" for="IsAdvancePayment">Advance Payment</label>
                             <input type="text" class="form-control" id="advance_payment" name="advance_payment" autocomplete="off" style="cursor: not-allowed; color:#000000;" disabled />
                         </div> -->
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-2">
                         <input type="checkbox" class="form-check-input" id="IsAdvancePayment" name="IsAdvancePayment"  style="margin-left: 0; padding-right: 1em; position:relative; float:left;">
                             <label style="margin-left: 1em;" for="advance_payment">Advance Payment</label>
                             <input type="text" class="form-control" id="advance_payment" name="advance_payment" autocomplete="off" style="cursor: not-allowed; color:#000000;" disabled />
@@ -159,6 +168,8 @@
                                 <th style="width: 200px; text-align:center;">Stock Qty</th>
                                 <th style="width: 100px; text-align:center;">Unit</th>
                                 <th style="width: 100px; text-align:center;">Qty</th>
+                                <th style="width: 100px; text-align:center;">Discount (%)</th>
+                                <th style="width: 100px; text-align:center;">withotDiscount</th>
                                 <th style="width: 200px; text-align:center;">Total Price</th>
                                 <th hidden>rv</th>
                                 <th style="width: 100px; text-align: center;">Action</th>
@@ -189,6 +200,8 @@
                                 <td class="static"><input type="text" class="form-control only-decimal add-item" name="txtStockQty" id="txtStockQty" style="text-align:right;" disabled></td>
                                 <td class="static"><input type="text" class="form-control add-item" name="txtMeasureUnit" id="txtMeasureUnit" style="text-align:center;" disabled></td>
                                 <td class="static"><input type="text" class="form-control only-decimal add-item" name="txtQty" id="txtQty" style="text-align:right;"></td>
+                                <td class="static"><input type="text" class="form-control only-decimal add-item" name="txtDiscountPercentage" id="txtDiscountPercentage" style="text-align:right;"></td>
+                                <td class="static"><input type="text" class="form-control only-decimal add-item" name="txtWithouDiscount" id="txtWithouDiscount" style="text-align:right;"></td>
                                 <td class="static"><input type="text" class="form-control only-decimal" name="txtTotalPrice" id="txtTotalPrice" placeholder="0.00" style="text-align:right;" disabled></td>
                                 <td class="static" hidden><input type="text" class="form-control" name="txtRv" id="txtRv"></td>
                                 <td class="static"><button type="button" class="button green center-items" id="btnAddToGrid"><i class="fas fa-plus"></i></button></td>
