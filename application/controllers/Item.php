@@ -90,7 +90,14 @@ class Item extends Admin_Controller
 		echo json_encode($data);
 	}
 
-	public function fetchItemData()
+	public function getfirstInFirstOut()
+	{
+		$intItemID = $this->input->post('intItemID');
+		$data = $this->model_item->getfirstInFirstOut($intItemID);
+		echo json_encode($data);
+	}
+
+	public function getStockAvailableItemData()
 	{
 
 		if (!$this->isAdmin) {
@@ -101,7 +108,7 @@ class Item extends Admin_Controller
 
 		$result = array('data' => array());
 
-		$data = $this->model_item->getItemData();
+		$data = $this->model_item->getStockAvailableItemData();
 		foreach ($data as $key => $value) {
 
 			// button
