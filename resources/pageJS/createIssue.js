@@ -147,7 +147,7 @@ $(document).ready(function () {
         // getMeasureUnitByItemID();
         var unitPrice = $("#txtUnitPrice").val();
         var qty = $("#txtQty").val()
-
+        var total = 0;
 
         if (unitPrice != "" && qty != "") {
             var total = unitPrice * qty;
@@ -250,7 +250,7 @@ $(document).ready(function () {
                         var Rv = $("input[name=txtRv]").val();
                         var discountPercentage = $("input[name=txtDiscountPercentage]").val();
                         var total = unitPrice * qty;
-                        var withOutDiscount = $("input[name=txtWithouDiscount]").val();
+                        var withOutDiscount = total;
                         var TotalPriceDiscounted =  $("input[name=txtTotalPrice]").val();
 
                         firstInFirstOut(itemID, item, measureUnit, stockQty, unitPrice, qty, discountPercentage, withOutDiscount, total,TotalPriceDiscounted);
@@ -289,7 +289,7 @@ $(document).ready(function () {
                         remove();
                         $("#cmbItem :selected").remove();
 
-                        $("input[name=cmbItem], input[name=txtMeasureUnit],input[name=txtUnitPrice],input[name=txtQty],input[name=txtStockQty],input[name=txtTotalPrice]").val("");
+                        $("input[name=cmbItem], input[name=txtMeasureUnit],input[name=txtUnitPrice],input[name=txtQty],input[name=txtStockQty],input[name=txtTotalPrice],input[name=txtDiscountPercentage]").val("");
                         // $("input[name=txtTotalPrice]").val("0.00");
                         CalculateItemCount();
                         CalculateGrandTotal();
@@ -528,31 +528,29 @@ function CalculateGrandTotal() {
         var discount = $("#txtDiscount").val();
         var unitPrice = $("#txtUnitPrice").val();
         var qty = $("#txtQty").val();
-        var discountPercentage = $("#txtDiscountPercentage").val();
+        // var discountPercentage = $("#txtDiscountPercentage").val();
         var total = 0;
-        var loopwithouDiscountSum = 0;
+        // var loopwithouDiscountSum = 0;
         $('#itemTable tbody tr').each(function () {
             var value = parseFloat($(this).closest("tr").find('.total').val());
-            var withoutDiscount = parseFloat($(this).closest("tr").find('.withoutDiscount').val());
+            // var withoutDiscount = parseFloat($(this).closest("tr").find('.withoutDiscount').val());
             if (!isNaN(value)) {
                 total += value;
             }
-            if (!isNaN(withoutDiscount)) {
-                loopwithouDiscountSum += withoutDiscount;
-            }
+            // if (!isNaN(withoutDiscount)) {
+            //     loopwithouDiscountSum += withoutDiscount;
+            // }
         });
 
-        alert(loopwithouDiscountSum);
 
         discount == "" ? discount = 0 : discount;
 
-        var totalDiscount =loopwithouDiscountSum - total;
+        // var totalDiscount =loopwithouDiscountSum - total;
 
-        var DiscoutedPrice = ((discountPercentage / 100) * (unitPrice * qty));
+        // var DiscoutedPrice = ((discountPercentage / 100) * (unitPrice * qty));
 
         $("#subTotal").val(currencyFormat(total));
-        $("#grandTotal").val(currencyFormat(DiscoutedPrice));
-        $("#txtDiscount").val(currencyFormat(totalDiscount));
+        $("#grandTotal").val(currencyFormat(discount));
 
     } else {
         debugger;
@@ -580,6 +578,8 @@ function getItemDetailsByCustomerID() {
                 $("#txtMeasureUnit").val(response.vcMeasureUnit);
                 $("#txtRv").val(response.rv);
                 $("#txtDiscountPercentage").val(0);
+                $("#txtWithouDiscount").val(0);
+
 
                 // if (response.decStockInHand == 'N/A') {
                 //     toastr["error"]("Please Check Stock");
@@ -696,6 +696,11 @@ $('#btnSubmit').click(function () {
     if ($("#cmbcustomer option:selected").val() == 0) {
         toastr["error"]("Please select customer !");
         $("#cmbcustomer").focus();
+        return;
+    }
+     if ($("#cmbSalesRep option:selected").val() == 0) {
+        toastr["error"]("Please select Sales Rep !");
+        $("#cmbSalesRep").focus();
         return;
     }
     if ($('#itemTable tr').length == 2) {
