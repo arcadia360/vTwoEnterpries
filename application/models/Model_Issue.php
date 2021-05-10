@@ -126,10 +126,12 @@ class Model_issue extends CI_Model
             }
             $items = array(
                 'intIssueHeaderID' => $IssueHeaderID,
+                'intGRNDetailID' =>$this->input->post('grnDetailID')[$i],
                 'intItemID' => $this->input->post('itemID')[$i],
                 'decIssueQty' => $this->input->post('itemQty')[$i],
                 'decUnitPrice' => $UnitPrice,
-                'decTotalPrice' => ($this->input->post('itemQty')[$i] * $UnitPrice)
+                'decDiscountPercentage' => $this->input->post('discountPercentage')[$i],
+                'decDiscountedPrice' => $this->input->post('totalPrice')[$i]
             );
             $insertDetails = $this->db->insert('IssueDetail', $items);
             $IssueDetailID = $this->db->insert_id();
@@ -146,20 +148,20 @@ class Model_issue extends CI_Model
 
             // $insertLog = $this->db->insert('itemtransactionlog', $Logdata);
 
-            $sql = "UPDATE Item AS I
-            SET I.decStockInHand = (I.decStockInHand - " . $decIssuQty . ")
-                WHERE I.intItemID = ?";
+            $sql = "UPDATE grndetail AS GD
+                    SET GD.decAvailableQty = (GD.decAvailableQty - " . $decIssuQty . ")
+                    WHERE GD.intGRNDetailID = ?";
 
-            $this->db->query($sql, array($itemID));
+            $this->db->query($sql, array($this->input->post('grnDetailID')[$i]));
         }
 
 
-        if ($anotherUserAccess == true) {
-            $response['success'] = false;
-            $response['messages'] = 'Another user tries to edit this Item details, please refresh the page and try again !';
-            $this->db->trans_rollback();
-            // return $response;
-        } else if ($exceedStockQty == true) {
+        // if ($anotherUserAccess == true) {
+        //     $response['success'] = false;
+        //     $response['messages'] = 'Another user tries to edit this Item details, please refresh the page and try again !';
+        //     $this->db->trans_rollback();
+        // } else 
+        if ($exceedStockQty == true) {
             $response['success'] = false;
             $response['messages'] = 'Stock quantity over exceeds error, please refresh the page and try again !';
             $this->db->trans_rollback();
@@ -287,7 +289,7 @@ class Model_issue extends CI_Model
             ID.decUnitPrice,
             ID.decIssueQty,
             MU.vcMeasureUnit,
-            ID.decTotalPrice
+            SUM(ID.decDiscountedPrice) AS  decTotalPrice
             FROM IssueDetail AS ID
             INNER JOIN Issueheader AS IH ON ID.intIssueHeaderID = IH.intIssueHeaderID
             INNER JOIN Item AS I ON ID.intItemID = I.intItemID
