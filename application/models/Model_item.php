@@ -17,7 +17,7 @@ class Model_item extends CI_Model
                         mu.vcMeasureUnit,
                         m.vcMainCategory, 
                         s.vcSubCategory,
-                        IFNULL(it.decStockInHand,'N/A') AS decStockInHand,
+                        COALESCE(SUM(gd.decAvailableQty),0) AS decStockInHand,
                         it.decReOrderLevel,
                         it.decUnitPrice,
                         REPLACE(it.rv,' ','-') as rv 
@@ -25,7 +25,10 @@ class Model_item extends CI_Model
                     inner join measureunit as mu on mu.intMeasureUnitID = it.intMeasureUnitID
                     inner join subcategory as s on it.intSubCategoryID = s.intSubCategoryID
                     inner join maincategory m on s.intMainCategoryID = m.intMainCategoryID
-                    WHERE it.IsActive = 1 AND it.intItemID = ? ";
+                    left outer join grndetail as gd on it.intItemID = gd.intItemID
+                    WHERE it.IsActive = 1 AND it.intItemID = ? 
+                    GROUP BY it.intItemID";
+
             $query = $this->db->query($sql, array($itemId));
             return $query->row_array();
         }
@@ -37,7 +40,7 @@ class Model_item extends CI_Model
                     mu.vcMeasureUnit,
                     m.vcMainCategory, 
                     s.vcSubCategory, 
-                    IFNULL(it.decStockInHand,'N/A') AS decStockInHand,
+                    COALESCE(SUM(gd.decAvailableQty),0) AS decStockInHand,
                     it.decReOrderLevel,
                     IFNULL(it.decUnitPrice,'N/A') AS decUnitPrice,
                     REPLACE(it.rv,' ','-') as rv 
@@ -45,11 +48,40 @@ class Model_item extends CI_Model
                 inner join measureunit as mu on mu.intMeasureUnitID = it.intMeasureUnitID
                 inner join subcategory as s on it.intSubCategoryID = s.intSubCategoryID
                 inner join maincategory m on s.intMainCategoryID = m.intMainCategoryID
+                left outer join grndetail as gd on it.intItemID = gd.intItemID
                 where  it.IsActive = 1
+                GROUP BY it.intItemID
                 order by it.vcItemName asc";
         $query = $this->db->query($sql, array(1));
         return $query->result_array();
     }
+
+    public function getStockAvailableItemData()
+    {
+        $sql = "SELECT 
+        it.intItemID,
+        it.vcItemName,
+        mu.intMeasureUnitID,
+        mu.vcMeasureUnit,
+        m.vcMainCategory, 
+        s.vcSubCategory, 
+        COALESCE(SUM(gd.decAvailableQty),0) AS decStockInHand,
+        it.decReOrderLevel,
+        IFNULL(it.decUnitPrice,'N/A') AS decUnitPrice,
+        REPLACE(it.rv,' ','-') as rv 
+    FROM item as it
+    inner join measureunit as mu on mu.intMeasureUnitID = it.intMeasureUnitID
+    inner join subcategory as s on it.intSubCategoryID = s.intSubCategoryID
+    inner join maincategory m on s.intMainCategoryID = m.intMainCategoryID
+    left outer join grndetail as gd on it.intItemID = gd.intItemID
+    left outer join grnheader as gh on gd.intGRNHeaderID = gh.intGRNHeaderID and  gh.intApprovedBy is not null
+    where  it.IsActive = 1
+    GROUP BY it.intItemID
+    order by it.vcItemName asc";
+        $query = $this->db->query($sql, array(1));
+        return $query->result_array();
+    }
+
 
     // public function getItemDataByItemTypeID($itemTypeId)
     // {
@@ -133,16 +165,26 @@ class Model_item extends CI_Model
                     it.vcItemName,
                     mu.intMeasureUnitID,
                     mu.vcMeasureUnit,
-                    IFNULL(it.decStockInHand,'N/A') AS decStockInHand,
+                    COALESCE(SUM(gd.decAvailableQty),0) AS decStockInHand,
                     it.decReOrderLevel,
                     IFNULL(cc.decUnitPrice,it.decUnitPrice) AS decUnitPrice,
                     REPLACE(it.rv,' ','-') as rv 
                 FROM item as it
                 inner join measureunit as mu on mu.intMeasureUnitID = it.intMeasureUnitID
-                left outer join customerpriceconfig as cc on it.intItemID = cc.intItemID and cc.intCustomerID = ?
-                where it.intItemID = ?";
+                left outer join grndetail as gd on it.intItemID = gd.intItemID
+                left outer join grnheader as gh on gd.intGRNHeaderID = gh.intGRNHeaderID
+                left outer join customerpriceconfig as cc on it.intItemID = cc.intItemID and cc.intCustomerID = ? 
+                where it.intItemID = ? and gh.intApprovedBy is not null
+                group by it.intItemID";
         $query = $this->db->query($sql, array($customerID, $ItemID));
         return $query->row_array();
+    }
+
+    public function getfirstInFirstOut($intItemID)
+    {
+        $sql = "SELECT intItemID, vcItemName, decAvailableQty, decUnitPrice, dtCreatedDate, intGrnDetailID, rv FROM stock_balances_view WHERE intItemID = ?";
+        $query = $this->db->query($sql, array($intItemID));
+        return $query->result_array();
     }
 
     // public function getAllItemData()
@@ -209,7 +251,7 @@ class Model_item extends CI_Model
     public function insertItemHitory($intEnteredBy, $id)
     {
         $this->db->trans_start();
-        $sql = "SELECT intItemID, vcItemName, intMeasureUnitID, dtCreatedDate, intUserID, decStockInHand, IsActive, decReOrderLevel, intSubCategoryID, decUnitPrice,rv as dtLastModifiedDate FROM item WHERE intitemID = ? ";
+        $sql = "SELECT intItemID, vcItemName, intMeasureUnitID, dtCreatedDate, intUserID, IsActive, decReOrderLevel, intSubCategoryID, decUnitPrice, dtLastModifiedDate FROM item WHERE intitemID = ? ";
         $query = $this->db->query($sql, array($id));
         if ($query->num_rows()) {
             $this->db->insert('item_his', $query->row_array());
