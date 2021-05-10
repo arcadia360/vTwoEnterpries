@@ -13,6 +13,7 @@ class Issue extends Admin_Controller
     $this->load->model('model_measureunit');
     $this->load->model('model_customer');
     $this->load->model('model_issue');
+    $this->load->model('model_utility');
   }
 
   //-----------------------------------
@@ -27,22 +28,30 @@ class Issue extends Admin_Controller
       }
     }
 
+    $sales_rep_data = $this->model_utility->getfetchSalesRepData();
     $customer_data = $this->model_customer->getCustomerData();
-    // $item_data = $this->model_item->getOnlyFinishItemData();
+    // $item_data = $this->model_item->getItemData();
+    // $item_data = $this->model_item->getStockAvailableItemData();
     $payment_data = $this->model_issue->getPaymentTypes();
     $this->data['payment_data'] = $payment_data;
     $this->data['customer_data'] = $customer_data;
     // $this->data['item_data'] = $item_data;
+    $this->data['sales_rep_data'] = $sales_rep_data;
 
     $this->render_template('Issue/createIssue', 'Create Issue',  $this->data);
   }
 
-  public function getOnlyFinishItemData()
+  public function getItemData()
   {
-    $data = $this->model_item->getOnlyFinishItemData();
+    $data = $this->model_item->getItemData();
     echo json_encode($data);
   }
 
+  public function getStockAvailableItemData()
+  {
+    $data = $this->model_item->getStockAvailableItemData();
+    echo json_encode($data);
+  }
 
   public function SaveIssue()
   {
