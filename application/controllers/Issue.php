@@ -47,11 +47,18 @@ class Issue extends Admin_Controller
     echo json_encode($data);
   }
 
+  public function getStocktItemData()
+  {
+    $data = $this->model_item->getStocktItemData();
+    echo json_encode($data);
+  }
+
   public function getStockAvailableItemData()
   {
     $data = $this->model_item->getStockAvailableItemData();
     echo json_encode($data);
   }
+  
 
   public function SaveIssue()
   {
