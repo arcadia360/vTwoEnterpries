@@ -77,7 +77,7 @@
                         </div>
                         <div class="form-group col-md-6">
                             <label for="supplier">Supplier</label>
-                            <input type="text" class="form-control" id="grn_no" name="grn_no" value="<?= $grn_header_data['vcGRNNo']; ?>" style="cursor: not-allowed; color:#000000;" required disabled>
+                            <input type="text" class="form-control" id="supplier" name="supplier" value="<?= $grn_header_data['vcSupplierName']; ?>" style="cursor: not-allowed; color:#000000;" required disabled>
                         </div>
                     </div>
                     <div class="row">
