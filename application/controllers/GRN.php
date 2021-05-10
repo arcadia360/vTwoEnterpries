@@ -107,7 +107,7 @@ class GRN extends Admin_Controller
         if (isset($grn_header_data)) {
             $grn_detail_data = $this->model_grn->getGRNDetailData($GRNHeaderID);
             $supplier_data = $this->model_supplier->getSupplierData();
-            $item_data = $this->model_item->getOnlyRawItemData();
+            $item_data = $this->model_item->getItemData();
 
             $this->data['supplier_data'] = $supplier_data;
             $this->data['item_data'] = $item_data;
@@ -117,7 +117,7 @@ class GRN extends Admin_Controller
 
             $this->render_template('GRN/viewGRNDetail', 'View GRN', $this->data);
         }else{
-            redirect(base_url() . 'GRN/viewGRNDetail', 'refresh');
+            // redirect(base_url() . 'GRN/viewGRNDetail', 'refresh');
         }
 
        
@@ -235,10 +235,10 @@ class GRN extends Admin_Controller
 
         $grn_detail_data = $this->model_grn->getGRNDetailData($GRNHeaderID);
         $supplier_data = $this->model_supplier->getSupplierData();
-        $item_data = $this->model_item->getOnlyRawItemData();
+        // $item_data = $this->model_item->getOnlyRawItemData();
 
         $this->data['supplier_data'] = $supplier_data;
-        $this->data['item_data'] = $item_data;
+        // $this->data['item_data'] = $item_data;
 
         $this->data['grn_detail_data'] = $grn_detail_data;
         $this->data['grn_header_data'] = $grn_header_data;
@@ -335,10 +335,10 @@ public function ApproveOrRejectGRN($GRNHeaderID){
 
         $grn_detail_data = $this->model_grn->getGRNDetailData($GRNHeaderID);
         // $supplier_data = $this->model_supplier->getSupplierData();
-        $item_data = $this->model_item->getOnlyRawItemData();
+        // $item_data = $this->model_item->getOnlyRawItemData();
 
         // $this->data['supplier_data'] = $supplier_data;
-        $this->data['item_data'] = $item_data;
+        // $this->data['item_data'] = $item_data;
 
         $this->data['grn_detail_data'] = $grn_detail_data;
         $this->data['grn_header_data'] = $grn_header_data;
