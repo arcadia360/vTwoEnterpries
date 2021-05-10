@@ -56,28 +56,54 @@ class Model_item extends CI_Model
         return $query->result_array();
     }
 
+    public function getStocktItemData()
+    {
+                $sql = "SELECT 
+                it.intItemID,
+                it.vcItemName,
+                mu.intMeasureUnitID,
+                mu.vcMeasureUnit,
+                m.vcMainCategory, 
+                s.vcSubCategory, 
+                COALESCE(SUM(gd.decAvailableQty),0) AS decStockInHand,
+                it.decReOrderLevel,
+                IFNULL(it.decUnitPrice,'N/A') AS decUnitPrice,
+                REPLACE(it.rv,' ','-') as rv 
+            FROM item as it
+            inner join measureunit as mu on mu.intMeasureUnitID = it.intMeasureUnitID
+            inner join subcategory as s on it.intSubCategoryID = s.intSubCategoryID
+            inner join maincategory m on s.intMainCategoryID = m.intMainCategoryID
+            left outer join grndetail as gd on it.intItemID = gd.intItemID
+            left outer join grnheader as gh on gd.intGRNHeaderID = gh.intGRNHeaderID and  gh.intApprovedBy is not null
+            where  it.IsActive = 1
+            GROUP BY it.intItemID
+            order by it.vcItemName asc";
+        $query = $this->db->query($sql, array(1));
+        return $query->result_array();
+    }
+
     public function getStockAvailableItemData()
     {
         $sql = "SELECT 
-        it.intItemID,
-        it.vcItemName,
-        mu.intMeasureUnitID,
-        mu.vcMeasureUnit,
-        m.vcMainCategory, 
-        s.vcSubCategory, 
-        COALESCE(SUM(gd.decAvailableQty),0) AS decStockInHand,
-        it.decReOrderLevel,
-        IFNULL(it.decUnitPrice,'N/A') AS decUnitPrice,
-        REPLACE(it.rv,' ','-') as rv 
-    FROM item as it
-    inner join measureunit as mu on mu.intMeasureUnitID = it.intMeasureUnitID
-    inner join subcategory as s on it.intSubCategoryID = s.intSubCategoryID
-    inner join maincategory m on s.intMainCategoryID = m.intMainCategoryID
-    left outer join grndetail as gd on it.intItemID = gd.intItemID
-    left outer join grnheader as gh on gd.intGRNHeaderID = gh.intGRNHeaderID and  gh.intApprovedBy is not null
-    where  it.IsActive = 1
-    GROUP BY it.intItemID
-    order by it.vcItemName asc";
+                it.intItemID,
+                it.vcItemName,
+                mu.intMeasureUnitID,
+                mu.vcMeasureUnit,
+                m.vcMainCategory, 
+                s.vcSubCategory, 
+                COALESCE(SUM(gd.decAvailableQty),0) AS decStockInHand,
+                it.decReOrderLevel,
+                IFNULL(it.decUnitPrice,'N/A') AS decUnitPrice,
+                REPLACE(it.rv,' ','-') as rv 
+            FROM item as it
+            inner join measureunit as mu on mu.intMeasureUnitID = it.intMeasureUnitID
+            inner join subcategory as s on it.intSubCategoryID = s.intSubCategoryID
+            inner join maincategory m on s.intMainCategoryID = m.intMainCategoryID
+            left outer join grndetail as gd on it.intItemID = gd.intItemID
+            left outer join grnheader as gh on gd.intGRNHeaderID = gh.intGRNHeaderID and  gh.intApprovedBy is not null
+            where  it.IsActive = 1 AND gd.decAvailableQty > 0 
+            GROUP BY it.intItemID
+            order by it.vcItemName asc";
         $query = $this->db->query($sql, array(1));
         return $query->result_array();
     }
