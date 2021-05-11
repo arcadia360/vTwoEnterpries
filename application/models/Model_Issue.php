@@ -22,13 +22,13 @@ class Model_issue extends CI_Model
     {
         $this->db->trans_begin();
 
-        // $query = $this->db->query("SELECT fnGenerateIssueNo() AS IssueNo");
-        // $ret = $query->row();
-        // $IssueNo = $ret->IssueNo;
+        $query = $this->db->query("SELECT fnGenerateIssueNo() AS IssueNo");
+        $ret = $query->row();
+        $IssueNo = $ret->IssueNo;
 
         $response = array();
 
-        $IssueNo = "Issue-001";
+        // $IssueNo = "Issue-001";
 
         $insertDetails = false;
 
@@ -59,7 +59,7 @@ class Model_issue extends CI_Model
         $data = array(
             'vcIssueNo' => $IssueNo,
             'intCustomerID' => $this->input->post('cmbcustomer'),
-            'intSalesRepID' => $this->input->post('cmbSalesRep'),
+            'intSalesRepID' => $this->input->post('cmbSalesRep') == null ? null : $this->input->post('cmbSalesRep'),
             'dtIssueDate' => date('Y-m-d', strtotime(str_replace('-', '/', $this->input->post('issuedDate')))),
             'intUserID' => $this->session->userdata('user_id'),
             'intPaymentTypeID' =>  $paymentType,
@@ -109,7 +109,7 @@ class Model_issue extends CI_Model
 
         for ($i = 0; $i < $item_count; $i++) {
 
-            $currentRV = $this->model_item->chkRv($this->input->post('itemID')[$i]);
+            $currentRV = $this->model_item->chkStockViewRv($this->input->post('grnDetailID')[$i]);
             $previousRV =  $this->input->post('Rv')[$i];
 
 
@@ -156,11 +156,11 @@ class Model_issue extends CI_Model
         }
 
 
-        // if ($anotherUserAccess == true) {
-        //     $response['success'] = false;
-        //     $response['messages'] = 'Another user tries to edit this Item details, please refresh the page and try again !';
-        //     $this->db->trans_rollback();
-        // } else 
+        if ($anotherUserAccess == true) {
+            $response['success'] = false;
+            $response['messages'] = 'Another user tries to edit this Item details, please refresh the page and try again !';
+            $this->db->trans_rollback();
+        } else 
         if ($exceedStockQty == true) {
             $response['success'] = false;
             $response['messages'] = 'Stock quantity over exceeds error, please refresh the page and try again !';
@@ -287,14 +287,15 @@ class Model_issue extends CI_Model
             $sql = "
             SELECT I.vcItemName,
             ID.decUnitPrice,
-            ID.decIssueQty,
+            SUM(ID.decIssueQty) AS decIssueQty,
             MU.vcMeasureUnit,
             SUM(ID.decDiscountedPrice) AS  decTotalPrice
             FROM IssueDetail AS ID
             INNER JOIN Issueheader AS IH ON ID.intIssueHeaderID = IH.intIssueHeaderID
             INNER JOIN Item AS I ON ID.intItemID = I.intItemID
             INNER JOIN measureunit AS MU ON I.intMeasureUnitID = MU.intMeasureUnitID
-            WHERE ID.intIssueHeaderID = ?";
+            WHERE ID.intIssueHeaderID = ?
+            GROUP BY ID.intGRNDetailID";
 
             $query = $this->db->query($sql, array($IssueHeaderID));
             return $query->result_array();
