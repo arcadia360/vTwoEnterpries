@@ -82,7 +82,7 @@ $(document).ready(function () {
     // });
 
     $('#txtQty,#txtUnitPrice').keyup(function (event) {
-        CalculateTotal() ;
+        CalculateTotal();
         CalItemWiseDiscount();
     });
 
@@ -249,11 +249,11 @@ $(document).ready(function () {
                         var qty = $("input[name=txtQty]").val();
                         var Rv = $("input[name=txtRv]").val();
                         var discountPercentage = $("input[name=txtDiscountPercentage]").val();
-                        var total = unitPrice * qty;
-                        var withOutDiscount = total;
-                        var TotalPriceDiscounted =  $("input[name=txtTotalPrice]").val();
+                        // var total = unitPrice * qty;
 
-                        firstInFirstOut(itemID, item, measureUnit, stockQty, unitPrice, qty, discountPercentage, withOutDiscount, total,TotalPriceDiscounted);
+                        // var TotalPriceDiscounted =  $("input[name=txtTotalPrice]").val();
+
+                        firstInFirstOut(itemID, item, measureUnit, stockQty, unitPrice, qty, discountPercentage);
 
                         // $(".first-tr").after('<tr>' +
                         //     '<td hidden>' +
@@ -336,7 +336,7 @@ $(document).ready(function () {
     }
 
 
-    function firstInFirstOut(itemID, item, measureUnit, stockQty, unitPrice, qty, discountPercentage, withOutDiscount, total,TotalPriceDiscounted) {
+    function firstInFirstOut(itemID, item, measureUnit, stockQty, unitPrice, qty, discountPercentage) {
         debugger;
         var model = new Item();
         model.intItemID = itemID;
@@ -346,14 +346,32 @@ $(document).ready(function () {
         ajaxCall('Item/getfirstInFirstOut', model, function (response) {
 
             // $("#itemCount").text("Item Count : " + response.length);
+            var DiscoutedPrice = 0;
+            // var discountPercentage = $("#txtDiscountPercentage").val();
+            var withOutDiscount = 0;
+            
+
+
 
             var itemQty = qty;
+            var stockQuantity = stockQty;
 
             for (let index = 0; index < response.length; index++) {
-                debugger;
+
+              
+
                 var htmlElement = '';
                 if (itemQty > 0) {
                     if (parseFloat(response[index].decAvailableQty) >= itemQty && itemQty > 0) {
+                        if (discountPercentage != "") {
+                            DiscoutedPrice = unitPrice - (unitPrice * (discountPercentage / 100));
+                            DiscoutedPrice = DiscoutedPrice * itemQty;
+                        }
+                        else {
+                            DiscoutedPrice = unitPrice * itemQty;
+                        }
+                        withOutDiscount = unitPrice * itemQty;
+
                         $(".first-tr").after('<tr>' +
                             '<td hidden>' +
                             '<input type="text" class="form-control itemID disable-typing" name="itemID[]" id="itemID_' + row_id + '" value="' + itemID + '" readonly>' +
@@ -362,13 +380,13 @@ $(document).ready(function () {
                             '<input type="text" class="form-control disable-typing" name="grnDetailID[]" id="grnDetailID_' + row_id + '" value="' + response[index].intGrnDetailID + '" readonly>' +
                             '</td>' +
                             '<td>' +
-                            '<input type="text" class="form-control itemName disable-typing" name="itemName[]" id="itemName_' + row_id + '" value="' + response[index].intGrnDetailID + "**" + item + '" readonly>' +
+                            '<input type="text" class="form-control itemName disable-typing" name="itemName[]" id="itemName_' + row_id + '" value="' + item.replace(/"/g, "\'\'") + '" readonly>' +
                             '</td>' +
                             '<td>' +
                             '<input type="text" class="form-control unitPrice disable-typing" style="text-align:right;" name="unitPrice[]" id="unitPrice_' + row_id + '" value="' + parseFloat(unitPrice).toFixed(2) + '" readonly>' +
                             '</td>' +
                             '<td>' +
-                            '   <input type="text" class="form-control disable-typing" style="text-align:center;" name="stockQty[]" id="stockQty_' + row_id + '"  value="' + stockQty + '" readonly>' +
+                            '   <input type="text" class="form-control disable-typing" style="text-align:center;" name="stockQty[]" id="stockQty_' + row_id + '"  value="' + stockQuantity  + '" readonly>' +
                             '</td>' +
                             '<td>' +
                             '   <input type="text" class="form-control disable-typing" style="text-align:center;" name="unit[]" id="unit_' + row_id + '"  value="' + measureUnit + '" readonly>' +
@@ -379,11 +397,11 @@ $(document).ready(function () {
                             '<td>' +
                             '<input type="text" class="form-control disable-typing" style="text-align:right;" name="discountPercentage[]" id="discountPercentage_' + row_id + '"  value="' + discountPercentage + '" readonly>' +
                             '</td>' +
-                            '<td>' +
+                            '<td hidden>' +
                             '<input type="text" style="cursor: pointer;" class="form-control withoutDiscount disable-typing" name="withoutDiscount[]" id="withoutDiscount_' + row_id + '" value="' + withOutDiscount + '" readonly>' +
                             '</td>' +
                             '<td>' +
-                            '<input type="text" class="form-control total disable-typing" style="text-align:right;" name="totalPrice[]" id="totalPrice_' + row_id + '"  value="' + parseFloat(TotalPriceDiscounted).toFixed(2) + '" readonly>' +
+                            '<input type="text" class="form-control total disable-typing" style="text-align:right;" name="totalPrice[]" id="totalPrice_' + row_id + '"  value="' + parseFloat(DiscoutedPrice).toFixed(2) + '" readonly>' +
                             '</td>' +
                             '<td hidden>' +
                             '<input type="text" style="cursor: pointer;" class="form-control Rv disable-typing" name="Rv[]" id="Rv_' + row_id + '" value="' + response[index].rv + '" readonly>' +
@@ -394,9 +412,18 @@ $(document).ready(function () {
                             '</tr>');
 
                         row_id++;
+                        stockQuantity = stockQuantity - itemQty;
                         itemQty = 0;
                     } else {
+                        if (discountPercentage != "") {
+                            DiscoutedPrice = unitPrice - (unitPrice * (discountPercentage / 100));
+                            DiscoutedPrice = DiscoutedPrice * parseFloat(response[index].decAvailableQty);
+                        }
+                        else {
+                            DiscoutedPrice = unitPrice * parseFloat(response[index].decAvailableQty);
+                        }
 
+                        withOutDiscount = unitPrice * parseFloat(response[index].decAvailableQty);
 
                         $(".first-tr").after('<tr>' +
                             '<td hidden>' +
@@ -406,13 +433,13 @@ $(document).ready(function () {
                             '<input type="text" class="form-control disable-typing" name="grnDetailID[]" id="grnDetailID_' + row_id + '" value="' + response[index].intGrnDetailID + '" readonly>' +
                             '</td>' +
                             '<td>' +
-                            '<input type="text" class="form-control itemName disable-typing" name="itemName[]" id="itemName_' + row_id + '" value="' + response[index].intGrnDetailID + "-" + item + '" readonly>' +
+                            '<input type="text" class="form-control itemName disable-typing" name="itemName[]" id="itemName_' + row_id + '" value="' + item.replace(/"/g, "\'\'") + '" readonly>' +
                             '</td>' +
                             '<td>' +
                             '<input type="text" class="form-control unitPrice disable-typing" style="text-align:right;" name="unitPrice[]" id="unitPrice_' + row_id + '" value="' + parseFloat(unitPrice).toFixed(2) + '" readonly>' +
                             '</td>' +
                             '<td>' +
-                            '   <input type="text" class="form-control disable-typing" style="text-align:center;" name="stockQty[]" id="stockQty_' + row_id + '"  value="' + stockQty + '" readonly>' +
+                            '   <input type="text" class="form-control disable-typing" style="text-align:center;" name="stockQty[]" id="stockQty_' + row_id + '"  value="' + stockQuantity + '" readonly>' +
                             '</td>' +
                             '<td>' +
                             '   <input type="text" class="form-control disable-typing" style="text-align:center;" name="unit[]" id="unit_' + row_id + '"  value="' + measureUnit + '" readonly>' +
@@ -423,11 +450,11 @@ $(document).ready(function () {
                             '<td>' +
                             '<input type="text" class="form-control disable-typing" style="text-align:right;" name="discountPercentage[]" id="discountPercentage_' + row_id + '"  value="' + discountPercentage + '" readonly>' +
                             '</td>' +
-                            '<td>' +
+                            '<td hidden>' +
                             '<input type="text" style="cursor: pointer;" class="form-control withoutDiscount disable-typing" name="withoutDiscount[]" id="withoutDiscount_' + row_id + '" value="' + withOutDiscount + '" readonly>' +
                             '</td>' +
                             '<td>' +
-                            '<input type="text" class="form-control total disable-typing" style="text-align:right;" name="totalPrice[]" id="totalPrice_' + row_id + '"  value="' + parseFloat(TotalPriceDiscounted).toFixed(2) + '" readonly>' +
+                            '<input type="text" class="form-control total disable-typing" style="text-align:right;" name="totalPrice[]" id="totalPrice_' + row_id + '"  value="' + parseFloat(DiscoutedPrice).toFixed(2) + '" readonly>' +
                             '</td>' +
                             '<td hidden>' +
                             '<input type="text" style="cursor: pointer;" class="form-control Rv disable-typing" name="Rv[]" id="Rv_' + row_id + '" value="' + response[index].rv + '" readonly>' +
@@ -439,6 +466,7 @@ $(document).ready(function () {
 
                         row_id++;
                         itemQty = itemQty - parseFloat(response[index].decAvailableQty);
+                        stockQuantity = stockQuantity - parseFloat(response[index].decAvailableQty);
 
                     }
 
@@ -525,32 +553,33 @@ function getDetailByCustomerID() {
 
 function CalculateGrandTotal() {
     if ($('#itemTable tr').length > 2) { // Because table header and item add row in here
-        var discount = $("#txtDiscount").val();
-        var unitPrice = $("#txtUnitPrice").val();
-        var qty = $("#txtQty").val();
+        // var discount = $("#txtDiscount").val();
+        // var unitPrice = $("#txtUnitPrice").val();
+        // var qty = $("#txtQty").val();
         // var discountPercentage = $("#txtDiscountPercentage").val();
-        var total = 0;
-        // var loopwithouDiscountSum = 0;
+        var discountedTotal = 0;
+        var withoutDiscount = 0;
         $('#itemTable tbody tr').each(function () {
             var value = parseFloat($(this).closest("tr").find('.total').val());
-            // var withoutDiscount = parseFloat($(this).closest("tr").find('.withoutDiscount').val());
+            var without = parseFloat($(this).closest("tr").find('.withoutDiscount').val());
             if (!isNaN(value)) {
-                total += value;
+                discountedTotal += value;
             }
-            // if (!isNaN(withoutDiscount)) {
-            //     loopwithouDiscountSum += withoutDiscount;
-            // }
+            if (!isNaN(without)) {
+                withoutDiscount += without;
+            }
         });
 
 
-        discount == "" ? discount = 0 : discount;
+        // discount == "" ? discount = 0 : discount;
 
-        // var totalDiscount =loopwithouDiscountSum - total;
 
         // var DiscoutedPrice = ((discountPercentage / 100) * (unitPrice * qty));
 
-        $("#subTotal").val(currencyFormat(total));
-        $("#grandTotal").val(currencyFormat(discount));
+        $("#subTotal").val(currencyFormat(withoutDiscount));
+        $("#txtDiscount").val(currencyFormat(withoutDiscount-discountedTotal));
+        $("#grandTotal").val(currencyFormat(discountedTotal));
+
 
     } else {
         debugger;
@@ -686,8 +715,20 @@ function getcmbItemData() {
 }
 
 function CalculateItemCount() {
-    var rowCount = $('#itemTable tr').length;
-    $("#itemCount").text("Item Count : " + (rowCount - 2));
+    // var rowCount = $('#itemTable tr').length;
+    // $("#itemCount").text("Item Count : " + (rowCount - 2));
+
+    var itemCount=0;
+var lastItemID = 0;
+    $('#itemTable tbody tr').each(function () {
+        var value = parseFloat($(this).closest("tr").find('.itemID').val());
+        if (!isNaN(value) && lastItemID != value) {
+            itemCount++;
+        }
+    });
+
+    $("#itemCount").text("Item Count : " + (itemCount));
+
 }
 
 $('#btnSubmit').click(function () {
@@ -698,11 +739,11 @@ $('#btnSubmit').click(function () {
         $("#cmbcustomer").focus();
         return;
     }
-     if ($("#cmbSalesRep option:selected").val() == 0) {
-        toastr["error"]("Please select Sales Rep !");
-        $("#cmbSalesRep").focus();
-        return;
-    }
+    // if ($("#cmbSalesRep option:selected").val() == 0) {
+    //     toastr["error"]("Please select Sales Rep !");
+    //     $("#cmbSalesRep").focus();
+    //     return;
+    // }
     if ($('#itemTable tr').length == 2) {
         toastr["error"]("Please add the issue items !");
         $("#cmbItem").focus();
