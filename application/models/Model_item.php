@@ -298,6 +298,15 @@ class Model_item extends CI_Model
         }
     }
 
+    public function chkStockViewRv($id = null)
+    {
+        if ($id) {
+            $sql = "SELECT REPLACE(rv,' ','-') as rv FROM GRNDetail  WHERE intGRNDetailID  = ?";
+            $query = $this->db->query($sql, array($id));
+            return $query->row_array();
+        }
+    }
+
     public function remove($id)
     {
         if ($id) {
