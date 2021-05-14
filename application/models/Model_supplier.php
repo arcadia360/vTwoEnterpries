@@ -307,8 +307,9 @@ class Model_supplier extends CI_Model
     public function getGRNWiseSettlementDetailsToModal($GRNHeaderID)
     {
         if ($GRNHeaderID) {
-            $sql = "SELECT SH.vcSupplierSettlementNo,IFNULL(CONCAT(SH.vcChequeNo,' - ',B.vcBankName),'N/A') AS vcChequeNo ,IFNULL(CAST(SH.dtPDDate AS DATE),'N/A') AS dtPDDate, SD.decPaidAmount  FROM suppliersettlementheader AS SH
+            $sql = "SELECT SH.vcSupplierSettlementNo,CAST(SH.dtPaidDate AS DATE) as dtPaidDate, PM.vcPayMode,IFNULL(CONCAT(SH.vcChequeNo,' - ',B.vcBankName),'N/A') AS vcChequeNo ,IFNULL(CAST(SH.dtPDDate AS DATE),'N/A') AS dtPDDate, SD.decPaidAmount  FROM suppliersettlementheader AS SH
             INNER JOIN suppliersettlementdetail AS SD ON SH.intSupplierSettlementHeaderID = SD.intSupplierSettlementHeaderID
+            INNER JOIN paymode AS PM ON SH.intPayModeID = PM.intPayModeID
             LEFT OUTER JOIN bank AS B ON SH.intBankID = B.intBankID
             WHERE SD.intGRNHeaderID = ?";
             $query = $this->db->query($sql, array($GRNHeaderID));

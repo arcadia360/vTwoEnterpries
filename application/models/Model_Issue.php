@@ -16,7 +16,7 @@ class Model_issue extends CI_Model
             $query = $this->db->query($sql, array($id));
             return $query->row_array();
         }
-    } 
+    }
 
     public function saveIssue()
     {
@@ -126,7 +126,7 @@ class Model_issue extends CI_Model
             }
             $items = array(
                 'intIssueHeaderID' => $IssueHeaderID,
-                'intGRNDetailID' =>$this->input->post('grnDetailID')[$i],
+                'intGRNDetailID' => $this->input->post('grnDetailID')[$i],
                 'intItemID' => $this->input->post('itemID')[$i],
                 'decIssueQty' => $this->input->post('itemQty')[$i],
                 'decUnitPrice' => $UnitPrice,
@@ -194,32 +194,37 @@ class Model_issue extends CI_Model
     {
         if ($IssueHeaderID) {
             $sql = "
-                    SELECT  IH.intIssueHeaderID,
-                    IH.intCustomerID,
-                    IH.vcIssueNo,
-                    CU.vcCustomerName,
-                    CU.vcBuildingNumber,
-                    CU.vcStreet,
-                    CU.vcCity,
-                    CAST(IH.dtIssueDate AS DATE) AS dtIssueDate,
-                    IH.dtCreatedDate,
-                    U.vcFullName,
-                    IH.intPaymentTypeID,
-                    PY.vcPaymentType,
-                    IH.decSubTotal,
-                    IH.decDiscount,
-                    IH.decGrandTotal,
-                    CU.decCreditLimit,
-                    CU.decAvailableCredit,
-                    IFNULL(CA.decAmount,'N/A') AS decAdvanceAmount,
-                    IFNULL(IH.vcRemark,'N/A') AS vcRemark,
-                    IFNULL(RD.intIssueHeaderID,'N/A') AS PaymentViewButton
-            FROM Issueheader AS IH
-            INNER JOIN customer AS CU ON IH.intCustomerID = CU.intCustomerID
-            INNER JOIN user as U ON IH.intUserID = U.intUserID
-            INNER JOIN paymenttype AS PY ON IH.intPaymentTypeID = PY.intPaymentTypeID
-            LEFT OUTER JOIN customeradvancepayment AS CA ON IH.intIssueHeaderID = CA.intIssueHeaderID
-            LEFT OUTER JOIN receiptdetail AS RD ON IH.intIssueHeaderID = RD.intIssueHeaderID
+            SELECT  
+                                IH.intIssueHeaderID,
+                                IH.intCustomerID,
+                                IFNULL(SR.vcSalesRepName,'N/A') AS vcSalesRepName,
+                                IH.vcIssueNo,
+                                CU.vcCustomerName,
+                                CU.vcBuildingNumber,
+                                CU.vcStreet,
+                                CU.vcCity,
+                                CU.vcContactNo1,
+                                CU.vcContactNo2,
+                                CAST(IH.dtIssueDate AS DATE) AS dtIssueDate,
+                                IH.dtCreatedDate,
+                                U.vcFullName,
+                                IH.intPaymentTypeID,
+                                PY.vcPaymentType,
+                                IH.decSubTotal,
+                                IH.decDiscount,
+                                IH.decGrandTotal,
+                                CU.decCreditLimit,
+                                CU.decAvailableCredit,
+                                IFNULL(CA.decAmount,'N/A') AS decAdvanceAmount,
+                                IFNULL(IH.vcRemark,'N/A') AS vcRemark,
+                                IFNULL(RD.intIssueHeaderID,'N/A') AS PaymentViewButton
+                        FROM Issueheader AS IH
+                        INNER JOIN customer AS CU ON IH.intCustomerID = CU.intCustomerID
+                        INNER JOIN user as U ON IH.intUserID = U.intUserID
+                        INNER JOIN paymenttype AS PY ON IH.intPaymentTypeID = PY.intPaymentTypeID
+                        LEFT OUTER JOIN customeradvancepayment AS CA ON IH.intIssueHeaderID = CA.intIssueHeaderID
+                        LEFT OUTER JOIN receiptdetail AS RD ON IH.intIssueHeaderID = RD.intIssueHeaderID
+                        LEFT OUTER JOIN salesrep AS SR ON IH.intSalesRepID = SR.intSalesRepID
             WHERE IH.intIssueHeaderID = ?";
 
             $query = $this->db->query($sql, array($IssueHeaderID));
@@ -283,23 +288,11 @@ class Model_issue extends CI_Model
 
     public function GetIssueDetailsData($IssueHeaderID = null)
     {
-        if ($IssueHeaderID) {
-            $sql = "
-            SELECT I.vcItemName,
-            ID.decUnitPrice,
-            SUM(ID.decIssueQty) AS decIssueQty,
-            MU.vcMeasureUnit,
-            SUM(ID.decDiscountedPrice) AS  decTotalPrice
-            FROM IssueDetail AS ID
-            INNER JOIN Issueheader AS IH ON ID.intIssueHeaderID = IH.intIssueHeaderID
-            INNER JOIN Item AS I ON ID.intItemID = I.intItemID
-            INNER JOIN measureunit AS MU ON I.intMeasureUnitID = MU.intMeasureUnitID
-            WHERE ID.intIssueHeaderID = ?
-            GROUP BY ID.intGRNDetailID";
 
-            $query = $this->db->query($sql, array($IssueHeaderID));
-            return $query->result_array();
-        }
+        $sql = "CALL spGetIssueDetailsData(?);";
+
+        $query = $this->db->query($sql, array($IssueHeaderID));
+        return $query->result_array();
     }
 
     public function getPaymentTypes()
@@ -362,7 +355,7 @@ class Model_issue extends CI_Model
 
         $ReturnNo = "Return-001";
 
-        $Reason ="";
+        $Reason = "";
         $UserID = 0;
         $Reason = $this->input->post('Reason');
         $UserID = $this->session->userdata('user_id');

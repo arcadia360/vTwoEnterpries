@@ -5,12 +5,12 @@
 $(document).ready(function () {
 
 
-        // $('#manageTable').DataTable( {
-        //     dom: 'Bfrtip',
-        //     buttons: [
-        //         'copy', 'csv', 'excel', 'pdf', 'print'
-        //     ]
-        // } );
+    // $('#manageTable').DataTable( {
+    //     dom: 'Bfrtip',
+    //     buttons: [
+    //         'copy', 'csv', 'excel', 'pdf', 'print'
+    //     ]
+    // } );
 
 
 
@@ -93,11 +93,26 @@ function FilterItems(FromDate, ToDate) {
 
 }
 
-function viewReceiptWiseSettlementDetails($ReceiptHeaderID)
-{
-    
+function viewReceiptWiseSettlementDetails($ReceiptHeaderID) {
+
 }
 
+function viewPrintIssueDiv($intIssueHeaderID) {
+  
+
+    $.ajax({
+        url: 'PrintIssueDiv/' + $intIssueHeaderID + '/' + 1,
+        type: 'post',
+        dataType: 'json',
+        success: function (response) {
+            // alert(response.issueNote);
+            document.body.innerHTML = response.issueNote;
+                        window.print();
+                        location.reload();
+        },
+        error: function (data) { }
+    });
+}
 
 // function removeGRN(GRNHeaderID){
 //     arcadiaConfirmAlert("You want to be able to remove this !", function (button) {

@@ -50,7 +50,7 @@ class Dashboard extends Admin_Controller
 
 			$notification .= '<a href="#" class="dropdown-item">
 		                    	<p class="notify-title"><i class="fas fa-file mr-2"></i>&nbsp;Re-Order Level Exceeded !</p>
-		                    	<p class="notify-message">You have re-order level exceed item " test  "<span class="float-right text-muted text-sm">Your SIH is ' . $value['decStockInHand'] .  '</span></p>
+		                    	<p class="notify-message">You have re-order level exceed item ' . $value['vcItemName'] .  '<span class="float-right text-muted text-sm">Your SIH is ' . $value['decStockInHand'] .  '</span></p>
 							</a>
 							<div class="dropdown-divider"></div>';
 			$ROLCount++;

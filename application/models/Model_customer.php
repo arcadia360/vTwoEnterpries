@@ -105,7 +105,7 @@ class Model_customer extends CI_Model
         $sql = "SELECT it.intItemID , it.vcItemName
         from item as it
         left outer join customerpriceconfig as cc on it.intItemID = cc.intItemID
-        where it.intItemTypeID = 2 and it.intItemID not in (select intItemID from  customerpriceconfig where intCustomerID = ? )";
+        where it.intItemID not in (select intItemID from  customerpriceconfig where intCustomerID = ? )";
         $query = $this->db->query($sql, array($CustomerID));
         return $query->result_array();
     }

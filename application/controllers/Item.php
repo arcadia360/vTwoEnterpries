@@ -97,6 +97,12 @@ class Item extends Admin_Controller
 		echo json_encode($data);
 	}
 
+	public function getStocktItemData()
+	{
+		$data = $this->model_item->getStocktItemData();
+		echo json_encode($data);
+	}
+
 	public function getStockAvailableItemData()
 	{
 
@@ -108,7 +114,7 @@ class Item extends Admin_Controller
 
 		$result = array('data' => array());
 
-		$data = $this->model_item->getStockAvailableItemData();
+		$data = $this->model_item->getStocktItemData();
 		foreach ($data as $key => $value) {
 
 			// button

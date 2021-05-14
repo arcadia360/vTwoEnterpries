@@ -58,27 +58,26 @@ class Model_item extends CI_Model
 
     public function getStocktItemData()
     {
-                $sql = "SELECT 
-                it.intItemID,
-                it.vcItemName,
-                mu.intMeasureUnitID,
-                mu.vcMeasureUnit,
-                m.vcMainCategory, 
-                s.vcSubCategory, 
-                COALESCE(SUM(gd.decAvailableQty),0) AS decStockInHand,
-                it.decReOrderLevel,
-                IFNULL(it.decUnitPrice,'N/A') AS decUnitPrice,
-                REPLACE(it.rv,' ','-') as rv 
-            FROM item as it
-            inner join measureunit as mu on mu.intMeasureUnitID = it.intMeasureUnitID
-            inner join subcategory as s on it.intSubCategoryID = s.intSubCategoryID
-            inner join maincategory m on s.intMainCategoryID = m.intMainCategoryID
-            left outer join grndetail as gd on it.intItemID = gd.intItemID
-            left outer join grnheader as gh on gd.intGRNHeaderID = gh.intGRNHeaderID and  gh.intApprovedBy is not null
-            where  it.IsActive = 1
-            GROUP BY it.intItemID
-            order by it.vcItemName asc";
-        $query = $this->db->query($sql, array(1));
+                $sql = "SELECT    I.intItemID,
+                            I.vcItemName,
+                            MU.intMeasureUnitID,
+                            MU.vcMeasureUnit,
+                            M.vcMainCategory, 
+                            S.vcSubCategory, 
+                            COALESCE(SUM(GD.decAvailableQty),0) AS decStockInHand,
+                            I.decReOrderLevel,
+                            IFNULL(I.decUnitPrice,'N/A') AS decUnitPrice,
+                            REPLACE(I.rv,' ','-') as rv  FROM
+            grnheader AS GH 
+            INNER JOIN grndetail AS GD ON GH.intGRNHeaderID = GD.intGRNHeaderID AND GH.intApprovedBy is not null
+            RIGHT OUTER JOIN item AS I ON GD.intItemID = I.intItemID
+            inner join measureunit as MU on MU.intMeasureUnitID = I.intMeasureUnitID
+            inner join subcategory as S on I.intSubCategoryID = S.intSubCategoryID
+            inner join maincategory M on S.intMainCategoryID = M.intMainCategoryID
+            where  I.IsActive = 1 
+            GROUP BY I.intItemID
+            ORDER BY I.vcItemName asc";
+          $query = $this->db->query($sql, array(1));
         return $query->result_array();
     }
 
@@ -147,24 +146,30 @@ class Model_item extends CI_Model
     //     }
     // }
 
-    // public function getOnlyRawItemData()
-    // {
-    //     $sql = "SELECT 
-    //                 it.intItemID,
-    //                 it.vcItemName,
-    //                 mu.intMeasureUnitID,
-    //                 mu.vcMeasureUnit,
-    //                 it.decStockInHand,
-    //                 it.decReOrderLevel,
-    //                 it.decUnitPrice,
-    //                 REPLACE(it.rv,' ','-') as rv 
-    //             FROM item as it
-    //             inner join measureunit as mu on mu.intMeasureUnitID = it.intMeasureUnitID
-    //             where  IsActive = 1 AND it.intItemTypeID = 1
-    //             order by it.vcItemName asc";
-    //     $query = $this->db->query($sql, array(1));
-    //     return $query->result_array();
-    // }
+    public function getOnlyCmbItemData()
+    {
+        $sql = "SELECT    I.intItemID,
+                I.vcItemName,
+                    MU.intMeasureUnitID,
+                    MU.vcMeasureUnit,
+                    M.vcMainCategory, 
+                    S.vcSubCategory, 
+                    COALESCE(SUM(GD.decAvailableQty),0) AS decStockInHand,
+                    I.decReOrderLevel,
+                    IFNULL(I.decUnitPrice,'N/A') AS decUnitPrice,
+                    REPLACE(I.rv,' ','-') as rv  FROM
+            grnheader AS GH 
+            INNER JOIN grndetail AS GD ON GH.intGRNHeaderID = GD.intGRNHeaderID AND GH.intApprovedBy is not null
+            RIGHT OUTER JOIN item AS I ON GD.intItemID = I.intItemID
+            inner join measureunit as MU on MU.intMeasureUnitID = I.intMeasureUnitID
+            inner join subcategory as S on I.intSubCategoryID = S.intSubCategoryID
+            inner join maincategory M on S.intMainCategoryID = M.intMainCategoryID
+            where  I.IsActive = 1 
+            GROUP BY I.intItemID
+        ORDER BY I.vcItemName asc";
+        $query = $this->db->query($sql, array(1));
+        return $query->result_array();
+    }
 
     // public function getOnlyFinishItemDataByNotConfig($intCuttingOrderHeaderID)
     // {

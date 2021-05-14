@@ -243,7 +243,7 @@ class Customer extends Admin_Controller
 		}
 
 		$customer_data = $this->model_customer->getCustomerData();
-		$item_data = $this->model_item->getOnlyFinishItemData();
+		$item_data = $this->model_item->getOnlyCmbItemData();
 
 
 		$this->data['customer_data'] = $customer_data;

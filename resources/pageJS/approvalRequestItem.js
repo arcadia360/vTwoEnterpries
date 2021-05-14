@@ -106,7 +106,7 @@ $(document).ready(function() {
 
 function CalculateItemCount() {
     var rowCount = $('#itemTable tr').length;
-    $("#itemCount").text("Item Count : " + (rowCount - 1));
+    $("#itemCount").text("Item Count : " + (rowCount - 1)); 
 }
 
 

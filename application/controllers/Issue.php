@@ -58,7 +58,7 @@ class Issue extends Admin_Controller
     $data = $this->model_item->getStockAvailableItemData();
     echo json_encode($data);
   }
-  
+
 
   public function SaveIssue()
   {
@@ -70,7 +70,7 @@ class Issue extends Admin_Controller
 
     $response = $this->model_issue->saveIssue();
     if ($response['success'] == true) {
-      $response['issueNote'] = $this->PrintIssueDiv($response['intIssueHeaderID']);
+      $response['issueNote'] = $this->PrintIssueDiv($response['intIssueHeaderID'], 0);
     }
     // $response['issueNote'] = "ABC";
 
@@ -90,170 +90,174 @@ class Issue extends Admin_Controller
     echo json_encode($issue_Header_Date);
   }
 
-  public function PrintIssueDiv($intIssueHeaderID)
+  public function PrintIssueDiv($intIssueHeaderID, $IsJasonReturn = null)
   {
     if ($intIssueHeaderID) {
 
       $issue_Header_Date =  $this->model_issue->GetIssueHeaderData($intIssueHeaderID);
       $issue_Detail_Date =  $this->model_issue->GetIssueDetailsData($intIssueHeaderID);
 
-      //   $html = '
+      //       $html = '
 
-      //         <div id="myDiv" class="wrapper">
-      //         <section class="invoice">
-      //           <!-- title row -->
-      //           <div class="row">
-      //             <div class="col-xs-12">
-      //               <h2 class="page-header">
-      //                 "KNC Cake Boards"
-      //               </h2>
-      //             </div>
-      //             <!-- /.col -->
-      //           </div>
-      //           <!-- info row -->
-      //           <div class="row invoice-info">
-
-      //             <div class="col-sm-4 invoice-col">
-
-      //               <b>Date:</b> ' . $issue_Header_Date['dtCreatedDate'] . '<br>
-      //               <b>Issue No:</b> ' . $issue_Header_Date['vcIssueNo'] . '<br>
-      //               <b>Customer Name:</b> ' . $issue_Header_Date['vcCustomerName'] . '<br>
-
-      //             </div>
-      //             <!-- /.col -->
-      //           </div>
-      //           <!-- /.row -->
-
-      //           <!-- Table row -->
-      //           <div class="row">
-      //             <div class="col-xs-12 table-responsive">
-      //               <table class="table table-striped">
-      //                 <thead>
-      //                 <tr>
-      //                   <th>Item name</th>
-      //                   <th>Unit Price</th>
-      //                   <th>Qty</th>
-      //                   <th>Amount</th>
-      //                 </tr>
-      //                 </thead>
-      //                 <tbody>';
-
-      //   foreach ($issue_Detail_Date as $k => $v) {
-
-      //     $html .= '<tr>
-      //                       <td>' . $v['vcItemName'] . '</td>
-      //                       <td>' . $v['decUnitPrice'] . '</td>
-      //                       <td>' . $v['decIssueQty'] . '</td>
-      //                       <td>' . $v['decTotalPrice'] . '</td>
-      //                     </tr>';
-      //   }
-
-      //   $html .= ' <tr align="right">
-      // 	              <th>Payment Mode:</th>
-      // 	              <td>' . $issue_Header_Date['vcPaymentType'] . '</td>
-      // 	            </tr>
-      // 	            <tr align="right">
-      // 	              <th>Sub Total:</th>
-      // 	              <td>' . $issue_Header_Date['decSubTotal'] . '</td>
-      // 	            </tr>
-      // 	            <tr align="right">
-      // 	              <th>Discount:</th>
-      // 	              <td>' . $issue_Header_Date['decDiscount'] . '</td>
-      //               </tr>
-      //               <tr align="right">
-      //               <th>Grand Total:</th>
-      //               <td>' . $issue_Header_Date['decGrandTotal'] . '</td>
+      // <body style="font-family: Teko, sans-serif;">
+      //     <div class="page">
+      //         <h1>INVOICE</h1>
+      //         <p class="address"><b>KNC Cake Boards & Boxes</b><br>No.124A<br>Galle Road,
+      //             Pohoddaramulla<br>Wadduwa<br>0714874746 / 0777206898</p>
+      //         <hr>
+      //         <table width="100%">
+      //             <tr>
+      //                 <td width="60%">
+      //                     <h3 style="margin: 0px;">INVOICED TO</h3>
+      //                     <p style="margin: 0px;">Customer Name</p>
+      //                     <p style="margin: 0px;">Address Line 2</p>
+      //                     <p style="margin: 0px;">Address Line 2</p>
+      //                     <p style="margin: 0px;">Address Line 3</p>
+      //                 </td>
+      //                 <td>
+      //                     <h3 style="margin: 0px;">INVOICE #</h3>
+      //                     <h3 style="margin: 0px;">INVOICE DATE</h3>
+      //                 </td>
+      //                 <td>
+      //                     <h3 style="margin: 0px;">: &nbsp; ' . $issue_Header_Date['vcIssueNo'] . '</h3>
+      //                     <h3 style="margin: 0px;">: &nbsp; ' . $issue_Header_Date['dtCreatedDate'] . '</h3>
+      //                 </td>
+      //             </tr>
+      //         </table>
+      //         <table width="100%" style="border-collapse: collapse; border: 1px solid black; margin-top: 10px;">
+      //             <tr>
+      //                 <th style=" border: 1px solid black;">
+      //                     <center><h4>DESCRIPTION</h4></center>
+      //                 </th>
+      //                 <th style=" border: 1px solid black;">
+      //                     <center><h4>QTY</h4></center>
+      //                 </th>
+      //                 <th style=" border: 1px solid black;">
+      //                     <center><h4>UNIT PRICE</h4></center>
+      //                 </th>
+      //                 <th style=" border: 1px solid black;">
+      //                     <center><h4>AMOUNT</h4></center>
+      //                 </th>
       //             </tr>';
-
-      //   $html .= '  </table>
-      //       </div>
-      //     </div>
-      //     <!-- /.col -->
-      //   </div>
-      //   <!-- /.row -->
-      // </section>
-      // <!-- /.content -->
-      // </div>';
 
       $html = '
 
-<body style="font-family: Teko, sans-serif;">
-    <div class="page">
-        <h1>INVOICE</h1>
-        <p class="address"><b>KNC Cake Boards & Boxes</b><br>No.124A<br>Galle Road,
-            Pohoddaramulla<br>Wadduwa<br>0714874746 / 0777206898</p>
-        <hr>
-        <table width="100%">
-            <tr>
-                <td width="60%">
-                    <h3 style="margin: 0px;">INVOICED TO</h3>
-                    <p style="margin: 0px;">Customer Name</p>
-                    <p style="margin: 0px;">Address Line 2</p>
-                    <p style="margin: 0px;">Address Line 2</p>
-                    <p style="margin: 0px;">Address Line 3</p>
-                </td>
-                <td>
-                    <h3 style="margin: 0px;">INVOICE #</h3>
-                    <h3 style="margin: 0px;">INVOICE DATE</h3>
-                </td>
-                <td>
-                    <h3 style="margin: 0px;">: &nbsp; ' . $issue_Header_Date['vcIssueNo'] . '</h3>
-                    <h3 style="margin: 0px;">: &nbsp; ' . $issue_Header_Date['dtCreatedDate'] . '</h3>
-                </td>
-            </tr>
-        </table>
-        <table width="100%" style="border-collapse: collapse; border: 1px solid black; margin-top: 10px;">
-            <tr>
-                <th style=" border: 1px solid black;">
-                    <center><h4>DESCRIPTION</h4></center>
-                </th>
-                <th style=" border: 1px solid black;">
-                    <center><h4>QTY</h4></center>
-                </th>
-                <th style=" border: 1px solid black;">
-                    <center><h4>UNIT PRICE</h4></center>
-                </th>
-                <th style=" border: 1px solid black;">
-                    <center><h4>AMOUNT</h4></center>
-                </th>
-            </tr>';
+<body>
+    <div style="text-align: right; border-bottom: 1px solid #000000; margin-bottom:10px; padding-bottom:10px;">
+        <h1 style="font-size: 60px;">INVOICE</h1>
+        <h3>VTwo Enterprises</h3>
+        <h5>
+            NO. S.61/93, Maithree Bodhiraja Mawatha, Colombo 12 </br>
+            0760147843 / 0764766969
+        </h5>
+    </div>
+     
+    <table width="100%" style="color:#000000;">
+        <tr>
+            <td>
+                <h5>' . $issue_Header_Date['vcCustomerName'] . '</h5>
+                <h6>' . $issue_Header_Date['vcBuildingNumber'] . ',</h6>
+                <h6>' . $issue_Header_Date['vcStreet'] . ',</h6>
+                <h6>' . $issue_Header_Date['vcContactNo1'] . '</h6>
+                <h6>' . $issue_Header_Date['vcContactNo2'] . '</h6>
+            </td>
+            <td>
+                <div style="text-align: right;">
+                    <h5>INVOICE # : ' . $issue_Header_Date['vcIssueNo'] . '</h5>
+                    <h5>DATE : ' . $issue_Header_Date['dtCreatedDate'] . '</h5>
+                    <h5>TERM : ' . $issue_Header_Date['vcPaymentType'] . '</h5>
+                </div>
+            </td>
+        </tr>
+    </table>
 
+    <table style="width: 100%; border-top: 1px solid #000000; border-right: 1px solid #000000; font-size: 1.2em; color:#000000;">
+        <tr style="text-align: center; height: 40px;">
+            <th width="50px" style="border: 1px solid #000000;">#</th>
+            <th style="border: 1px solid #000000;">ITEM DESCRIPTION</th>
+            <th width="120px" style="border: 1px solid #000000;">UNIT PRICE</th>
+            <th width="100px" style="border: 1px solid #000000;">QTY</th>
+            <th width="130px" style="border: 1px solid #000000;">DISCOUNT (%)</th>
+            <th width="250px" style="border: 1px solid #000000;">TOTAL</th>
+        </tr>';
+
+
+      $resultCount = 0;
       foreach ($issue_Detail_Date as $k => $v) {
 
         $html .= '
-            <tr>
-                <td style=" border: 1px solid black; padding-left: 10px; padding-top: 5px;">' . $v['vcItemName'] . '</td>
-                <td style=" border: 1px solid black; text-align: center; padding-top: 5px;">' . $v['decIssueQty'] . '</td>
-                <td style=" border: 1px solid black; text-align: right; padding:5px;">' . $v['decUnitPrice'] . '</td>
-                <td style=" border: 1px solid black; text-align: right; padding:5px;">' . $v['decTotalPrice'] . '</td>
-            </tr>
-                        
-                        ';
+    
+        <tr style="font-size: 1.2em;">
+            <td style="text-align: center; border-left: 1px solid #000000;">' . $v['num'] . '</td>
+            <td style="border-left: 1px solid #000000;">&nbsp;' . $v['vcItemName'] . '</td>
+            <td style="text-align: right; border-left: 1px solid #000000;">' . $v['decUnitPrice'] . '&nbsp;</td>
+            <td style="text-align: center; border-left: 1px solid #000000;">' . $v['decIssueQty'] . '&nbsp;</td>
+            <td style="text-align: center; border-left: 1px solid #000000;">' . $v['decDiscountPercentage'] . '&nbsp;</td>
+            <td style="text-align: right; border-left: 1px solid #000000;">' . $v['decTotalPrice'] . '&nbsp;</td>
+        </tr>
+            ';
+
+        $resultCount++;
+      }
+
+      for ($i = 0; $i < (30 - $resultCount); $i++) {
+        $html .= '   
+        <tr>
+          <td style="text-align: center; border-left: 1px solid #000000;"></td>
+          <td style="border-left: 1px solid #000000;">&nbsp;</td>
+          <td style="text-align: right; border-left: 1px solid #000000;">&nbsp;</td>
+          <td style="text-align: center; border-left: 1px solid #000000;">&nbsp;</td>
+          <td style="text-align: center; border-left: 1px solid #000000;">&nbsp;</td>
+          <td style="text-align: right; border-left: 1px solid #000000;">&nbsp;</td>
+      </tr>';
       }
 
 
       $html .= '
-        </table>
-        <br>
-        <table width="100%">
-            <tr>
-                <td>Sub Total</td>
-                <td style="text-align: right;">' . $issue_Header_Date['decSubTotal'] . '</td>
-            </tr>
-            <tr>
-                <td>
-                    <h2>TOTAL</h2>
-                </td>
-                <td>
-                    <h2 style="text-align: right;">' . $issue_Header_Date['decGrandTotal'] . '</h2>
-                </td>
-            </tr>
-        </table>
-    </div>
+      <tr style="font-size: 1.2em;">
+            <td style="text-align: center; border-top: 1px solid #000000;"></td>
+            <td style="border-top: 1px solid #000000;">&nbsp;</td>
+            <td style="text-align: right; border-top: 1px solid #000000;">&nbsp;</td>
+            <td colspan="2" style="border: 1px solid #000000;">&nbsp;Sub Total</td>
+            <td style="text-align: right; border: 1px solid #000000;">' . $issue_Header_Date['decSubTotal'] . '&nbsp;</td>
+        </tr>
+        <tr style="font-size: 1.2em;">
+            <td></td>
+            <td>&nbsp;</td>
+            <td style="text-align: right;">&nbsp;</td>
+            <td colspan="2" style="border: 1px solid #000000;">&nbsp;Discount (%)</td>
+            <td style="text-align: right; border: 1px solid #000000;">' . $issue_Header_Date['decDiscount'] . '&nbsp;</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>&nbsp;</td>
+            <td style="text-align: right;">&nbsp;</td>
+            <td colspan="2" style="border: 1px solid #000000; font-size: 20px; font-weight:600;">&nbsp;Grand Total</td>
+            <td style="text-align: right; border: 1px solid #000000; font-size: 20px; font-weight:600;">' . $issue_Header_Date['decGrandTotal'] . '&nbsp;</td>
+        </tr>
+    </table>
+</br>
+</br>
+</br>
+</br>
+</br>
+
+    <table width="100%">
+        <tr style="border-top: 1px solid #000000; text-align: center;">
+            <td width="34%">Customer Signature & Stamp</td>
+            <td width="33%">Deliverd By</td>
+            <td width="33%">Prepared By</td>
+        </tr>
+    </table>
 </body>
    ';
 
-      return $html;
+      if ($IsJasonReturn == 1) {
+        $response['issueNote'] =  $html;
+        echo json_encode($response);
+      } else {
+        return $html;
+      }
     }
   }
 
@@ -297,6 +301,7 @@ class Issue extends Admin_Controller
 
       if (in_array('viewIssue', $this->permission) || $this->isAdmin) {
         $buttons .= '<a class="button btn btn-default" href="' . base_url("Issue/ViewIssueDetails/" . $value['intIssueHeaderID']) . '" style="margin:0 !important;"><i class="fas fa-eye"></i></a>';
+        $buttons .= ' <button type="button" class="btn btn-default" onclick="viewPrintIssueDiv(' . $value['intIssueHeaderID'] . ')"><i class="fa fa-print"></i></button>';
       }
 
       if ($value['PaymentViewButton'] != 'N/A') {
@@ -307,11 +312,10 @@ class Issue extends Admin_Controller
 
       if ($value['PaymentViewButton'] != 'N/A') {
         $badge = '<span class="badge badge-secondary" style="padding: 4px 10px; float:right; margin-right:10px;">Partially Paid</span>';
-      }
-      else{
+      } else {
         $badge = '<span class="badge badge-warning" style="padding: 4px 10px; float:right; margin-right:10px;">Total Pending</span>';
       }
-     
+
 
       $result['data'][$key] = array(
         $value['vcIssueNo'],

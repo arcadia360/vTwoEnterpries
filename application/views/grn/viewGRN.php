@@ -166,6 +166,8 @@
                 <thead>
                     <tr>
                         <th style="text-align:center;">Supplier Settlement No</th>
+                        <th style="text-align:center;">Settled Date</th>
+                        <th style="text-align:center;">Pay Mode</th>
                         <th style="text-align:center;">Cheque No</th>
                         <th style="text-align:center;">PD Date</th>
                         <th style="text-align:center;">Amount</th>

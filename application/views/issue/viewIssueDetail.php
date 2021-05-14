@@ -71,9 +71,13 @@
             <div class="card-body">
                 <!-- <form role="form" class="add-form" method="post" action="<?= base_url('GRN/EditGRNDetails/' . $grn_header_data['intGRNHeaderID']) ?>" id="editGRN"> -->
                 <div class="row">
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-3">
                         <label for="credit_limit">Customer</label>
                         <input type="text" class="form-control" id="Customer" name="Customer" value="<?= $issue_header_data['vcCustomerName']; ?>" style="cursor: not-allowed; color:#000000;" required disabled>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="credit_limit">Sales Rep</label>
+                        <input type="text" class="form-control" id="SalesRep" name="SalesRep" value="<?= $issue_header_data['vcSalesRepName']; ?>" style="cursor: not-allowed; color:#000000;" required disabled>
                     </div>
                     <div class="form-group col-md-3">
                         <label for="credit_limit">Credit Limit</label>

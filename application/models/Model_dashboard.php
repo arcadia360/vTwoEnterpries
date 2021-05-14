@@ -45,11 +45,13 @@ class Model_dashboard extends CI_Model
         $sql = "";
         if ($branch_id == 0) {
             $sql = "SELECT 
-            I.vcItemName,SUM(GD.decAvailableQty) AS decStockInHand
-            FROM item AS I
-            INNER JOIN grndetail AS GD on I.intItemID = GD.intItemID
-            WHERE I.decReOrderLevel > decAvailableQty AND I.IsActive = 1
-            GROUP BY I.intItemID";
+                I.vcItemName,SUM(GD.decAvailableQty) AS decStockInHand , I.decReOrderLevel
+                FROM item AS I
+                INNER JOIN grndetail AS GD on I.intItemID = GD.intItemID
+                INNER JOIN grnheader AS GH on GD.intGRNHeaderID = GH.intGRNHeaderID
+                WHERE  I.IsActive = 1 AND GH.intApprovedBy is not null 
+            GROUP BY I.intItemID
+            HAVING SUM(GD.decAvailableQty) < I.decReOrderLevel";
             $query = $this->db->query($sql);
         } else {
             // $sql = "SELECT I.vcItemName,I.decStockInHand

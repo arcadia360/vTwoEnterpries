@@ -120,6 +120,8 @@ function viewGRNWiseSettlementDetails($GRNHeaderID)
             for (let index = 0; index < response.length; index++) {
                 $("#IssueItemTable tbody").append('<tr>'+
                 '<td><input type="text" class="form-control" name="txtMeasureUnit[]" id="txtMeasureUnit" style="text-align:center;" value="'+response[index].vcSupplierSettlementNo+'" disabled></td>'+
+                '<td><input type="text" class="form-control" name="txtMeasureUnit[]" id="txtMeasureUnit" style="text-align:center;" value="'+response[index].dtPaidDate+'" disabled></td>'+
+                '<td><input type="text" class="form-control" name="txtMeasureUnit[]" id="txtMeasureUnit" style="text-align:center;" value="'+response[index].vcPayMode+'" disabled></td>'+
                 '<td><input type="text" class="form-control" name="txtExpectedQty[]" id="txtExpectedQty" style="text-align:right;" value="'+response[index].vcChequeNo+'" disabled></td>'+
                 '<td><input type="text" class="form-control" name="txtReceivedQty[]" id="txtReceivedQty" style="text-align:right;" value="'+response[index].dtPDDate+'" disabled></td>'+
                 '<td><input type="text" class="form-control" name="txtReceivedQty[]" id="txtReceivedQty" style="text-align:right;" value="'+response[index].decPaidAmount+'" disabled></td>'+

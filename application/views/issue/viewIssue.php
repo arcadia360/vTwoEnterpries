@@ -112,5 +112,3 @@
 </div>
 
 <script src="<?php echo base_url('resources/pageJS/viewIssue.js') ?>"></script>
-
-
