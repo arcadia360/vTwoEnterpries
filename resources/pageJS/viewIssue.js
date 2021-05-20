@@ -4,17 +4,6 @@
 
 $(document).ready(function () {
 
-
-    // $('#manageTable').DataTable( {
-    //     dom: 'Bfrtip',
-    //     buttons: [
-    //         'copy', 'csv', 'excel', 'pdf', 'print'
-    //     ]
-    // } );
-
-
-
-
     var date = new Date();
     var monthStartDate = new Date(date.getFullYear(), date.getMonth(), 1);
 

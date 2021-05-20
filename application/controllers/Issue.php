@@ -383,7 +383,7 @@ class Issue extends Admin_Controller
   }
 
 
-  public function ViewIssueDetailsToTable()
+  public function ViewIssueDetailsToReturnData()
   {
     if (!$this->isAdmin) {
       if (!in_array('viewIssue', $this->permission)) {
@@ -391,7 +391,8 @@ class Issue extends Admin_Controller
       }
     }
     $intIssueHeaderID = $this->input->post('intIssueHeaderID');
-    $issued_item_data = $this->model_issue->GetIssueDetailsData($intIssueHeaderID);
+    // $issued_item_data = $this->model_issue->GetIssueDetailsData($intIssueHeaderID);
+    $issued_item_data = $this->model_issue->GetIssueDetailsToReturnData($intIssueHeaderID);
     echo json_encode($issued_item_data);
   }
 

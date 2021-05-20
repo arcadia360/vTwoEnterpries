@@ -118,7 +118,7 @@
                         </div>
                     </div>
                     <div class="row">
-                    <div class="form-group col-md-2">
+                        <div class="form-group col-md-2">
                             <label for="credit_limit">Advance Amount</label>
                             <input type="text" class="form-control" id="AdvanceAmount" name="AdvanceAmount" autocomplete="off" style="cursor: not-allowed; color:#000000;" disabled />
                         </div>
@@ -139,7 +139,7 @@
                         </div>
                         <div class="form-group col-md-4">
                             <label for="credit_limit">Reason</label>
-                            <input type="text" class="form-control" id="Reason" name="Reason" autocomplete="off" placeholder="Enter Return Reason" required/>
+                            <input type="text" class="form-control" id="Reason" name="Reason" autocomplete="off" placeholder="Enter Return Reason" required />
                         </div>
                     </div>
                     <table class="table" id="IssueItemTable">
@@ -150,6 +150,9 @@
                                 <th style="width: 100px; text-align:center;">Unit Price</th>
                                 <th style="width: 100px; text-align:center;">Issued Qty</th>
                                 <th style="width: 100px; text-align:center;">Total</th>
+                                <th style="width: 100px; text-align:center;">Balance Qty</th>
+                                <th style="width: 100px; text-align:center;">Return Qty</th>
+                                <th style="width: 100px; text-align:center;">Item Wise Total</th>
                                 <th hidden>rv</th>
                             </tr>
                         </thead>
@@ -161,6 +164,7 @@
 
                     <div class="row" style="border-top:1px solid #dee2e6;">
                         <div class="col-md-6">
+                            <input type="text" class="form-control" style="font-weight: 600; text-align:right; font-size:1.5em !important;" id="grandTotal" name="grandTotal" placeholder="0.00" readonly>
                             <p style="color: #c2c7d0;" id="itemCount">Item Count : 0</p>
                         </div>
                         <!-- /.col -->

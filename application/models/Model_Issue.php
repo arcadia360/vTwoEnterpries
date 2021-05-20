@@ -295,6 +295,14 @@ class Model_issue extends CI_Model
         return $query->result_array();
     }
 
+    public function GetIssueDetailsToReturnData($IssueHeaderID = null)
+    {
+        $sql = "CALL spIssueDetailsToReturnData(?);";
+
+        $query = $this->db->query($sql, array($IssueHeaderID));
+        return $query->result_array();
+    }
+
     public function getPaymentTypes()
     {
         $sql = "SELECT intPaymentTypeID,vcPaymentType FROM paymenttype;";
@@ -358,15 +366,62 @@ class Model_issue extends CI_Model
         $Reason = "";
         $UserID = 0;
         $Reason = $this->input->post('Reason');
-        $UserID = $this->session->userdata('user_id');
+        // $UserID = $this->session->userdata('user_id');
+        $UserID = 1;
 
+        $data = array(
+            'vcIssueReturnNo' => $ReturnNo,
+            'intIssueHeaderID' => $IssueHeaderID,
+            'decTotal' => 33333,
+            'vcReason' => $Reason,
+            'intReturnedUserID' => $UserID,
+        );
 
-        $sql = "UPDATE Item AS I
-        INNER JOIN issuedetail AS ID ON I.intItemID = ID.intItemID
-        SET I.decStockInHand = (I.decStockInHand + ID.decIssueQty)
-        WHERE ID.intIssueHeaderID = ? ;";
-        $this->db->query($sql, array($IssueHeaderID));
+        $this->db->insert('issuereturnheader', $data);
+        $IssueReturnHeaderID = $this->db->insert_id();
 
+        $anotherUserAccess = false;
+        $exceedStockQty = false;
+
+        $item_count = count($this->input->post('txtGRNDetailID'));
+
+        for ($i = 0; $i < $item_count; $i++) {
+
+            if((float)$this->input->post('txtReturnQty')[$i] > 0) {
+
+                $currentRV = $this->model_item->chkStockViewRv($this->input->post('txtGRNDetailID')[$i]);
+                $previousRV =  $this->input->post('txtRv')[$i];
+    
+    
+                if ($currentRV['rv'] != $previousRV) {
+                    $anotherUserAccess = true;
+                }
+                // $decIssuQty = $this->input->post('itemQty')[$i];
+                // $itemID  = $this->input->post('itemID')[$i];
+                // $itemData = $this->model_item->getItemData($this->input->post('itemID')[$i]);
+                // $UnitPrice = $itemCustomerWiseUnitPrice['decUnitPrice'];
+                // if ($itemData['decStockInHand'] < $decIssuQty) {
+                //     $exceedStockQty = true;
+                // }
+                $decReturnQty = $this->input->post('txtReturnQty')[$i];
+    
+                $items = array(
+                    'intIssueReturnHeaderID' => $IssueReturnHeaderID,
+                    'intIssueDetailID' => $this->input->post('txtIssueDetailID')[$i],
+                    'intGRNDetailID' => $this->input->post('txtGRNDetailID')[$i],
+                    'intItemID' => $this->input->post('txtItemID')[$i],
+                    'decUnitPrice' =>$this->input->post('txtUnitPrice')[$i],
+                    'decReturnQty' => $decReturnQty,
+                );
+                $insertDetails = $this->db->insert('issuereturndetail', $items);
+    
+                $sql = "UPDATE grndetail AS GD
+                        SET GD.decAvailableQty = (GD.decAvailableQty + ?)
+                        WHERE GD.intGRNDetailID = ?";
+    
+                $this->db->query($sql, array($decReturnQty,$this->input->post('txtGRNDetailID')[$i]));
+            }
+        }
 
         $sql = "UPDATE customer AS C
         INNER JOIN issueheader AS I ON C.intCustomerID = I.intCustomerID 
@@ -380,29 +435,27 @@ class Model_issue extends CI_Model
         WHERE intIssueHeaderID = ? ;";
         $this->db->query($sql, array($IssueHeaderID));
 
-        $sql = "INSERT INTO issuereturnheader(vcIssueReturnNo,intIssueHeaderID, vcIssueNo, intCustomerID, dtIssueDate, dtCreatedDate, intUserID, intPaymentTypeID, decSubTotal, decDiscount, decGrandTotal, IsActive, vcReason, intReturnedUserID)
-        SELECT  '$ReturnNo', IH.intIssueHeaderID, IH.vcIssueNo, IH.intCustomerID, IH.dtIssueDate, IH.dtCreatedDate, IH.intUserID, IH.intPaymentTypeID, IH.decSubTotal, IH.decDiscount, IH.decGrandTotal, IH.IsActive , ' $Reason ' , $UserID 
-        FROM    issueheader AS IH
-        WHERE   IH.intIssueHeaderID = ?;";
-        $this->db->query($sql, array($IssueHeaderID));
-        $IssueReturnHeaderID = $this->db->insert_id();
+        if ($anotherUserAccess == true) {
+            $response['success'] = false;
+            $response['messages'] = 'Another user tries to edit this Item details, please refresh the page and try again !';
+            $this->db->trans_rollback();
+        } else 
+        if ($exceedStockQty == true) {
+            $response['success'] = false;
+            $response['messages'] = 'Stock quantity over exceeds error, please refresh the page and try again !';
+            $this->db->trans_rollback();
+        } else {
+            if ($this->db->trans_status() === FALSE) {
+                $this->db->trans_rollback();
+                $response['success'] = false;
+                $response['messages'] = 'Error in the database while create the issue details';
+            } else {
 
-        $sql = "INSERT INTO issuereturndetail(intIssueReturnHeaderID, intIssueDetailID, intIssueHeaderID, intItemID, decIssueQty, decUnitPrice, decTotalPrice,decReturnQty)
-        SELECT  $IssueReturnHeaderID , ID.intIssueDetailID, ID.intIssueHeaderID, ID.intItemID, ID.decIssueQty, ID.decUnitPrice, ID.decTotalPrice , ID.decIssueQty
-        FROM    issuedetail AS ID
-        WHERE   ID.intIssueHeaderID = ?;";
-        $this->db->query($sql, array($IssueHeaderID));
-
-        $this->db->where('intIssueHeaderID', $IssueHeaderID);
-        $this->db->delete('issuedetail');
-
-        $this->db->where('intIssueHeaderID', $IssueHeaderID);
-        $this->db->delete('issueheader');
-
-        $this->db->trans_complete();
-
-        $response['success'] = true;
-        $response['messages'] = 'Succesfully Returned !';
+                $this->db->trans_commit();
+                $response['success'] = true;
+                $response['messages'] = 'Succesfully Returned!';
+            }
+        }
 
         return $response;
     }

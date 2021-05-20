@@ -7,61 +7,124 @@ $(document).ready(function () {
     });
 
 
+
+
 });
 
 var Issue = function () {
     this.intIssueHeaderID = 0;
 }
 
-function getIssuedHeaderData()
-{
+function getIssuedHeaderData() {
     var IssueHeaderID = $("#cmbIssueNo").val();
     if (IssueHeaderID > 0) {
-        var model = new Issue(); 
+        var model = new Issue();
         model.intIssueHeaderID = IssueHeaderID;
         ajaxCall('Issue/getIssuedHeaderData', model, function (response) {
-                 $("#Customer").val(response.vcCustomerName);
-                $("#IssuedDate").val(response.dtIssueDate);
-                $("#CreatedDate").val(response.dtCreatedDate);
-                $("#CreatedUser").val(response.vcFullName);
-                $("#PaymentMode").val(response.vcPaymentType);
-                $("#AdvanceAmount").val(response.decAdvanceAmount);
-                $("#SubTotal").val(response.decSubTotal);
-                $("#Discount").val(response.decDiscount);
-                $("#GrandTotal").val(response.decGrandTotal);
-      
+            $("#Customer").val(response.vcCustomerName);
+            $("#IssuedDate").val(response.dtIssueDate);
+            $("#CreatedDate").val(response.dtCreatedDate);
+            $("#CreatedUser").val(response.vcFullName);
+            $("#PaymentMode").val(response.vcPaymentType);
+            $("#AdvanceAmount").val(response.decAdvanceAmount);
+            $("#SubTotal").val(response.decSubTotal);
+            $("#Discount").val(response.decDiscount);
+            $("#GrandTotal").val(response.decGrandTotal);
+
         });
     }
 }
 
-function getIssuedDetails(){
+function getIssuedDetails() {
     var IssueHeaderID = $("#cmbIssueNo").val();
     if (IssueHeaderID > 0) {
 
         $('#IssueItemTable tbody').empty();
-    
-        var model = new Issue(); 
+
+        var total = 0;
+        var model = new Issue();
         model.intIssueHeaderID = IssueHeaderID;
 
-        ajaxCall('Issue/ViewIssueDetailsToTable', model, function (response) {
+        ajaxCall('Issue/ViewIssueDetailsToReturnData', model, function (response) {
             // debugger;
             for (let index = 0; index < response.length; index++) {
 
 
-                $("#IssueItemTable tbody").append('<tr>'+
-                '<td hidden><input type="number" class="form-control" name="txtItemID[]" value="'+response[index].vcItemName+'"></td>'+
-                '<td><input type="text" class="form-control" name="txtMeasureUnit[]" id="txtMeasureUnit" style="text-align:center;" value="'+response[index].vcItemName+'" disabled></td>'+
-                '<td><input type="text" class="form-control" name="txtExpectedQty[]" id="txtExpectedQty" style="text-align:right;" value="'+response[index].vcMeasureUnit+'" disabled></td>'+
-                '<td><input type="text" class="form-control" name="txtReceivedQty[]" id="txtReceivedQty" style="text-align:right;" value="'+response[index].decUnitPrice+'" disabled></td>'+
-                '<td><input type="text" class="form-control" name="txtBalanceQty[]" id="txtBalanceQty" style="text-align:right;" value="'+response[index].decIssueQty +'" disabled></td>'+
-                '<td><input type="text" class="form-control" name="txtBalanceQty[]" id="txtBalanceQty" style="text-align:right;" value="'+response[index].decTotalPrice +'" disabled></td>'+
-                '<td hidden><input type="text" class="form-control" name="txtRv[]" id="txtRv"></td>'+
-            '</tr>');
+                $("#IssueItemTable tbody").append('<tr>' +
+                    '<td hidden><input type="number" class="form-control" name="txtGRNDetailID[]" value="' + response[index].intGRNDetailID + '"></td>' +
+                    '<td hidden><input type="number" class="form-control" name="txtIssueDetailID[]" value="' + response[index].intIssueDetailID + '"></td>' +
+                    '<td hidden><input type="number" class="form-control" name="txtItemID[]" value="' + response[index].intItemID + '"></td>' +
+                    '<td hidden><input type="text" class="form-control" name="txtUnitPrice[]" id="txtUnitPrice" style="text-align:right;" value="' + response[index].decUnitPrice + '"></td>' +
+                    '<td><input type="text" class="form-control" name="txtMeasureUnit[]" id="txtMeasureUnit" style="text-align:center;" value="' + response[index].vcItemName.replace(/"/g, "\'\'") + '" disabled></td>' +
+                    '<td><input type="text" class="form-control" name="txtExpectedQty[]" id="txtExpectedQty" style="text-align:right;" value="' + response[index].vcMeasureUnit + '" disabled></td>' +
+                    '<td><input type="text" class="form-control" unitPrice name="decUnitPrice[]" id="decUnitPrice" style="text-align:right;" value="' + response[index].decUnitPrice + '" disabled></td>' +
+                    '<td><input type="text" class="form-control" name="decIssueQty[]" id="decIssueQty" style="text-align:right;" value="' + response[index].decIssueQty + '" disabled></td>' +
+                    '<td><input type="text" class="form-control" name="decTotalPrice[]" id="decTotalPrice" style="text-align:right;" value="' + response[index].decTotalPrice + '" disabled></td>' +
+                    '<td><input type="text" class="form-control" name="txtBalanceQty[]" id="txtBalanceQty" style="text-align:right;" value="' + response[index].decBalaceReturnQty + '" disabled></td>' +
+                    '<td><input type="text" class="form-control only-decimal" returnQty name="txtReturnQty[]" id="txtReturnQty" style="text-align:center;" placeholder="_ _ _ _ _" onkeyup="validateReturnQty(this)" onkeypress="return isNumber(event,this)" ></input></td>' +
+                    '<td><input type="number" total class="form-control" id="total" name="total[]" value="' + total + '"></td>' +
+                    '<td hidden><input type="text" class="form-control" name="txtRv[]" id="txtRv" value="' + response[index].rv + '" ></td>' +
+                    '</tr>');
             }
-      
+
         });
     }
 }
+
+
+
+
+function validateReturnQty(evnt) {
+
+    CalItemWiseTotal();
+
+    var BalanceQty = $(evnt).closest("tr").find('#txtBalanceQty').val();
+
+    if (parseFloat(BalanceQty) == 0) {
+        $(evnt).closest("tr").find('#txtReturnQty').val(null);
+        toastr["error"]("You can't return this. Because this item already fully returned !");
+    } else if (parseFloat(BalanceQty) > 0) {
+        if (parseFloat($(evnt).closest("tr").find('#txtReturnQty').val()) > parseFloat(BalanceQty)) {
+            toastr["error"]("You can't exceed balance quantity  !");
+            $(evnt).closest("tr").find('#txtReturnQty').val(null);
+        }
+    }
+
+    CalculateGrandTotal();
+
+
+}
+
+
+function CalItemWiseTotal() {
+    var unitPrice = $("#txtUnitPrice").val();
+    var qty = $("#txtReturnQty").val()
+    var total = 0;
+    if (qty != "") {
+        var total = (unitPrice * qty);
+    }
+    $("#total").val(total);
+}
+
+
+function CalculateGrandTotal() {
+    if ($('#IssueItemTable tr').length > 1) { // Because table header and item add row in here
+        var total = 0;
+        $('#IssueItemTable tbody tr').each(function () {
+            var value = parseFloat($(this).closest("tr").find('.total').val());
+            if (!isNaN(value)) {
+                total += value;
+            }
+          
+        });
+
+        $("#grandTotal").val(currencyFormat(total));
+
+    } else {
+        $("#grandTotal").val("0.00");
+    }
+}
+
 
 $('#btnSubmit').click(function () {
 
@@ -75,43 +138,43 @@ $('#btnSubmit').click(function () {
         $("#Reason").focus();
         return;
     }
-        arcadiaConfirmAlert("You want to be able to return this issue note !", function (button) {
+    arcadiaConfirmAlert("You want to be able to return this issue note !", function (button) {
 
-            var form = $("#issueNote");
+        var form = $("#issueNote");
 
-            $.ajax({
-                async: false,
-                type: form.attr('method'),
-                url: form.attr('action'),
-                data: form.serialize(), 
-                dataType: 'json',
-                success: function (response) {
-                    debugger;
-                    if (response.success == true) {
-                        arcadiaSuccessMessage("Saved !");
+        $.ajax({
+            async: false,
+            type: form.attr('method'),
+            url: form.attr('action'),
+            data: form.serialize(),
+            dataType: 'json',
+            success: function (response) {
+                debugger;
+                if (response.success == true) {
+                    arcadiaSuccessMessage("Saved !");
+                } else {
+
+                    if (response.messages instanceof Object) {
+                        $.each(response.messages, function (index, value) {
+                            var id = $("#" + index);
+
+                            id.closest('.form-group')
+                                .removeClass('has-error')
+                                .removeClass('has-success')
+                                .addClass(value.length > 0 ? 'has-error' : 'has-success');
+
+                            id.after(value);
+
+                        });
                     } else {
-
-                        if (response.messages instanceof Object) {
-                            $.each(response.messages, function (index, value) {
-                                var id = $("#" + index);
-
-                                id.closest('.form-group')
-                                    .removeClass('has-error')
-                                    .removeClass('has-success')
-                                    .addClass(value.length > 0 ? 'has-error' : 'has-success');
-
-                                id.after(value);
-
-                            });
-                        } else {
-                            toastr["error"](response.messages);
-                            // arcadiaErrorMessage(response.messages);
-                            // $(button).prop('disabled', false);
-                        }
+                        toastr["error"](response.messages);
+                        // arcadiaErrorMessage(response.messages);
+                        // $(button).prop('disabled', false);
                     }
                 }
-            });
-        }, this);
+            }
+        });
+    }, this);
     // }
 
 });
