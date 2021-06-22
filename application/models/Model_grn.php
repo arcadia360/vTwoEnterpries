@@ -237,7 +237,7 @@ class Model_grn extends CI_Model
         }
     }
 
-    public function removeGRN($intGRNHeaderID)
+    public function removeGRN($intGRNHeaderID) 
     {
         if ($intGRNHeaderID) {
             $data = [

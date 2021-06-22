@@ -143,29 +143,30 @@ class Issue extends Admin_Controller
       $html = '
 
 <body>
-    <div style="text-align: right; border-bottom: 1px solid #000000; margin-bottom:10px; padding-bottom:10px;">
-        <h1 style="font-size: 60px;">INVOICE</h1>
-        <h3>VTwo Enterprises</h3>
+    <div style="text-align: center; border-bottom: 1px solid #000000; margin-bottom:10px; padding-bottom:10px;">
+        <h1 style="font-size: 50px;"><strong>VTwo Enterprises</strong></h1>
+        <h3>General Hardware Merchants</h3>
         <h5>
             NO. S.61/93, Maithree Bodhiraja Mawatha, Colombo 12 </br>
-            0760147843 / 0764766969
+            0113440404 / 0760147843
         </h5>
+        <h4><strong>INVOICE</strong></h4>
     </div>
      
     <table width="100%" style="color:#000000;">
         <tr>
-            <td>
-                <h5>' . $issue_Header_Date['vcCustomerName'] . '</h5>
-                <h6>' . $issue_Header_Date['vcBuildingNumber'] . ',</h6>
-                <h6>' . $issue_Header_Date['vcStreet'] . ',</h6>
-                <h6>' . $issue_Header_Date['vcContactNo1'] . '</h6>
-                <h6>' . $issue_Header_Date['vcContactNo2'] . '</h6>
+            <td width="85%">
+                <h5><strong>' . $issue_Header_Date['vcCustomerName'] . '</strong></h5>
+                <h5>' . $issue_Header_Date['vcBuildingNumber'] . ' , ' . $issue_Header_Date['vcStreet'] . ',</h5>
+                <h5>' . $issue_Header_Date['vcCity'] . '.</h5>
+                <h5>' . $issue_Header_Date['vcContactNo1'] . '</h5>
+                <h5>' . $issue_Header_Date['vcContactNo2'] . '</h5>
             </td>
             <td>
-                <div style="text-align: right;">
-                    <h5>INVOICE # : ' . $issue_Header_Date['vcIssueNo'] . '</h5>
+                <div style="text-align: left;">
                     <h5>DATE : ' . $issue_Header_Date['dtCreatedDate'] . '</h5>
-                    <h5>TERM : ' . $issue_Header_Date['vcPaymentType'] . '</h5>
+                    <h5>INVOICE # : ' . $issue_Header_Date['vcIssueNo'] . '</h5>
+                    <h5>TERM : <strong>' . $issue_Header_Date['vcPaymentType'] . '</strong></h5>
                 </div>
             </td>
         </tr>
@@ -173,12 +174,12 @@ class Issue extends Admin_Controller
 
     <table style="width: 100%; border-top: 1px solid #000000; border-right: 1px solid #000000; font-size: 1.2em; color:#000000;">
         <tr style="text-align: center; height: 40px;">
-            <th width="50px" style="border: 1px solid #000000;">#</th>
+            <th width="30px" style="border: 1px solid #000000;">#</th>
             <th style="border: 1px solid #000000;">ITEM DESCRIPTION</th>
-            <th width="120px" style="border: 1px solid #000000;">UNIT PRICE</th>
-            <th width="100px" style="border: 1px solid #000000;">QTY</th>
-            <th width="130px" style="border: 1px solid #000000;">DISCOUNT (%)</th>
-            <th width="250px" style="border: 1px solid #000000;">TOTAL</th>
+            <th width="100px" style="border: 1px solid #000000;">UNIT PRICE</th>
+            <th width="80px" style="border: 1px solid #000000;">QTY</th>
+            <th width="60px" style="border: 1px solid #000000;">DIS.(%)</th>
+            <th width="170px" style="border: 1px solid #000000;">TOTAL</th>
         </tr>';
 
 
@@ -192,7 +193,7 @@ class Issue extends Admin_Controller
             <td style="border-left: 1px solid #000000;">&nbsp;' . $v['vcItemName'] . '</td>
             <td style="text-align: right; border-left: 1px solid #000000;">' . $v['decUnitPrice'] . '&nbsp;</td>
             <td style="text-align: center; border-left: 1px solid #000000;">' . $v['decIssueQty'] . '&nbsp;</td>
-            <td style="text-align: center; border-left: 1px solid #000000;">' . $v['decDiscountPercentage'] . '&nbsp;</td>
+            <td style="width:60px; text-align: center; border-left: 1px solid #000000;">' . $v['decDiscountPercentage'] . '%</td>
             <td style="text-align: right; border-left: 1px solid #000000;">' . $v['decTotalPrice'] . '&nbsp;</td>
         </tr>
             ';
@@ -200,7 +201,7 @@ class Issue extends Admin_Controller
         $resultCount++;
       }
 
-      for ($i = 0; $i < (30 - $resultCount); $i++) {
+      for ($i = 0; $i < (25 - $resultCount); $i++) {
         $html .= '   
         <tr>
           <td style="text-align: center; border-left: 1px solid #000000;"></td>
@@ -243,7 +244,7 @@ class Issue extends Admin_Controller
 </br>
 
     <table width="100%">
-        <tr style="border-top: 1px solid #000000; text-align: center;">
+        <tr style="border-top: 1px solid #000000; text-align: center; font-size:1.2em;">
             <td width="34%">Customer Signature & Stamp</td>
             <td width="33%">Deliverd By</td>
             <td width="33%">Prepared By</td>
@@ -321,7 +322,7 @@ class Issue extends Admin_Controller
         $value['vcIssueNo'],
         $value['vcCustomerName'],
         $value['dtIssueDate'],
-        $value['dtCreatedDate'],
+        $value['dtCreatedDateWithTime'],
         $value['vcFullName'],
         $value['vcPaymentType'],
         number_format((float)$value['decSubTotal'], 2, '.', ''),

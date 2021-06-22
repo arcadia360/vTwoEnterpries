@@ -1,4 +1,4 @@
-<style>
+<!-- <style>
     .table,
     td {
         border: 1px solid #263238;
@@ -47,18 +47,27 @@
         margin: 0;
     }
 
-    /* .table td, .table th {
-    padding: 0;
-    vertical-align: top;
-    border:0;
-} */
-
-    /* .select2-results__option:nth-child(4) {
-        background-color: red !important;
-    } */
-
     .select2-results__option[id*="Test"] {
         color: red;
+    }
+
+
+</style> -->
+
+
+<style>
+      .table,
+    td {
+        border: 1px solid #263238;
+    }
+
+    .table th {
+        background-color: #263238 !important;
+        color: #FFFFFF;
+    }
+
+    tbody td {
+        padding: 0 !important;
     }
 </style>
 
@@ -137,7 +146,7 @@
                             <!-- style="display:block !important;" -->
                             <thead>
                                 <tr>
-                                    <th>Settlement No</th>
+                                    <th>Receipt No</th>
                                     <th>Customer Name</th>
                                     <th>Payment Mode</th>
                                     <th>Paid Amount</th>

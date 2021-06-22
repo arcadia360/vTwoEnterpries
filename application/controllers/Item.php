@@ -140,12 +140,12 @@ class Item extends Admin_Controller
 
 			$result['data'][$key] = array(
 				$value['vcItemName'],
+				$value['decStockInHand'],
+				$UnitPrice,
 				$value['vcMeasureUnit'],
 				$value['vcMainCategory'],
 				$value['vcSubCategory'],
-				$value['decStockInHand'],
 				$ReorderLevl,
-				$UnitPrice,
 				$buttons
 			);
 		} // /foreach

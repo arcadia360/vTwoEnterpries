@@ -50,12 +50,12 @@
 							<thead>
 								<tr>
 									<th>Item Name</th>
+									<th>Stock Qty</th>
+									<th>Unit Price</th>
 									<th>Measure Unit</th>
 									<th>Main Category</th>
 									<th>Sub Category</th>
-									<th>Stock Qty</th>
 									<th>Re-Order Level</th>
-									<th>Unit Price</th>
 									<th>Action</th>
 								</tr>
 							</thead>

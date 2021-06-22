@@ -8,100 +8,212 @@ var Receipt = function () {
 
 $(document).ready(function () {
 
-var date = new Date();
-var monthStartDate = new Date(date.getFullYear(), date.getMonth(), 1);
+    var date = new Date();
+    var monthStartDate = new Date(date.getFullYear(), date.getMonth(), 1);
 
-var selectedFromDate = "";
-var selectedToDate = "";
+    var selectedFromDate = "";
+    var selectedToDate = "";
 
-FilterItems(convertToShortDate(monthStartDate), convertToShortDate(date));
+    FilterItems(convertToShortDate(monthStartDate), convertToShortDate(date));
 
-$('input[name="daterange"]').daterangepicker({
-    opens: 'center',
-    startDate: new Date(date.getFullYear(), date.getMonth(), 1),
-    endDate: date,
-    maxDate: new Date()
-}, function (start, end) {
-    selectedFromDate = start.format('YYYY-MM-DD');
-    selectedToDate = end.format('YYYY-MM-DD');
-    FilterItems(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'))
+    $('input[name="daterange"]').daterangepicker({
+        opens: 'center',
+        startDate: new Date(date.getFullYear(), date.getMonth(), 1),
+        endDate: date,
+        maxDate: new Date()
+    }, function (start, end) {
+        selectedFromDate = start.format('YYYY-MM-DD');
+        selectedToDate = end.format('YYYY-MM-DD');
+        FilterItems(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'))
+    });
+
+    $('#cmbPayMode').on('change', function () {
+        if (selectedFromDate == "" && selectedToDate == "") {
+            FilterItems(convertToShortDate(monthStartDate), convertToShortDate(date));
+        } else {
+            FilterItems(selectedFromDate, selectedToDate);
+        }
+    });
+
+    $('#cmbcustomer').on('change', function () {
+        if (selectedFromDate == "" && selectedToDate == "") {
+            FilterItems(convertToShortDate(monthStartDate), convertToShortDate(date));
+        } else {
+            FilterItems(selectedFromDate, selectedToDate);
+        }
+    });
+
+
 });
 
-$('#cmbPayMode').on('change', function () {
-    if (selectedFromDate == "" && selectedToDate == "") {
-        FilterItems(convertToShortDate(monthStartDate), convertToShortDate(date));
-    } else {
-        FilterItems(selectedFromDate, selectedToDate);
-    }
-});
+function customerChequeRealized(CustomerChequeID){
+    arcadiaConfirmAlert("You want to be able to realized Cheque !", function (button) {
+        // var model = new Receipt();
+        // model.intCustomerChequeID = $CustomerChequeID;
+        // model.intReceiptHeaderID = $ReceiptHeaderID;
+        $.ajax({
+            async: true,
+            url: base_url + 'Receipt/CustomerChequeRealized',
+            type: 'post',
+            data: {
+                intCustomerChequeID: CustomerChequeID
+            },
+            dataType: 'json',
+            success: function (response) {
+                if (response.success == true) {
+                    arcadiaSuccessMessage("realized Cheque !", "Receipt/ViewReceipt");
+                } else {
+                    toastr["error"](response.messages);
+                }
+            },
+            error: function (request, status, error) {
+                arcadiaErrorMessage(error);
+            }
+        });
+    }, this);
+}
 
-$('#cmbcustomer').on('change', function () {
-    if (selectedFromDate == "" && selectedToDate == "") {
-        FilterItems(convertToShortDate(monthStartDate), convertToShortDate(date));
-    } else {
-        FilterItems(selectedFromDate, selectedToDate);
-    }
-});
-
-});
-
-function viewSettlementDetails($ReceiptHeaderID)
+function customerCancelReceipt(ReceiptHeaderID)
 {
+    arcadiaConfirmAlert("You want to be able to Cancel Receipt !", function (button) {
+        // var model = new Receipt();
+        // model.intCustomerChequeID = $CustomerChequeID;
+        // model.intReceiptHeaderID = $ReceiptHeaderID;
+        $.ajax({
+            async: true,
+            url: base_url + 'Receipt/CustomerChequeReceipt',
+            type: 'post',
+            data: {
+                intReceiptHeaderID: ReceiptHeaderID
+            },
+            dataType: 'json',
+            success: function (response) {
+                if (response.success == true) {
+                    arcadiaSuccessMessage("Cancelled Receipt !", "Receipt/ViewReceipt");
+                } else {
+                    toastr["error"](response.messages);
+                }
+            },
+            error: function (request, status, error) {
+                arcadiaErrorMessage(error);
+            }
+        });
+    }, this);
+}
+
+function customerReturnCheque(CustomerChequeID,ReceiptHeaderID){
+    arcadiaConfirmAlert("You want to be able to Return Cheque !", function (button) {
+        // var model = new Receipt();
+        // model.intCustomerChequeID = $CustomerChequeID;
+        // model.intReceiptHeaderID = $ReceiptHeaderID;
+        $.ajax({
+            async: true,
+            url: base_url + 'Receipt/CustomerReturnCheque',
+            type: 'post',
+            data: {
+                intCustomerChequeID: CustomerChequeID,
+                intReceiptHeaderID: ReceiptHeaderID
+            },
+            dataType: 'json',
+            success: function (response) {
+                if (response.success == true) {
+                    arcadiaSuccessMessage("Returned Cheque !", "Receipt/ViewReceipt");
+                } else {
+                    toastr["error"](response.messages);
+                }
+            },
+            error: function (request, status, error) {
+                arcadiaErrorMessage(error);
+            }
+        });
+    }, this);
+}
+
+function customerCancelCheque(CustomerChequeID,ReceiptHeaderID){
+    arcadiaConfirmAlert("You want to be able to Cancel Cheque !", function (button) {
+        //    var model = new Receipt();
+        // model.intCustomerChequeID = $CustomerChequeID;
+        // model.intReceiptHeaderID = $ReceiptHeaderID;
+
+        $.ajax({
+            async: true,
+            url: base_url + 'Receipt/CustomerCancelCheque',
+            type: 'post',
+            data: {
+                intCustomerChequeID: CustomerChequeID,
+                intReceiptHeaderID: ReceiptHeaderID
+            },
+            dataType: 'json',
+            success: function (response) {
+                if (response.success == true) {
+                    arcadiaSuccessMessage("Cancelled Cheque !", "Receipt/ViewReceipt");
+                } else {
+                    toastr["error"](response.messages);
+                }
+            },
+            error: function (request, status, error) {
+                arcadiaErrorMessage(error);
+            }
+        });
+    }, this);
+}
+
+function viewSettlementDetails($ReceiptHeaderID) {
     if ($ReceiptHeaderID > 0) {
 
         $('#IssueItemTable tbody').empty();
-    
-        var model = new Receipt(); 
+
+        var model = new Receipt();
         model.intReceiptHeaderID = $ReceiptHeaderID;
 
         ajaxCall('Receipt/ViewSettlementDetailsToModal', model, function (response) {
             // debugger;
             for (let index = 0; index < response.length; index++) {
-                $("#IssueItemTable tbody").append('<tr>'+
-                '<td><input type="text" class="form-control" name="txtIssueNo[]" id="txtIssueNo" style="text-align:center;" value="'+response[index].vcIssueNo+'" disabled></td>'+
-                '<td><input type="text" class="form-control" name="txtGrandTotal[]" id="txtGrandTotal" style="text-align:right;" value="'+response[index].decGrandTotal+'" disabled></td>'+
-                '<td><input type="text" class="form-control" name="txtReceivedQty[]" id="txtReceivedQty" style="text-align:right;" value="'+response[index].decPaidAmount+'" disabled></td>'+
-            '</tr>');
+                $("#IssueItemTable tbody").append('<tr>' +
+                    '<td><input type="text" class="form-control" name="txtIssueNo[]" id="txtIssueNo" style="text-align:center;" value="' + response[index].vcIssueNo + '" disabled></td>' +
+                    '<td><input type="text" class="form-control" name="txtGrandTotal[]" id="txtGrandTotal" style="text-align:right;" value="' + response[index].decGrandTotal + '" disabled></td>' +
+                    '<td><input type="text" class="form-control" name="txtReceivedQty[]" id="txtReceivedQty" style="text-align:right;" value="' + response[index].decPaidAmount + '" disabled></td>' +
+                    '</tr>');
             }
-      
+
         });
     }
-    
+
 }
 
 
 function FilterItems(FromDate, ToDate) {
 
-var PayModeID = $('#cmbPayMode').val();
-var CustomerID = $('#cmbcustomer').val();
-// PayModeID >>    All         = 0
-// PayModeID >>    Cash        = 1
-// PayModeID >>    Cheque      = 2
+    var PayModeID = $('#cmbPayMode').val();
+    var CustomerID = $('#cmbcustomer').val();
+    // PayModeID >>    All         = 0
+    // PayModeID >>    Cash        = 1
+    // PayModeID >>    Cheque      = 2
 
 
-$('#manageTable').DataTable({
-    dom: 'Bfrtip',
-    buttons: [
-        'copy', 'csv', 'excel', 'pdf', 'print'
-    ],
-    'ajax': 'FilterCustomerReceiptHeaderData/' + PayModeID + '/' + CustomerID + '/' + '/' + FromDate + '/' + ToDate,
-    'order': [],
-    "bDestroy": true,
-    "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+    $('#manageTable').DataTable({
+        dom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ],
+        'ajax': 'FilterCustomerReceiptHeaderData/' + PayModeID + '/' + CustomerID + '/' + '/' + FromDate + '/' + ToDate,
+        'order': [],
+        "bDestroy": true,
+        "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
 
-        $(nRow.childNodes[0]).css('text-align', 'center');
-        $(nRow.childNodes[1]).css('text-align', 'center');
-        $(nRow.childNodes[2]).css('text-align', 'center');
-        $(nRow.childNodes[3]).css('text-align', 'center');
-        $(nRow.childNodes[4]).css('text-align', 'center');
-        $(nRow.childNodes[5]).css('text-align', 'center');
-        $(nRow.childNodes[6]).css('text-align', 'center');
-        $(nRow.childNodes[7]).css('text-align', 'center');
-        $(nRow.childNodes[8]).css('text-align', 'center');
-        $(nRow.childNodes[9]).css('text-align', 'center');
+            $(nRow.childNodes[0]).css('text-align', 'center');
+            $(nRow.childNodes[1]).css('text-align', 'center');
+            $(nRow.childNodes[2]).css('text-align', 'center');
+            $(nRow.childNodes[3]).css('text-align', 'center');
+            $(nRow.childNodes[4]).css('text-align', 'center');
+            $(nRow.childNodes[5]).css('text-align', 'center');
+            $(nRow.childNodes[6]).css('text-align', 'center');
+            $(nRow.childNodes[7]).css('text-align', 'center');
+            $(nRow.childNodes[8]).css('text-align', 'center');
+            $(nRow.childNodes[9]).css('text-align', 'center');
 
 
-    }
-});
+        }
+    });
 
 }

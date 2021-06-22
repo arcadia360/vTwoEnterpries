@@ -193,6 +193,12 @@ $(document).ready(function () {
             toastr["error"]("Please select customer !");
             return;
         }
+
+        if ($("#cmbSalesRep option:selected").val() == 0) {
+            toastr["error"]("Please select sales Rep !");
+            return;
+        }
+
         if ($("input[name=txtStockQty]").val() == "N/A" || $("input[name=txtStockQty]").val() == "0.00") {
             toastr["error"]("Please can't Add Stock Qty N/A !");
             return;
@@ -383,10 +389,10 @@ $(document).ready(function () {
                             '<input type="text" class="form-control itemName disable-typing" name="itemName[]" id="itemName_' + row_id + '" value="' + item.replace(/"/g, "\'\'") + '" readonly>' +
                             '</td>' +
                             '<td>' +
-                            '<input type="text" class="form-control unitPrice disable-typing" style="text-align:right;" name="unitPrice[]" id="unitPrice_' + row_id + '" value="' + parseFloat(unitPrice).toFixed(2) + '" readonly>' +
+                            '<input type="text" class="form-control unitPrice disable-typing" style="text-align:right; width:80px;" name="unitPrice[]" id="unitPrice_' + row_id + '" value="' + parseFloat(unitPrice).toFixed(2) + '" readonly>' +
                             '</td>' +
                             '<td>' +
-                            '   <input type="text" class="form-control disable-typing" style="text-align:center;" name="stockQty[]" id="stockQty_' + row_id + '"  value="' + stockQuantity  + '" readonly>' +
+                            '   <input type="text" class="form-control disable-typing" style="text-align:center; width:60px;" name="stockQty[]" id="stockQty_' + row_id + '"  value="' + stockQuantity  + '" readonly>' +
                             '</td>' +
                             '<td>' +
                             '   <input type="text" class="form-control disable-typing" style="text-align:center;" name="unit[]" id="unit_' + row_id + '"  value="' + measureUnit + '" readonly>' +
@@ -395,7 +401,7 @@ $(document).ready(function () {
                             '<input type="text" class="form-control  qty disable-typing" style="text-align:right;" name="itemQty[]" id="itemQty_' + row_id + '"  value="' + itemQty + '" readonly>' +
                             '</td>' +
                             '<td>' +
-                            '<input type="text" class="form-control disable-typing" style="text-align:right;" name="discountPercentage[]" id="discountPercentage_' + row_id + '"  value="' + discountPercentage + '" readonly>' +
+                            '<input type="text" class="form-control disable-typing" style="text-align:right; width:40px;" name="discountPercentage[]" id="discountPercentage_' + row_id + '"  value="' + discountPercentage + '" readonly>' +
                             '</td>' +
                             '<td hidden>' +
                             '<input type="text" style="cursor: pointer;" class="form-control withoutDiscount disable-typing" name="withoutDiscount[]" id="withoutDiscount_' + row_id + '" value="' + withOutDiscount + '" readonly>' +
@@ -436,10 +442,10 @@ $(document).ready(function () {
                             '<input type="text" class="form-control itemName disable-typing" name="itemName[]" id="itemName_' + row_id + '" value="' + item.replace(/"/g, "\'\'") + '" readonly>' +
                             '</td>' +
                             '<td>' +
-                            '<input type="text" class="form-control unitPrice disable-typing" style="text-align:right;" name="unitPrice[]" id="unitPrice_' + row_id + '" value="' + parseFloat(unitPrice).toFixed(2) + '" readonly>' +
+                            '<input type="text" class="form-control unitPrice disable-typing" style="text-align:right; width:80px;" name="unitPrice[]" id="unitPrice_' + row_id + '" value="' + parseFloat(unitPrice).toFixed(2) + '" readonly>' +
                             '</td>' +
                             '<td>' +
-                            '   <input type="text" class="form-control disable-typing" style="text-align:center;" name="stockQty[]" id="stockQty_' + row_id + '"  value="' + stockQuantity + '" readonly>' +
+                            '   <input type="text" class="form-control disable-typing" style="text-align:center; width:60px;" name="stockQty[]" id="stockQty_' + row_id + '"  value="' + stockQuantity + '" readonly>' +
                             '</td>' +
                             '<td>' +
                             '   <input type="text" class="form-control disable-typing" style="text-align:center;" name="unit[]" id="unit_' + row_id + '"  value="' + measureUnit + '" readonly>' +
@@ -448,7 +454,7 @@ $(document).ready(function () {
                             '<input type="text" class="form-control qty disable-typing" style="text-align:right;" name="itemQty[]" id="itemQty_' + row_id + '"  value="' + parseFloat(response[index].decAvailableQty) + '" readonly>' +
                             '</td>' +
                             '<td>' +
-                            '<input type="text" class="form-control disable-typing" style="text-align:right;" name="discountPercentage[]" id="discountPercentage_' + row_id + '"  value="' + discountPercentage + '" readonly>' +
+                            '<input type="text" class="form-control disable-typing" style="text-align:right;  width:40px;" name="discountPercentage[]" id="discountPercentage_' + row_id + '"  value="' + discountPercentage + '" readonly>' +
                             '</td>' +
                             '<td hidden>' +
                             '<input type="text" style="cursor: pointer;" class="form-control withoutDiscount disable-typing" name="withoutDiscount[]" id="withoutDiscount_' + row_id + '" value="' + withOutDiscount + '" readonly>' +

@@ -144,9 +144,11 @@ class Model_receipt extends CI_Model
         if ($ReceiptHeaderID) {
             $sql = "SELECT 
                     SS.intReceiptHeaderID,
+                    C.intCustomerChequeID,
                     SS.vcReceiptNo,
                     S.vcCustomerName,
                     P.vcPayMode,
+                    P.intPayModeID,
                     SS.decAmount,
                     CAST(SS.dtReceiptDate AS DATE) AS dtPaidDate,
                     U.vcFullName,
@@ -154,7 +156,8 @@ class Model_receipt extends CI_Model
                     IFNULL(B.vcBankName,'N/A') AS vcBankName,
                     IFNULL(C.vcChequeNo,'N/A') AS vcChequeNo,
                     IFNULL(C.dtPDDate,'N/A') AS dtPDDate,
-                    IFNULL(SS.vcRemark,'N/A') AS vcRemark
+                    IFNULL(SS.vcRemark,'N/A') AS vcRemark,
+                    C.IsRealized
             FROM receiptheader AS SS
             INNER JOIN customer AS S ON SS.intCustomerID = S.intCustomerID
             INNER JOIN paymode AS P ON SS.intPayModeID = P.intPayModeID
@@ -170,9 +173,11 @@ class Model_receipt extends CI_Model
 
         $sql = " SELECT 
                     SS.intReceiptHeaderID,
+                    C.intCustomerChequeID,
                     SS.vcReceiptNo,
                     S.vcCustomerName,
                     P.vcPayMode,
+                    P.intPayModeID,
                     SS.decAmount,
                     CAST(SS.dtReceiptDate AS DATE) AS dtPaidDate,
                     U.vcFullName,
@@ -180,7 +185,8 @@ class Model_receipt extends CI_Model
                     IFNULL(B.vcBankName,'N/A') AS vcBankName,
                     IFNULL(C.vcChequeNo,'N/A') AS vcChequeNo,
                     IFNULL(C.dtPDDate,'N/A') AS dtPDDate,
-                    IFNULL(SS.vcRemark,'N/A') AS vcRemark
+                    IFNULL(SS.vcRemark,'N/A') AS vcRemark, 
+                    C.IsRealized
             FROM receiptheader AS SS
             INNER JOIN customer AS S ON SS.intCustomerID = S.intCustomerID
             INNER JOIN paymode AS P ON SS.intPayModeID = P.intPayModeID
@@ -227,5 +233,91 @@ class Model_receipt extends CI_Model
             $query = $this->db->query($sql, array($ReceiptHeaderID));
             return $query->result_array();
         }
+    }
+
+    public function customerChequeRealized($CustomerChequeID)
+    {
+        date_default_timezone_set('Asia/Colombo');
+        $now = date('Y-m-d H:i:s');
+
+        if ($CustomerChequeID) {
+            $data = [
+                'IsRealized' => '1',
+                'dtRealizedDate' => $now,
+                'intRealizedUserID' => $this->session->userdata('user_id'),
+            ];
+            $this->db->where('intCustomerChequeID', $CustomerChequeID);
+            $Realized = $this->db->update('CustomerCheque', $data);
+            return ($Realized == true) ? true : false;
+        }
+    }
+
+    public function customerReturnCheque($CustomerChequeID,$ReceiptHeaderID)
+    {
+        date_default_timezone_set('Asia/Colombo');
+        $now = date('Y-m-d H:i:s');
+
+        if ($CustomerChequeID) {
+        }
+    }
+
+    public function customerCancelCheque($CustomerChequeID,$ReceiptHeaderID)
+    {
+        date_default_timezone_set('Asia/Colombo');
+        $now = date('Y-m-d H:i:s');
+
+        if ($CustomerChequeID) {
+            $this->db->trans_start();
+            $sql = "SELECT intCustomerChequeID, intBankID, intReceiptHeaderID, vcChequeNo, dtPDDate, IsRealized, dtRealizedDate, intRealizedUserID, '".$now."'  AS dtCancelledDate ,  ". $this->session->userdata('user_id') ." AS  intCancelledUserID FROM CustomerCheque WHERE intCustomerChequeID = ? ";
+            $query = $this->db->query($sql, array($CustomerChequeID));
+            if ($query->num_rows()) {
+                $insert = $this->db->insert('customercancelcheque', $query->row_array());
+                $this->db->where('intCustomerChequeID', $CustomerChequeID);
+                $delete = $this->db->delete('CustomerCheque');
+
+                $sql = "SELECT intReceiptHeaderID, vcReceiptNo, intCustomerID, intPayModeID, decAmount, dtReceiptDate, vcRemark, intUserID, dtCreatedDate, '".$now."'  AS dtCancelledDate ,  ". $this->session->userdata('user_id') ." AS  intCancelledUserID FROM receiptheader WHERE intReceiptHeaderID = ? ";
+                $query = $this->db->query($sql, array($ReceiptHeaderID));
+                $insert = $this->db->insert('receiptheader_his', $query->row_array());
+
+                $sql = "SELECT intReceiptDetailID, intReceiptHeaderID, intIssueHeaderID, decPaidAmount FROM receiptdetail WHERE intReceiptHeaderID = ? ";
+                $query = $this->db->query($sql, array($ReceiptHeaderID));
+                $insert = $this->db->insert('receiptdetail_his', $query->row_array());
+
+                $this->db->where('intReceiptHeaderID', $ReceiptHeaderID);
+                $delete = $this->db->delete('receiptdetail');
+
+                $this->db->where('intReceiptHeaderID', $CustomerChequeID);
+                $delete = $this->db->delete('receiptheader');
+
+                $this->db->trans_complete();
+                return ($delete == true) ? true : false;
+            }
+        }
+    }
+
+    public function customerChequeReceipt($ReceiptHeaderID)
+    {
+        date_default_timezone_set('Asia/Colombo');
+        $now = date('Y-m-d H:i:s');
+
+        $this->db->trans_start();
+
+        $sql = "SELECT intReceiptHeaderID, vcReceiptNo, intCustomerID, intPayModeID, decAmount, dtReceiptDate, vcRemark, intUserID, dtCreatedDate, '".$now."'  AS dtCancelledDate ,  ". $this->session->userdata('user_id') ." AS  intCancelledUserID FROM receiptheader WHERE intReceiptHeaderID = ? ";
+        $query = $this->db->query($sql, array($ReceiptHeaderID));
+        $insert = $this->db->insert('receiptheader_his', $query->row_array());
+
+        $sql = "SELECT intReceiptDetailID, intReceiptHeaderID, intIssueHeaderID, decPaidAmount FROM receiptdetail WHERE intReceiptHeaderID = ? ";
+        $query = $this->db->query($sql, array($ReceiptHeaderID));
+        $insert = $this->db->insert('receiptdetail_his', $query->row_array());
+
+        $this->db->where('intReceiptHeaderID', $ReceiptHeaderID);
+        $delete = $this->db->delete('receiptdetail');
+
+        $this->db->where('intReceiptHeaderID', $ReceiptHeaderID);
+        $delete = $this->db->delete('receiptheader');
+
+        $this->db->trans_complete();
+        return ($delete == true) ? true : false;
+
     }
 }

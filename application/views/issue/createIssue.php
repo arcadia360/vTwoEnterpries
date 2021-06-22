@@ -165,11 +165,11 @@
                                 <th hidden>Item ID</th>
                                 <th hidden>GRN Detail ID</th>
                                 <th style="text-align:center;">Item</th>
-                                <th style="width: 200px; text-align:center;">Unit Price</th>
-                                <th style="width: 200px; text-align:center;">Stock Qty</th>
+                                <th style="width: 200px; text-align:center; width:80px;">Unit Price</th>
+                                <th style="width: 200px; text-align:center; width:60px;">Stock Qty</th>
                                 <th style="width: 100px; text-align:center;">Unit</th>
                                 <th style="width: 100px; text-align:center;">Qty</th>
-                                <th style="width: 100px; text-align:center;">Discount (%)</th>
+                                <th style="width: 100px; text-align:center;  width:40px;">Dis.(%)</th>
                                 <th hidden>withotDiscount</th>
                                 <th style="width: 200px; text-align:center;">Total Price</th>
                                 <th hidden>rv</th>
@@ -197,11 +197,11 @@
                                         <?php } ?> -->
                                     </select>
                                 </td>
-                                <td class="static"><input type="text" class="form-control only-decimal add-item" name="txtUnitPrice" id="txtUnitPrice" style="text-align:right;" disabled></td>
-                                <td class="static"><input type="text" class="form-control only-decimal add-item" name="txtStockQty" id="txtStockQty" style="text-align:right;" disabled></td>
+                                <td class="static"><input type="text" class="form-control only-decimal add-item" name="txtUnitPrice" id="txtUnitPrice" style="text-align:right; width:80px;" disabled></td>
+                                <td class="static"><input type="text" class="form-control only-decimal add-item" name="txtStockQty" id="txtStockQty" style="text-align:right; width:60px;" disabled></td>
                                 <td class="static"><input type="text" class="form-control add-item" name="txtMeasureUnit" id="txtMeasureUnit" style="text-align:center;" disabled></td>
                                 <td class="static"><input type="text" class="form-control only-decimal add-item" name="txtQty" id="txtQty" style="text-align:right;"></td>
-                                <td class="static"><input type="text" class="form-control only-decimal add-item" name="txtDiscountPercentage" id="txtDiscountPercentage" maxlength="2" style="text-align:right;"></td>
+                                <td class="static"><input type="text" class="form-control only-decimal add-item" name="txtDiscountPercentage" id="txtDiscountPercentage" maxlength="2" style="text-align:right;  width:40px;"></td>
                                 <td class="static" hidden><input type="text" class="form-control only-decimal add-item" name="txtWithouDiscount" id="txtWithouDiscount" style="text-align:right;"></td>
                                 <td class="static"><input type="text" class="form-control only-decimal" name="txtTotalPrice" id="txtTotalPrice" placeholder="0.00" style="text-align:right;" disabled></td>
                                 <td class="static" hidden><input type="text" class="form-control" name="txtRv" id="txtRv"></td>
