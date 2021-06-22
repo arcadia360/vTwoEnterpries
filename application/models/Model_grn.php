@@ -40,13 +40,14 @@ class Model_grn extends CI_Model
         $item_count = count($this->input->post('itemID'));
 
         for ($i = 0; $i < $item_count; $i++) {
+            $qty = $this->input->post('itemQty')[$i];
             $items = array(
                 'intGRNHeaderID' => $GRNHeaderID,
                 'intItemID' => $this->input->post('itemID')[$i],
-                'decQty' => $this->input->post('itemQty')[$i],
+                'decQty' => $qty,
                 'decUnitPrice' => $this->input->post('unitPrice')[$i],
                 'decTotalPrice' => $this->input->post('totalPrice')[$i],
-                'decAvailableQty' => $this->input->post('itemQty')[$i]
+                'decAvailableQty' => $qty
             );
             $insertDetails = $this->db->insert('GRNDetail', $items);
         }
