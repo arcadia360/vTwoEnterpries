@@ -49,21 +49,21 @@ $(document).ready(function () {
 
     });
 
-    $('#IsAdvancePayment').change(function () {
-        if ($(this).is(':checked')) {
-            $(this).attr('value', 'true');
-        } else {
-            $(this).attr('value', 'false');
-        }
+    // $('#IsAdvancePayment').change(function () {
+    //     if ($(this).is(':checked')) {
+    //         $(this).attr('value', 'true');
+    //     } else {
+    //         $(this).attr('value', 'false');
+    //     }
 
-        //   $("#itemTable").find("tr:gt(1)").remove();
-        //   $('#cmbItem').val('0'); 
-        //   $('#cmbItem').trigger('change');
-        //   $("input[name=cmbItem], input[name=txtMeasureUnit],input[name=txtUnitPrice], input[name=txtQty],input[name=txtStockQty],input[name=txtTotalPrice],input[name=grandTotal],input[name=subTotal],input[name=txtDiscount]").val("");
-        //   CalculateItemCount();
-        //   getcmbItemDate();
+    //     //   $("#itemTable").find("tr:gt(1)").remove();
+    //     //   $('#cmbItem').val('0'); 
+    //     //   $('#cmbItem').trigger('change');
+    //     //   $("input[name=cmbItem], input[name=txtMeasureUnit],input[name=txtUnitPrice], input[name=txtQty],input[name=txtStockQty],input[name=txtTotalPrice],input[name=grandTotal],input[name=subTotal],input[name=txtDiscount]").val("");
+    //     //   CalculateItemCount();
+    //     //   getcmbItemDate();
 
-    });
+    // });
 
     $('#cmbpayment').on('select2:select', function (e) {
         // getDetailByCustomerID();
@@ -112,34 +112,34 @@ $(document).ready(function () {
                 return;
             }
 
-            if ($("#cmbpayment option:selected").val() == 2) { //Credit
+            // if ($("#cmbpayment option:selected").val() != 1) { //Credit   1 Ony Cash
                 if (chkCreditLimit() == false) {
-                    toastr["error"]("Customer CreditLimit Exceed !");
+                    toastr["error"]("Customer Available Credit Exceed !");
                     return;
                 }
                 else {
                     AddToGrid(true);
                     return;
                 }
-            }
-            else {
-                AddToGrid(true);
-            }
+            // }
+            // else {
+            //     AddToGrid(true);
+            // }
         }
 
         event.stopPropagation();
     });
 
     $('#cmbpayment').on('select2:select', function (e) {
-        if ($("#cmbpayment option:selected").val() == 2) {
+        // if ($("#cmbpayment option:selected").val() != 1) {  //Credit   1 Ony Cash old
             if ($("#cmbcustomer option:selected").val() == 0) {
                 toastr["error"]("Please select customer !");
                 return;
             }
             if (chkCreditLimit() == false) {
-                toastr["error"]("Customer CreditLimit Exceed !");
+                toastr["error"]("Customer Available Credit Exceed !");
             }
-        }
+        // }
     });
 
 
@@ -209,18 +209,18 @@ $(document).ready(function () {
             return;
         }
 
-        if ($("#cmbpayment option:selected").val() == 2) { //Credit
+        // if ($("#cmbpayment option:selected").val() != 1) { //Credit   1 Ony Cash  old
             if (chkCreditLimit() == false) {
-                toastr["error"]("Customer CreditLimit Exceed !");
+                toastr["error"]("Customer Available Credit Exceed !");
             }
             else {
 
                 AddToGrid(false);
             }
-        }
-        else {
-            AddToGrid(false);
-        }
+        // }
+        // else {
+        //     AddToGrid(false);
+        // }
     });
 
 
@@ -355,7 +355,7 @@ $(document).ready(function () {
             var DiscoutedPrice = 0;
             // var discountPercentage = $("#txtDiscountPercentage").val();
             var withOutDiscount = 0;
-            
+
 
 
 
@@ -364,7 +364,7 @@ $(document).ready(function () {
 
             for (let index = 0; index < response.length; index++) {
 
-              
+
 
                 var htmlElement = '';
                 if (itemQty > 0) {
@@ -392,7 +392,7 @@ $(document).ready(function () {
                             '<input type="text" class="form-control unitPrice disable-typing" style="text-align:right; width:80px;" name="unitPrice[]" id="unitPrice_' + row_id + '" value="' + parseFloat(unitPrice).toFixed(2) + '" readonly>' +
                             '</td>' +
                             '<td>' +
-                            '   <input type="text" class="form-control disable-typing" style="text-align:center; width:60px;" name="stockQty[]" id="stockQty_' + row_id + '"  value="' + stockQuantity  + '" readonly>' +
+                            '   <input type="text" class="form-control disable-typing" style="text-align:center; width:60px;" name="stockQty[]" id="stockQty_' + row_id + '"  value="' + stockQuantity + '" readonly>' +
                             '</td>' +
                             '<td>' +
                             '   <input type="text" class="form-control disable-typing" style="text-align:center;" name="unit[]" id="unit_' + row_id + '"  value="' + measureUnit + '" readonly>' +
@@ -538,16 +538,16 @@ function getDetailByCustomerID() {
                 $("#advance_payment").val(response.decAdvanceAmount);
 
 
-                AdvanceAmount = parseFloat(response.decAdvanceAmount)
+                // AdvanceAmount = parseFloat(response.decAdvanceAmount)
                 CreditBuyAmount = parseFloat(response.decCreditBuyAmount)
                 AvailableCredit = parseFloat(response.decAvailableCredit)
 
-                if (AdvanceAmount > 0) {
-                    document.getElementById("IsAdvancePayment").checked = true;
-                }
-                else {
-                    document.getElementById("IsAdvancePayment").checked = false;
-                }
+                // if (AdvanceAmount > 0) {
+                //     document.getElementById("IsAdvancePayment").checked = true;
+                // }
+                // else {
+                //     document.getElementById("IsAdvancePayment").checked = false;
+                // }
             },
             error: function (xhr, status, error) {
                 //var err = eval("(" + xhr.responseText + ")");
@@ -583,7 +583,7 @@ function CalculateGrandTotal() {
         // var DiscoutedPrice = ((discountPercentage / 100) * (unitPrice * qty));
 
         $("#subTotal").val(currencyFormat(withoutDiscount));
-        $("#txtDiscount").val(currencyFormat(withoutDiscount-discountedTotal));
+        $("#txtDiscount").val(currencyFormat(withoutDiscount - discountedTotal));
         $("#grandTotal").val(currencyFormat(discountedTotal));
 
 
@@ -658,7 +658,7 @@ function chkCreditLimit() {
     var customerID = $("#cmbcustomer").val();
     debugger;
 
-    var IsAdvancePayment = document.getElementById("IsAdvancePayment");
+    // var IsAdvancePayment = document.getElementById("IsAdvancePayment");
 
     if (customerID > 0) {
 
@@ -669,23 +669,23 @@ function chkCreditLimit() {
             dataType: 'json',
             success: function (response) {
 
-                if (IsAdvancePayment.checked) {
+                // if (IsAdvancePayment.checked) {
 
-                    if ((parseFloat(response.decAvailableCredit) + AdvanceAmount) < total) {
-                        canAdd = false;
-                    }
-                    else {
-                        canAdd = true;
-                    }
+                //     if ((parseFloat(response.decAvailableCredit) + AdvanceAmount) < total) {
+                //         canAdd = false;
+                //     }
+                //     else {
+                //         canAdd = true;
+                //     }
+                // }
+                // else {
+                if (parseFloat(response.decAvailableCredit) < total) {
+                    canAdd = false;
                 }
                 else {
-                    if (parseFloat(response.decAvailableCredit) < total) {
-                        canAdd = false;
-                    }
-                    else {
-                        canAdd = true;
-                    }
+                    canAdd = true;
                 }
+                // }
 
             },
             error: function (xhr, status, error) {
@@ -724,8 +724,8 @@ function CalculateItemCount() {
     // var rowCount = $('#itemTable tr').length;
     // $("#itemCount").text("Item Count : " + (rowCount - 2));
 
-    var itemCount=0;
-var lastItemID = 0;
+    var itemCount = 0;
+    var lastItemID = 0;
     $('#itemTable tbody tr').each(function () {
         var value = parseFloat($(this).closest("tr").find('.itemID').val());
         if (!isNaN(value) && lastItemID != value) {
@@ -738,7 +738,7 @@ var lastItemID = 0;
 }
 
 $('#btnSubmit').click(function () {
-    var IsAdvancePayment = document.getElementById("IsAdvancePayment");
+    // var IsAdvancePayment = document.getElementById("IsAdvancePayment");
 
     if ($("#cmbcustomer option:selected").val() == 0) {
         toastr["error"]("Please select customer !");
@@ -755,29 +755,36 @@ $('#btnSubmit').click(function () {
         $("#cmbItem").focus();
     } else {
         $("input[name=txtQty],input[name=txtTotalPrice]").val("");
-        if ($("#cmbpayment option:selected").val() == 2 && chkCreditLimit() == false) {
-            toastr["error"]("Customer CreditLimit Exceed !");
+        // if ($("#cmbpayment option:selected").val() != 1 && chkCreditLimit() == false) { //Credit   1 Ony Cash   old
+        //     toastr["error"]("Customer CreditLimit Exceed !");
+        //     return;
+        // } 
+
+        if (chkCreditLimit() == false) { //Credit   1 Ony Cash
+            toastr["error"]("Customer Available Credit Exceed !");
             return;
-        } if (IsAdvancePayment.checked) {
-            if ($("input[name=grandTotal]").val() < AdvanceAmount) {
-                toastr["error"]("Please Enter more than Advance Payment !");
-                return;
-            }
-        }
-        if ($("#cmbpayment option:selected").val() == 2) {
-            if (IsAdvancePayment.checked) {
-                if (CreditBuyAmount < $("input[name=grandTotal]").val()) {
-                    toastr["error"]("Customer CreditLimit Exceed !");
-                    return;
-                }
-            }
-            else {
+        } 
+
+        // if (IsAdvancePayment.checked) {
+        //     if ($("input[name=grandTotal]").val() < AdvanceAmount) {
+        //         toastr["error"]("Please Enter more than Advance Payment !");
+        //         return;
+        //     }
+        // }
+        // if ($("#cmbpayment option:selected").val() == 2) {
+        //     if (IsAdvancePayment.checked) {
+        //         if (CreditBuyAmount < $("input[name=grandTotal]").val()) {
+        //             toastr["error"]("Customer CreditLimit Exceed !");
+        //             return;
+        //         }
+        //     }
+        //     else {
                 if (AvailableCredit < $("input[name=grandTotal]").val()) {
-                    toastr["error"]("Customer CreditLimit Exceed ! Please Try Apply Advance Amount!");
+                    toastr["error"]("Customer Available Credit Exceed !");
                     return;
                 }
-            }
-        }
+        //     }
+        // }
 
 
         arcadiaConfirmAlert("You want to be able to create this !", function (button) {

@@ -112,19 +112,28 @@ class Receipt extends Admin_Controller
 
       $buttons = '';
 
-      if (in_array('viewReceipt', $this->permission) || $this->isAdmin) {
-        $buttons .= ' <button type="button" class="btn btn-default" onclick="viewSettlementDetails(' . $value['intReceiptHeaderID'] . ')"  data-toggle="modal" data-target="#viewModal"><i class="fas fa-eye"></i></button>';
-      }
+      //ReceiptStatus ---> 0 = fresh Receipt
+      //ReceiptStatus ---> 1 = Cancelled Receipt
+      //ReceiptStatus ---> 2 = Return Cheque
 
-      if ($value['intCustomerChequeID'] != NULL && $value['IsRealized'] == 0) //Cheque
-      {
-        $buttons .= '<a class="button btn btn-default" onclick="customerChequeRealized(' . $value['intCustomerChequeID'] . ')"><i class="fa fa-check"></i></a>';
-        $buttons .= '<a class="button btn btn-default" onclick="customerReturnCheque(' . $value['intCustomerChequeID'] . ',' . $value['intReceiptHeaderID'] . ')"><i class="fa fa-undo-alt"></i></a>';
-        $buttons .= '<a class="button btn btn-default" onclick="customerCancelCheque(' . $value['intCustomerChequeID'] . ',' . $value['intReceiptHeaderID'] . ')"><i class="fa fa-trash"></i></a>';
+      if ($value['ReceiptStatus'] == 0) { 
+        if (in_array('viewReceipt', $this->permission) || $this->isAdmin) {
+          $buttons .= ' <button type="button" class="btn btn-default" onclick="viewSettlementDetails(' . $value['intReceiptHeaderID'] . ')"  data-toggle="modal" data-target="#viewModal"><i class="fas fa-eye"></i></button>';
+        }
+
+        if ($value['intCustomerChequeID'] != NULL && $value['IsRealized'] == 0) //Cheque
+        {
+          $buttons .= '<a class="button btn btn-default" data-toggle="tooltip" title="Cheque Realized" onclick="customerChequeRealized(' . $value['intCustomerChequeID'] . ',' . $value['intReceiptHeaderID'] . ')"><i class="fa fa-check"></i></a>';
+          $buttons .= '<a class="button btn btn-default" data-toggle="tooltip" title="Return Cheque" onclick="customerReturnCheque(' . $value['intCustomerChequeID'] . ',' . $value['intReceiptHeaderID'] . ')"><i class="fa fa-undo-alt"></i></a>';
+          $buttons .= '<a class="button btn btn-default" data-toggle="tooltip" title="Cancel Cheque" onclick="customerCancelCheque(' . $value['intCustomerChequeID'] . ',' . $value['intReceiptHeaderID'] . ')"><i class="fa fa-trash"></i></a>';
+        } elseif ($value['IsRealized'] == 1) {
+          $buttons .= '<a class="button btn btn-default" data-toggle="tooltip" title="Cancel Realized" onclick="customerCancelRealized(' . $value['intCustomerChequeID'] . ',' . $value['intReceiptHeaderID'] . ')"><i class="fas fa-ban"></i></a>';
+        } else {
+          $buttons .= '<a class="button btn btn-default" data-toggle="tooltip" title="Cancel Receipt" onclick="customerCancelReceipt(' . $value['intReceiptHeaderID'] . ')"><i class="fa fa-trash"></i></a>';
+        }
       }
       else{
-        $buttons .= '<a class="button btn btn-default" onclick="customerCancelReceipt(' . $value['intReceiptHeaderID'] . ')"><i class="fa fa-trash"></i></a>';
-
+        $buttons .= ' <button type="button" class="btn btn-default" onclick="viewCancelledReceiptDetailsHis(' . $value['intReceiptHeaderID'] . ')"  data-toggle="modal" data-target="#viewModal"><i class="fas fa-eye"></i></button>';
       }
 
 
@@ -140,7 +149,9 @@ class Receipt extends Admin_Controller
         $value['vcChequeNo'],
         $value['dtPDDate'],
         $value['vcRemark'],
-        $buttons
+        $buttons,
+        $value['ReceiptStatus'],
+        $value['IsRealized']
       );
     }
 
@@ -154,15 +165,41 @@ class Receipt extends Admin_Controller
     echo json_encode($data);
   }
 
+  public function viewCancelledReceiptDetailsHis()
+  {
+    $ReceiptHeaderID = $this->input->post('intReceiptHeaderID');
+    $data = $this->model_receipt->viewCancelledReceiptDetailsHis($ReceiptHeaderID);
+    echo json_encode($data);
+  }
+
   public function CustomerChequeRealized()
   {
     $CustomerChequeID = $this->input->post('intCustomerChequeID');
+    $ReceiptHeaderID = $this->input->post('intReceiptHeaderID');
 
-    $delete = $this->model_receipt->customerChequeRealized($CustomerChequeID);
+    $delete = $this->model_receipt->customerChequeRealized($CustomerChequeID, $ReceiptHeaderID);
 
     if ($delete == true) {
       $response['success'] = true;
       $response['messages'] = "Realized !";
+    } else {
+      $response['success'] = false;
+      $response['messages'] = "Error in the database !";
+    }
+
+    echo json_encode($response);
+  }
+
+  public function customerCancelRealized()
+  {
+    $CustomerChequeID = $this->input->post('intCustomerChequeID');
+    $ReceiptHeaderID = $this->input->post('intReceiptHeaderID');
+
+    $delete = $this->model_receipt->customerCancelRealized($CustomerChequeID, $ReceiptHeaderID);
+
+    if ($delete == true) {
+      $response['success'] = true;
+      $response['messages'] = "Cancelled !";
     } else {
       $response['success'] = false;
       $response['messages'] = "Error in the database !";
@@ -176,7 +213,7 @@ class Receipt extends Admin_Controller
     $CustomerChequeID = $this->input->post('intCustomerChequeID');
     $ReceiptHeaderID = $this->input->post('intReceiptHeaderID');
 
-    $delete = $this->model_receipt->customerReturnCheque($CustomerChequeID,$ReceiptHeaderID);
+    $delete = $this->model_receipt->customerReturnCheque($CustomerChequeID, $ReceiptHeaderID);
 
     if ($delete == true) {
       $response['success'] = true;
@@ -194,7 +231,7 @@ class Receipt extends Admin_Controller
     $CustomerChequeID = $this->input->post('intCustomerChequeID');
     $ReceiptHeaderID = $this->input->post('intReceiptHeaderID');
 
-    $delete = $this->model_receipt->customerCancelCheque($CustomerChequeID,$ReceiptHeaderID);
+    $delete = $this->model_receipt->customerCancelCheque($CustomerChequeID, $ReceiptHeaderID);
 
     if ($delete == true) {
       $response['success'] = true;

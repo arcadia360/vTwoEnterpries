@@ -8,6 +8,8 @@ var Receipt = function () {
 
 $(document).ready(function () {
 
+    $('[data-toggle="tooltip"]').tooltip();
+
     var date = new Date();
     var monthStartDate = new Date(date.getFullYear(), date.getMonth(), 1);
 
@@ -46,7 +48,7 @@ $(document).ready(function () {
 
 });
 
-function customerChequeRealized(CustomerChequeID){
+function customerChequeRealized(CustomerChequeID,ReceiptHeaderID){
     arcadiaConfirmAlert("You want to be able to realized Cheque !", function (button) {
         // var model = new Receipt();
         // model.intCustomerChequeID = $CustomerChequeID;
@@ -56,12 +58,13 @@ function customerChequeRealized(CustomerChequeID){
             url: base_url + 'Receipt/CustomerChequeRealized',
             type: 'post',
             data: {
-                intCustomerChequeID: CustomerChequeID
+                intCustomerChequeID: CustomerChequeID,
+                intReceiptHeaderID: ReceiptHeaderID
             },
             dataType: 'json',
             success: function (response) {
                 if (response.success == true) {
-                    arcadiaSuccessMessage("realized Cheque !", "Receipt/ViewReceipt");
+                    arcadiaSuccessMessage("Realized Cheque !", "Receipt/ViewReceipt");
                 } else {
                     toastr["error"](response.messages);
                 }
@@ -158,6 +161,36 @@ function customerCancelCheque(CustomerChequeID,ReceiptHeaderID){
     }, this);
 }
 
+function customerCancelRealized(CustomerChequeID,ReceiptHeaderID)
+{
+    arcadiaConfirmAlert("You want to be able to Cancel Realized !", function (button) {
+        //    var model = new Receipt();
+        // model.intCustomerChequeID = $CustomerChequeID;
+        // model.intReceiptHeaderID = $ReceiptHeaderID;
+
+        $.ajax({
+            async: true,
+            url: base_url + 'Receipt/customerCancelRealized',
+            type: 'post',
+            data: {
+                intCustomerChequeID: CustomerChequeID,
+                intReceiptHeaderID: ReceiptHeaderID
+            },
+            dataType: 'json',
+            success: function (response) {
+                if (response.success == true) {
+                    arcadiaSuccessMessage("Cancelled Realized !", "Receipt/ViewReceipt");
+                } else {
+                    toastr["error"](response.messages);
+                }
+            },
+            error: function (request, status, error) {
+                arcadiaErrorMessage(error);
+            }
+        });
+    }, this);
+}
+
 function viewSettlementDetails($ReceiptHeaderID) {
     if ($ReceiptHeaderID > 0) {
 
@@ -170,7 +203,8 @@ function viewSettlementDetails($ReceiptHeaderID) {
             // debugger;
             for (let index = 0; index < response.length; index++) {
                 $("#IssueItemTable tbody").append('<tr>' +
-                    '<td><input type="text" class="form-control" name="txtIssueNo[]" id="txtIssueNo" style="text-align:center;" value="' + response[index].vcIssueNo + '" disabled></td>' +
+                    '<td><input type="text" class="form-control" name="txtIssueNo[]" id="txtIssueNo" style="text-align:center;" value="' + response[index].vcIssueNo +'" disabled></td>' +
+                    '<td><input type="text" class="form-control" name="txtBalance[]" id="txtBalance" style="text-align:right;" value="'  + response[index].TotalAmountDue + '" disabled></td>' +
                     '<td><input type="text" class="form-control" name="txtGrandTotal[]" id="txtGrandTotal" style="text-align:right;" value="' + response[index].decGrandTotal + '" disabled></td>' +
                     '<td><input type="text" class="form-control" name="txtReceivedQty[]" id="txtReceivedQty" style="text-align:right;" value="' + response[index].decPaidAmount + '" disabled></td>' +
                     '</tr>');
@@ -179,6 +213,30 @@ function viewSettlementDetails($ReceiptHeaderID) {
         });
     }
 
+}
+
+function viewCancelledReceiptDetailsHis($ReceiptHeaderID)
+{
+    if ($ReceiptHeaderID > 0) {
+
+        $('#IssueItemTable tbody').empty();
+
+        var model = new Receipt();
+        model.intReceiptHeaderID = $ReceiptHeaderID;
+
+        ajaxCall('Receipt/viewCancelledReceiptDetailsHis', model, function (response) {
+            // debugger;
+            for (let index = 0; index < response.length; index++) {
+                $("#IssueItemTable tbody").append('<tr>' +
+                    '<td><input type="text" class="form-control" name="txtIssueNo[]" id="txtIssueNo" style="text-align:center;" value="' + response[index].vcIssueNo +'" disabled></td>' +
+                    '<td><input type="text" class="form-control" name="txtBalance[]" id="txtBalance" style="text-align:right;" value="'  + response[index].TotalAmountDue + '" disabled></td>' +
+                    '<td><input type="text" class="form-control" name="txtGrandTotal[]" id="txtGrandTotal" style="text-align:right;" value="' + response[index].decGrandTotal + '" disabled></td>' +
+                    '<td><input type="text" class="form-control" name="txtReceivedQty[]" id="txtReceivedQty" style="text-align:right;" value="' + response[index].decPaidAmount + '" disabled></td>' +
+                    '</tr>');
+            }
+
+        });
+    }
 }
 
 
@@ -200,6 +258,16 @@ function FilterItems(FromDate, ToDate) {
         'order': [],
         "bDestroy": true,
         "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+            if (aData[12] == 1) { // Cancel Receipt
+                $('td', nRow).css('background-color', '#dc3545');
+            } else if (aData[12] == 2) { // Return Cheque
+                $('td', nRow).css('background-color', '#6C757D');
+            }
+            else if (aData[13] == 1) { // Realized
+                $('td', nRow).css('background-color', '#17A2B8');
+            }else if (aData[13] == 0) { // Pending Realizing
+                $('td', nRow).css('background-color', '#FFC108');
+            }      
 
             $(nRow.childNodes[0]).css('text-align', 'center');
             $(nRow.childNodes[1]).css('text-align', 'center');

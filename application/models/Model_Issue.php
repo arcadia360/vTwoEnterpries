@@ -30,7 +30,7 @@ class Model_issue extends CI_Model
 
         // $IssueNo = "Issue-001";
 
-        $insertDetails = false;
+        // $insertDetails = false;
 
         $paymentType = $this->input->post('cmbpayment');
         $GrandTotal = str_replace(',', '', $this->input->post('grandTotal'));
@@ -39,20 +39,24 @@ class Model_issue extends CI_Model
         $customerAvailableCredit = (float)$customerData['decAvailableCredit'];
         $exceedCreditLimit = false;
 
-        if ($paymentType == 2) //Credit
-        {
-            $IsAdvancePayment = (bool)$this->input->post('IsAdvancePayment');
-            $advance_payment = (float)$customerData['decAdvanceAmount'];
+        // if ($paymentType == 2) //Credit
+        // {
+        //     $IsAdvancePayment = (bool)$this->input->post('IsAdvancePayment');
+        //     $advance_payment = (float)$customerData['decAdvanceAmount'];
 
-            if ($IsAdvancePayment == true) {
-                if ((float)$customerData['decCreditBuyAmount'] < $GrandTotal) {
-                    $exceedCreditLimit = true;
-                }
-            } else {
-                if ($customerAvailableCredit < $GrandTotal) {
-                    $exceedCreditLimit = true;
-                }
-            }
+        //     if ($IsAdvancePayment == true) {
+        //         if ((float)$customerData['decCreditBuyAmount'] < $GrandTotal) {
+        //             $exceedCreditLimit = true;
+        //         }
+        //     } else {
+        //         if ($customerAvailableCredit < $GrandTotal) {
+        //             $exceedCreditLimit = true;
+        //         }
+        //     }
+        // }
+
+        if ($customerAvailableCredit < $GrandTotal) {
+            $exceedCreditLimit = true;
         }
 
 
@@ -73,34 +77,39 @@ class Model_issue extends CI_Model
         $this->db->insert('IssueHeader', $data);
         $IssueHeaderID = $this->db->insert_id();
 
-        $IsAdvancePayment = (bool)$this->input->post('IsAdvancePayment');
-        if ($IsAdvancePayment == true) {
-            if ((float)$customerData['decAdvanceAmount'] > 0) {
-                $sql = "UPDATE customeradvancepayment AS C
-                SET C.intIssueHeaderID  = " . $IssueHeaderID . "
-                WHERE C.intCustomerID = ? AND C.intIssueHeaderID IS NULL";
+        // $IsAdvancePayment = (bool)$this->input->post('IsAdvancePayment');
+        // if ($IsAdvancePayment == true) {
+        //     if ((float)$customerData['decAdvanceAmount'] > 0) {
+        //         $sql = "UPDATE customeradvancepayment AS C
+        //         SET C.intIssueHeaderID  = " . $IssueHeaderID . "
+        //         WHERE C.intCustomerID = ? AND C.intIssueHeaderID IS NULL";
 
-                $this->db->query($sql, array($this->input->post('cmbcustomer')));
-            }
-        }
+        //         $this->db->query($sql, array($this->input->post('cmbcustomer')));
+        //     }
+        // }
 
-        if ($paymentType == 2) //Credit
-        {
-            if ($IsAdvancePayment == true) {
-                if ((float)$customerData['decAdvanceAmount'] > 0) {
+        // if ($paymentType == 2) //Credit
+        // {
+        //     if ($IsAdvancePayment == true) {
+        //         if ((float)$customerData['decAdvanceAmount'] > 0) {
 
-                    $sql = "UPDATE customer AS C
-                    SET C.decAvailableCredit = (C.decAvailableCredit - " . ($GrandTotal - (float)$customerData['decAdvanceAmount']) . ")
-                    WHERE C.intCustomerID = ?";
-                    $this->db->query($sql, array($this->input->post('cmbcustomer')));
-                }
-            } else {
-                $sql = "UPDATE customer AS C
-                   SET C.decAvailableCredit = (C.decAvailableCredit - " . $GrandTotal . ")
-                   WHERE C.intCustomerID = ?";
-                $this->db->query($sql, array($this->input->post('cmbcustomer')));
-            }
-        }
+        //             $sql = "UPDATE customer AS C
+        //             SET C.decAvailableCredit = (C.decAvailableCredit - " . ($GrandTotal - (float)$customerData['decAdvanceAmount']) . ")
+        //             WHERE C.intCustomerID = ?";
+        //             $this->db->query($sql, array($this->input->post('cmbcustomer')));
+        //         }
+        //     } else {
+        //         $sql = "UPDATE customer AS C
+        //            SET C.decAvailableCredit = (C.decAvailableCredit - " . $GrandTotal . ")
+        //            WHERE C.intCustomerID = ?";
+        //         $this->db->query($sql, array($this->input->post('cmbcustomer')));
+        //     }
+        // }
+
+        $sql = "UPDATE customer AS C
+        SET C.decAvailableCredit = (C.decAvailableCredit - " . $GrandTotal . ")
+        WHERE C.intCustomerID = ?";
+        $this->db->query($sql, array($this->input->post('cmbcustomer')));
 
 
         $item_count = count($this->input->post('itemID'));
@@ -135,7 +144,7 @@ class Model_issue extends CI_Model
                 'decDiscountedPrice' => $this->input->post('totalPrice')[$i]
             );
             $insertDetails = $this->db->insert('IssueDetail', $items);
-            $IssueDetailID = $this->db->insert_id();
+            // $IssueDetailID = $this->db->insert_id();
 
             // $Logdata = array(
             //     'intItemID' => $itemData['intItemID'],
@@ -194,9 +203,8 @@ class Model_issue extends CI_Model
     public function GetIssueHeaderData($IssueHeaderID = null, $PaymentType = null, $CustomerID = null, $FromDate = null, $ToDate = null)
     {
         if ($IssueHeaderID) {
-            $sql = "
-            SELECT  
-                                IH.intIssueHeaderID,
+            
+            $sql = "SELECT  IH.intIssueHeaderID,
                                 IH.intCustomerID,
                                 IFNULL(SR.vcSalesRepName,'N/A') AS vcSalesRepName,
                                 IH.vcIssueNo,
@@ -235,8 +243,7 @@ class Model_issue extends CI_Model
 
 
 
-        $sql = "
-        SELECT  IH.intIssueHeaderID,
+        $sql = "SELECT  IH.intIssueHeaderID,
                IH.vcIssueNo,
                CU.vcCustomerName,
                CU.vcBuildingNumber,
@@ -390,12 +397,12 @@ class Model_issue extends CI_Model
 
         for ($i = 0; $i < $item_count; $i++) {
 
-            if((float)$this->input->post('txtReturnQty')[$i] > 0) {
+            if ((float)$this->input->post('txtReturnQty')[$i] > 0) {
 
                 $currentRV = $this->model_item->chkStockViewRv($this->input->post('txtGRNDetailID')[$i]);
                 $previousRV =  $this->input->post('txtRv')[$i];
-    
-    
+
+
                 if ($currentRV['rv'] != $previousRV) {
                     $anotherUserAccess = true;
                 }
@@ -407,22 +414,22 @@ class Model_issue extends CI_Model
                 //     $exceedStockQty = true;
                 // }
                 $decReturnQty = $this->input->post('txtReturnQty')[$i];
-    
+
                 $items = array(
                     'intIssueReturnHeaderID' => $IssueReturnHeaderID,
                     'intIssueDetailID' => $this->input->post('txtIssueDetailID')[$i],
                     'intGRNDetailID' => $this->input->post('txtGRNDetailID')[$i],
                     'intItemID' => $this->input->post('txtItemID')[$i],
-                    'decUnitPrice' =>$this->input->post('txtUnitPrice')[$i],
+                    'decUnitPrice' => $this->input->post('txtUnitPrice')[$i],
                     'decReturnQty' => $decReturnQty,
                 );
                 $insertDetails = $this->db->insert('issuereturndetail', $items);
-    
+
                 $sql = "UPDATE grndetail AS GD
                         SET GD.decAvailableQty = (GD.decAvailableQty + ?)
                         WHERE GD.intGRNDetailID = ?";
-    
-                $this->db->query($sql, array($decReturnQty,$this->input->post('txtGRNDetailID')[$i]));
+
+                $this->db->query($sql, array($decReturnQty, $this->input->post('txtGRNDetailID')[$i]));
             }
         }
 

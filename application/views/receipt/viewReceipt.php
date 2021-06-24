@@ -56,7 +56,7 @@
 
 
 <style>
-      .table,
+    .table,
     td {
         border: 1px solid #263238;
     }
@@ -162,7 +162,7 @@
                             </thead>
                         </table>
                         <hr>
-                        Color tags : <span class="badge badge-pill badge-warning">Pending Approvals</span> <span class="badge badge-pill badge-light" style="border: 1px #000000 solid;">Approved GRNs</span> <span class="badge badge-pill badge-danger">Rejected GRNs</span>
+                        Color tags : <span class="badge badge-pill badge-danger">Cancelled Receipt</span> <span class="badge badge-pill badge-info">Realized</span> <span class="badge badge-pill badge-warning">Pending Realizing</span> <span class="badge badge-pill badge-secondary">Return Cheque</span>
                     </div>
                     <!-- /.box-body -->
                 </div>
@@ -176,7 +176,7 @@
 
 
 <div class="modal fade" tabindex="-1" role="dialog" id="viewModal">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="viewModal">View Settlement Details</h5>
@@ -189,6 +189,7 @@
                 <thead>
                     <tr>
                         <th style="text-align:center;">Issue No</th>
+                        <th style="width: 100px; text-align:center;">Outstanding</th>
                         <th style="width: 100px; text-align:center;">Total Amount</th>
                         <th style="width: 100px; text-align:center;">Paid Amount</th>
                     </tr>

@@ -31,7 +31,7 @@
                 <div class="row">
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label>Payment Mode :</label>
+                            <label>Credit Term :</label>
                             <select class="form-control select2" style="width: 100%;" id="cmbpayment" name="cmbpayment">
                                 <option value="0" selected hidden>All Payments</option>
                                 <?php foreach ($payment_data as $k => $v) { ?>
