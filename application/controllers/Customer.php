@@ -44,6 +44,7 @@ class Customer extends Admin_Controller
 		$this->form_validation->set_rules('street', 'street', 'trim|required');
 		$this->form_validation->set_rules('city', 'city', 'trim|required');
 		$this->form_validation->set_rules('contact_no_1', 'contact no', 'required|min_length[10]|max_length[10]');
+		$this->form_validation->set_rules('credit_limit', 'credit limit', 'trim|required');
 
 		$this->form_validation->set_error_delimiters('<p class="text-danger">', '</p>');
 
@@ -117,9 +118,6 @@ class Customer extends Admin_Controller
 				}
 			}
 
-
-
-
 			$result['data'][$key] = array(
 				$value['vcCustomerName'],
 				$value['vcBuildingNumber'],
@@ -128,6 +126,7 @@ class Customer extends Admin_Controller
 				$value['vcContactNo1'],
 				$value['vcContactNo2'],
 				$value['decCreditLimit'],
+				$value['decAvailableCredit'],
 				$buttons
 			);
 		}
@@ -152,6 +151,7 @@ class Customer extends Admin_Controller
 			$this->form_validation->set_rules('edit_street', 'street', 'trim|required');
 			$this->form_validation->set_rules('edit_city', 'city', 'trim|required');
 			$this->form_validation->set_rules('edit_contact_no_1', 'contact no', 'required|min_length[10]|max_length[10]');
+			$this->form_validation->set_rules('edit_credit_limit', 'credit limit', 'trim|required');
 
 
 			$this->form_validation->set_error_delimiters('<p class="text-danger">', '</p>');

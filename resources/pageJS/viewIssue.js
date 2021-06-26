@@ -1,6 +1,8 @@
 
 // var manageTable;
-
+var Issue = function () {
+    this.intIssueHeaderID = 0;
+}
 
 $(document).ready(function () {
 
@@ -55,7 +57,7 @@ function FilterItems(FromDate, ToDate) {
 
 
     $('#manageTable').DataTable({
-        dom: 'Bfrtip',
+        dom: '<"dt-top-container"<l><"dt-center-in-div"B><f>r>t<ip>',
         buttons: [
             'copy', 'csv', 'excel', 'pdf', 'print'
         ],
@@ -82,7 +84,28 @@ function FilterItems(FromDate, ToDate) {
 
 }
 
-function viewReceiptWiseSettlementDetails($ReceiptHeaderID) {
+function viewIssuetWiseSettlementDetails($IssueHeaderID) {
+
+    if ($IssueHeaderID > 0) {
+
+        $('#IssueItemTable tbody').empty();
+
+        var model = new Issue();
+        model.intIssueHeaderID = $IssueHeaderID;
+
+        ajaxCall('Issue/viewIssuetWiseSettlementDetails', model, function (response) {
+            // debugger;
+            for (let index = 0; index < response.length; index++) {
+                $("#IssueItemTable tbody").append('<tr>' +
+                    '<td><input type="text" class="form-control" name="txtReceiptNo[]" id="txtReceiptNo" style="text-align:center;" value="' + response[index].vcReceiptNo +'" disabled></td>' +
+                    '<td><input type="text" class="form-control" name="txtChequeNo[]" id="txtChequeNo" style="text-align:right;" value="' + response[index].vcChequeNo + '" disabled></td>' +
+                    '<td><input type="text" class="form-control" name="txtRealized[]" id="txtRealized" style="text-align:right;" value="' + response[index].IsRealized + '" disabled></td>' +
+                    '<td><input type="text" class="form-control" name="txtPaidAmount[]" id="txtPaidAmount" style="text-align:right;" value="' + response[index].decPaidAmount + '" disabled></td>' +
+                    '</tr>');
+            }
+
+        });
+    }
 
 }
 

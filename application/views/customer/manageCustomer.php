@@ -37,6 +37,7 @@
 									<th>Contact No 1</th>
 									<th>Contact No 2</th>
 									<th>Credit Limit</th>
+									<th>Available Limit</th>
 									<th>Action</th>
 								</tr>
 							</thead>
@@ -141,14 +142,22 @@
 						<label for="contact_no_2">Contact No 2</label>
 						<input type="number" class="form-control" id="edit_contact_no_2" name="edit_contact_no_2" onKeyPress="if(this.value.length==10) return false;" placeholder="Enter Contact No 2" autocomplete="off">
 					</div>
-					<div class="form-group">
-						<label for="txtCredit">Credit Limit</label>
-						<input type="text" class="form-control only-decimal" id="edit_credit_limit" name="edit_credit_limit" placeholder="Enter Credit Limit">
+					<div class="row">
+						<div class="form-group">
+							<label for="txtCredit">Credit Limit</label>
+							<input type="text" class="form-control only-decimal" id="edit_credit_limit" name="edit_credit_limit" placeholder="Enter Credit Limit">
+						</div>
+						&nbsp;&nbsp;&nbsp;
+						<div class="form-group">
+							<label for="txtCredit">Available Limit</label>
+							<input type="text" class="form-control only-decimal" id="available_limit" name="available_limit" disabled>
+						</div>
 					</div>
+
 				</div>
 
 				<div class="modal-footer">
-					<button type="submit" class="btn btn-success btn-flat"><i class="fas fa-download" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Update Customer</button>
+					<button type="submit" id="btnUpDateCustomer" class="btn btn-success btn-flat"><i class="fas fa-download" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Update Customer</button>
 				</div>
 
 			</form>

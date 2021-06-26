@@ -71,7 +71,7 @@ class Model_issue extends CI_Model
             // 'decDiscount' => $this->input->post('txtDiscount'),
             'decDiscount' => (str_replace(',', '', $this->input->post('subTotal')) - ($GrandTotal)),
             'decGrandTotal' => $GrandTotal,
-            'vcRemark' => $this->input->post('txtRemark'),
+            'vcRemark' => $this->input->post('txtRemark') == null ? null : $this->input->post('txtRemark'),
         );
 
         $this->db->insert('IssueHeader', $data);
@@ -260,7 +260,8 @@ class Model_issue extends CI_Model
                IH.decGrandTotal,
                IFNULL(CA.decAmount,'N/A') AS decAdvanceAmount,
                IFNULL(IH.vcRemark,'N/A') AS vcRemark,
-               IFNULL(RD.intIssueHeaderID,'N/A') AS PaymentViewButton
+               IFNULL(RD.intIssueHeaderID,'N/A') AS PaymentViewButton,
+               SUM(RD.decPaidAmount) AS PaidTotal
        FROM Issueheader AS IH
        INNER JOIN customer AS CU ON IH.intCustomerID = CU.intCustomerID
        INNER JOIN user as U ON IH.intUserID = U.intUserID
@@ -318,6 +319,25 @@ class Model_issue extends CI_Model
         $sql = "SELECT intPaymentTypeID,vcPaymentType FROM paymenttype;";
         $query = $this->db->query($sql);
         return $query->result_array();
+    }
+
+    public function getIssuetWiseSettlementDetails($IssueHeaderID)
+    {
+        if ($IssueHeaderID) {
+            $sql = "SELECT R.vcReceiptNo, CAST(R.dtReceiptDate AS DATE) as dtReceiptDate,  P.vcPayMode,
+            IFNULL(CONCAT(CH.vcChequeNo,' - ',B.vcBankName),'Cash') AS vcChequeNo ,
+			IFNULL(CAST(CH.dtPDDate AS DATE),'N/A') AS dtPDDate,  CASE WHEN CH.IsRealized = 1 THEN 'Yes'  WHEN CH.IsRealized IS NULL THEN 'N/A' ELSE 'No' END AS IsRealized, 
+            CASE WHEN CH.dtRealizedDate IS NULL THEN 'N/A' ELSE CAST(CH.dtRealizedDate AS DATE)  END AS dtRealizedDate , RD.decPaidAmount
+            FROM receiptheader AS R
+            INNER JOIN receiptdetail AS RD ON R.intReceiptHeaderID = Rd.intReceiptHeaderID
+            INNER JOIN issueheader AS IH ON RD.intIssueHeaderID = IH.intIssueHeaderID
+			INNER JOIN paymode AS P ON R.intPayModeID = P.intPayModeID
+            LEFT OUTER JOIN customercheque  AS CH ON R.intReceiptHeaderID = CH.intReceiptHeaderID
+            LEFT OUTER JOIN bank AS B ON CH.intBankID = B.intBankID
+            WHERE RD.intIssueHeaderID = ?";
+            $query = $this->db->query($sql, array($IssueHeaderID));
+            return $query->result_array();
+        }
     }
 
 
@@ -433,17 +453,22 @@ class Model_issue extends CI_Model
             }
         }
 
+        // $sql = "UPDATE customer AS C
+        // INNER JOIN issueheader AS I ON C.intCustomerID = I.intCustomerID 
+        // LEFT OUTER JOIN customeradvancepayment AS A ON I.intIssueHeaderID = A.intIssueHeaderID
+        // SET C.decAvailableCredit =  CASE WHEN A.intIssueHeaderID IS NULL THEN (C.decAvailableCredit + I.decGrandTotal) ELSE (C.decAvailableCredit + (I.decGrandTotal - A.decAmount)) END 
+        // WHERE I.intIssueHeaderID = ? AND I.intPaymentTypeID = 2;";
+        // $this->db->query($sql, array($IssueHeaderID));
+
         $sql = "UPDATE customer AS C
-        INNER JOIN issueheader AS I ON C.intCustomerID = I.intCustomerID 
-        LEFT OUTER JOIN customeradvancepayment AS A ON I.intIssueHeaderID = A.intIssueHeaderID
-        SET C.decAvailableCredit =  CASE WHEN A.intIssueHeaderID IS NULL THEN (C.decAvailableCredit + I.decGrandTotal) ELSE (C.decAvailableCredit + (I.decGrandTotal - A.decAmount)) END 
-        WHERE I.intIssueHeaderID = ? AND I.intPaymentTypeID = 2;";
+        SET C.decAvailableCredit =  (C.decAvailableCredit + ?)
+        WHERE C.intCustomerID = ? ";
         $this->db->query($sql, array($IssueHeaderID));
 
-        $sql = "UPDATE customeradvancepayment
-        SET intIssueHeaderID = NULL
-        WHERE intIssueHeaderID = ? ;";
-        $this->db->query($sql, array($IssueHeaderID));
+        // $sql = "UPDATE customeradvancepayment
+        // SET intIssueHeaderID = NULL
+        // WHERE intIssueHeaderID = ? ;";
+        // $this->db->query($sql, array($IssueHeaderID));
 
         if ($anotherUserAccess == true) {
             $response['success'] = false;

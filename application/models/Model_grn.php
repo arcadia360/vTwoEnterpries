@@ -147,7 +147,7 @@ class Model_grn extends CI_Model
         }
 
 
-        $sql  = $sql . $dateFilter . $statusFilter . "GROUP BY GH.intGRNHeaderID  ORDER BY GH.intGRNHeaderID";
+        $sql  = $sql . $dateFilter . $statusFilter . "GROUP BY GH.intGRNHeaderID  ORDER BY GH.intGRNHeaderID DESC";
 
         $query = $this->db->query($sql, array($FromDate, $ToDate));
         return $query->result_array();

@@ -196,7 +196,7 @@ class Model_item extends CI_Model
                     it.vcItemName,
                     mu.intMeasureUnitID,
                     mu.vcMeasureUnit,
-                    COALESCE(SUM(CAST(gd.decAvailableQty AS INT)),0) AS decStockInHand,
+                    COALESCE(SUM(FLOOR(gd.decAvailableQty)),0) AS decStockInHand,
                     it.decReOrderLevel,
                     IFNULL(cc.decUnitPrice,it.decUnitPrice) AS decUnitPrice,
                     REPLACE(it.rv,' ','-') as rv 

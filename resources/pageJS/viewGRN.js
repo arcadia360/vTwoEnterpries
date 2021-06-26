@@ -60,6 +60,7 @@ function FilterItems(FromDate,ToDate){
             }
 
             $(nRow.childNodes[0]).css('text-align', 'center');
+            $(nRow.childNodes[1]).css('text-align', 'center');
             $(nRow.childNodes[2]).css('text-align', 'center');
             $(nRow.childNodes[3]).css('text-align', 'center');
             $(nRow.childNodes[4]).css('text-align', 'center');

@@ -1,14 +1,29 @@
 var manageTable;
 
-$(document).ready(function() {
+$(document).ready(function () {
     manageTable = $('#manageTable').DataTable({
         'ajax': 'fetchCustomerData',
         'order': []
     });
 
 
+    $('#edit_credit_limit').on('keyup', function (e) {
+        if ($('#edit_credit_limit').val() > 0) {
+            if (parseFloat($('#edit_credit_limit').val()) < parseFloat($('#available_limit').val())) {
+                toastr["error"]("You can't enter lower than available limit  !");
+                $("#btnUpDateCustomer").prop('disabled', true);
+            }
+            else{
+                $("#btnUpDateCustomer").prop('disabled', false);
+            }
+        }
+
+    });
+
+
+
     // submit the create from 
-    $("#createCustomerForm").unbind('submit').on('submit', function() {
+    $("#createCustomerForm").unbind('submit').on('submit', function () {
         var form = $(this);
 
         // remove the text-danger
@@ -19,7 +34,7 @@ $(document).ready(function() {
             type: form.attr('method'),
             data: form.serialize(), // /converting the form data into array and sending it to server
             dataType: 'json',
-            success: function(response) {
+            success: function (response) {
 
                 manageTable.ajax.reload(null, false);
 
@@ -38,7 +53,7 @@ $(document).ready(function() {
                 } else {
 
                     if (response.messages instanceof Object) {
-                        $.each(response.messages, function(index, value) {
+                        $.each(response.messages, function (index, value) {
                             var id = $("#" + index);
 
                             id.closest('.form-group')
@@ -72,7 +87,7 @@ function editCustomer(id) {
         url: 'fetchCustomerDataById/' + id,
         type: 'post',
         dataType: 'json',
-        success: function(response) {
+        success: function (response) {
 
             $("#edit_customer_name").val(response.vcCustomerName);
             $("#edit_building_number").val(response.vcBuildingNumber);
@@ -81,8 +96,9 @@ function editCustomer(id) {
             $("#edit_contact_no_1").val(response.vcContactNo1);
             $("#edit_contact_no_2").val(response.vcContactNo2);
             $("#edit_credit_limit").val(response.decCreditLimit);
+            $("#available_limit").val(response.decAvailableCredit);
             // submit the edit from 
-            $("#updateCustomerForm").unbind('submit').bind('submit', function() {
+            $("#updateCustomerForm").unbind('submit').bind('submit', function () {
                 var form = $(this);
 
                 // remove the text-danger
@@ -93,7 +109,7 @@ function editCustomer(id) {
                     type: form.attr('method'),
                     data: form.serialize(), // /converting the form data into array and sending it to server
                     dataType: 'json',
-                    success: function(response) {
+                    success: function (response) {
 
                         manageTable.ajax.reload(null, false);
 
@@ -109,7 +125,7 @@ function editCustomer(id) {
                         } else {
 
                             if (response.messages instanceof Object) {
-                                $.each(response.messages, function(index, value) {
+                                $.each(response.messages, function (index, value) {
                                     var id = $("#" + index);
 
                                     id.closest('.form-group')
@@ -144,7 +160,7 @@ function removeCustomer(id) {
     if (id) {
 
         // submit the edit from 
-        $("#removeCustomerForm").unbind('submit').bind('submit', function() {
+        $("#removeCustomerForm").unbind('submit').bind('submit', function () {
             var form = $(this);
 
             // remove the text-danger
@@ -158,7 +174,7 @@ function removeCustomer(id) {
                     intCustomerID: id
                 },
                 dataType: 'json',
-                success: function(response) {
+                success: function (response) {
 
                     manageTable.ajax.reload(null, false);
 

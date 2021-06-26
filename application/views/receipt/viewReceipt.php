@@ -69,6 +69,19 @@
     tbody td {
         padding: 0 !important;
     }
+
+    div.dt-top-container {
+        display: grid;
+        grid-template-columns: auto auto auto;
+    }
+
+    div.dt-center-in-div {
+        margin: 0 auto;
+    }
+
+    div.dt-filter-spacer {
+        margin: 10px 0;
+    }
 </style>
 
 <!-- Content Wrapper. Contains page content -->
@@ -157,6 +170,7 @@
                                     <th>Cheque No</th>
                                     <th>PD Date</th>
                                     <th>Remark</th>
+                                    <th>Receipt Status</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -176,7 +190,7 @@
 
 
 <div class="modal fade" tabindex="-1" role="dialog" id="viewModal">
-    <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="viewModal">View Settlement Details</h5>
@@ -195,8 +209,6 @@
                     </tr>
                 </thead>
                 <tbody>
-
-
                 </tbody>
             </table>
 

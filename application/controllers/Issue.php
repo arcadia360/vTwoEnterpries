@@ -176,6 +176,7 @@ class Issue extends Admin_Controller
         <tr style="text-align: center; height: 40px;">
             <th width="30px" style="border: 1px solid #000000;">#</th>
             <th style="border: 1px solid #000000;">ITEM DESCRIPTION</th>
+            <th width="80px" style="border: 1px solid #000000;">UNIT</th>
             <th width="100px" style="border: 1px solid #000000;">UNIT PRICE</th>
             <th width="80px" style="border: 1px solid #000000;">QTY</th>
             <th width="60px" style="border: 1px solid #000000;">DIS.(%)</th>
@@ -191,6 +192,7 @@ class Issue extends Admin_Controller
         <tr style="font-size: 1.2em;">
             <td style="text-align: center; border-left: 1px solid #000000;">' . $v['num'] . '</td>
             <td style="border-left: 1px solid #000000;">&nbsp;' . $v['vcItemName'] . '</td>
+            <td style="text-align: center; border-left: 1px solid #000000;">' . $v['vcMeasureUnit'] . '&nbsp;</td>
             <td style="text-align: right; border-left: 1px solid #000000;">' . $v['decUnitPrice'] . '&nbsp;</td>
             <td style="text-align: center; border-left: 1px solid #000000;">' . $v['decIssueQty'] . '&nbsp;</td>
             <td style="width:60px; text-align: center; border-left: 1px solid #000000;">' . $v['decDiscountPercentage'] . '%</td>
@@ -206,6 +208,7 @@ class Issue extends Admin_Controller
         <tr>
           <td style="text-align: center; border-left: 1px solid #000000;"></td>
           <td style="border-left: 1px solid #000000;">&nbsp;</td>
+          <td style="text-align: center; border-left: 1px solid #000000;">&nbsp;</td>
           <td style="text-align: right; border-left: 1px solid #000000;">&nbsp;</td>
           <td style="text-align: center; border-left: 1px solid #000000;">&nbsp;</td>
           <td style="text-align: center; border-left: 1px solid #000000;">&nbsp;</td>
@@ -216,6 +219,7 @@ class Issue extends Admin_Controller
 
       $html .= '
       <tr style="font-size: 1.2em;">
+            <td style="border-top: 1px solid #000000;"></td>
             <td style="text-align: center; border-top: 1px solid #000000;"></td>
             <td style="border-top: 1px solid #000000;">&nbsp;</td>
             <td style="text-align: right; border-top: 1px solid #000000;">&nbsp;</td>
@@ -224,12 +228,14 @@ class Issue extends Admin_Controller
         </tr>
         <tr style="font-size: 1.2em;">
             <td></td>
+            <td></td>
             <td>&nbsp;</td>
             <td style="text-align: right;">&nbsp;</td>
             <td colspan="2" style="border: 1px solid #000000;">&nbsp;Discount (%)</td>
             <td style="text-align: right; border: 1px solid #000000;">' . $issue_Header_Date['decDiscount'] . '&nbsp;</td>
         </tr>
         <tr>
+            <td></td>
             <td></td>
             <td>&nbsp;</td>
             <td style="text-align: right;">&nbsp;</td>
@@ -307,13 +313,15 @@ class Issue extends Admin_Controller
 
       if ($value['PaymentViewButton'] != 'N/A') {
         if (in_array('viewIssueCreditSettlement', $this->permission) || $this->isAdmin) {
-          $buttons .= ' <button type="button" class="btn btn-default" onclick="viewReceiptWiseSettlementDetails(' . $value['intIssueHeaderID'] . ')" data-toggle="modal" data-target="#viewModal"><i class="fas fa-money-bill-alt"></i></button>';
+          $buttons .= ' <button type="button" class="btn btn-default" onclick="viewIssuetWiseSettlementDetails(' . $value['intIssueHeaderID'] . ')" data-toggle="modal" data-target="#viewModal"><i class="fas fa-money-bill-alt"></i></button>';
         }
       }
 
-      if ($value['PaymentViewButton'] != 'N/A') {
+      if ($value['decGrandTotal'] > $value['PaidTotal'] && $value['PaymentViewButton'] != 'N/A') {
         $badge = '<span class="badge badge-secondary" style="padding: 4px 10px; float:right; margin-right:10px;">Partially Paid</span>';
-      } else {
+      } else if ($value['decGrandTotal'] <= $value['PaidTotal'] && $value['PaymentViewButton'] != 'N/A') {
+        $badge = '<span class="badge badge-success" style="padding: 4px 10px; float:right; margin-right:10px;">Fully Paid</span>';
+      } else if ($value['PaidTotal'] == NULL) {
         $badge = '<span class="badge badge-warning" style="padding: 4px 10px; float:right; margin-right:10px;">Total Pending</span>';
       }
 
@@ -362,6 +370,13 @@ class Issue extends Admin_Controller
     } else {
       redirect(base_url() . 'Issue/viewIssueDetail', 'refresh');
     }
+  }
+
+  public function viewIssuetWiseSettlementDetails()
+  {
+    $IssueHeaderID = $this->input->post('intIssueHeaderID');
+    $data = $this->model_issue->getIssuetWiseSettlementDetails($IssueHeaderID);
+    echo json_encode($data);
   }
 
 

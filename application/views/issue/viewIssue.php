@@ -6,6 +6,40 @@
     } 
 </style> -->
 
+<style>
+    .table,
+    td {
+        border: 1px solid #263238;
+    }
+
+    .table th {
+        background-color: #263238 !important;
+        color: #FFFFFF;
+    }
+
+    /* .modal-ku {
+        width: 650px;
+        margin: auto;
+    } */
+
+    tbody td {
+        padding: 0 !important;
+    }
+
+    div.dt-top-container {
+        display: grid;
+        grid-template-columns: auto auto auto;
+    }
+
+    div.dt-center-in-div {
+        margin: 0 auto;
+    }
+
+    div.dt-filter-spacer {
+        margin: 10px 0;
+    }
+</style>
+
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper arcadia-main-container ">
     <section class="content-header">
@@ -86,7 +120,7 @@
                                     <th>Issue Date</th>
                                     <th>Created Date</th>
                                     <th>Created User</th>
-                                    <th>Payment Type</th>
+                                    <th>Term</th>
                                     <th>Sub Total</th>
                                     <th>Discount</th>
                                     <th>Grand Total</th>
@@ -107,8 +141,37 @@
         <!-- /.card -->
         <!-- /.row -->
     </section>
-
-
 </div>
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="viewModal">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewModal">View Settlement Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <table class="table" id="IssueItemTable">
+                <thead>
+                    <tr>
+                        <th style="width: 150px; text-align:center;">Receipt No</th>
+                        <th style="width: 100px; text-align:center;">Cheque No</th>
+                        <th style="width: 20px; text-align:center;">Realized</th>
+                        <th style="width: 80px; text-align:center;">Paid Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+
+                </tbody>
+            </table>
+
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
 <script src="<?php echo base_url('resources/pageJS/viewIssue.js') ?>"></script>

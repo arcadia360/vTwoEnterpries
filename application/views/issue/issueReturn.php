@@ -113,7 +113,7 @@
                             <input type="text" class="form-control" id="CreatedUser" name="CreatedUser" autocomplete="off" style="cursor: not-allowed; color:#000000;" disabled />
                         </div>
                         <div class="form-group col-md-2">
-                            <label for="credit_limit">Payment Mode</label>
+                            <label for="credit_limit">Term</label>
                             <input type="text" class="form-control" id="PaymentMode" name="PaymentMode" autocomplete="off" style="cursor: not-allowed; color:#000000;" disabled />
                         </div>
                     </div>

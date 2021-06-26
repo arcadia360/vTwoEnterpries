@@ -111,12 +111,27 @@ class Receipt extends Admin_Controller
     foreach ($settlement_data as $key => $value) {
 
       $buttons = '';
+      $badge = '';
 
       //ReceiptStatus ---> 0 = fresh Receipt
       //ReceiptStatus ---> 1 = Cancelled Receipt
       //ReceiptStatus ---> 2 = Return Cheque
 
-      if ($value['ReceiptStatus'] == 0) { 
+      if ($value['ReceiptStatus'] == 1) { // Cancel Receipt
+        $badge = '<span class="badge badge-danger" style="padding: 4px 10px; float:right; margin-right:10px;">Cancelled Receipt</span>';
+      } else if ($value['ReceiptStatus'] == 2) { // Return Cheque
+        $badge = '<span class="badge badge-secondary" style="padding: 4px 10px; float:right; margin-right:10px;">Return Cheque</span>';
+      } else if ($value['IsRealized'] == 1) { // Realized
+        $badge = '<span class="badge badge-info" style="padding: 4px 10px; float:right; margin-right:10px;">Realized</span>';
+      } else if ($value['IsRealized'] == 0 && $value['intCustomerChequeID'] != NULL) { // Pending Realizing
+        $badge = '<span class="badge badge-warning" style="padding: 4px 10px; float:right; margin-right:10px;">Pending Realizing</span>';
+      } else if ($value['intCustomerChequeID'] == NULL) { // CASH
+        $badge = '';
+      }
+
+
+
+      if ($value['ReceiptStatus'] == 0) {
         if (in_array('viewReceipt', $this->permission) || $this->isAdmin) {
           $buttons .= ' <button type="button" class="btn btn-default" onclick="viewSettlementDetails(' . $value['intReceiptHeaderID'] . ')"  data-toggle="modal" data-target="#viewModal"><i class="fas fa-eye"></i></button>';
         }
@@ -131,8 +146,7 @@ class Receipt extends Admin_Controller
         } else {
           $buttons .= '<a class="button btn btn-default" data-toggle="tooltip" title="Cancel Receipt" onclick="customerCancelReceipt(' . $value['intReceiptHeaderID'] . ')"><i class="fa fa-trash"></i></a>';
         }
-      }
-      else{
+      } else {
         $buttons .= ' <button type="button" class="btn btn-default" onclick="viewCancelledReceiptDetailsHis(' . $value['intReceiptHeaderID'] . ')"  data-toggle="modal" data-target="#viewModal"><i class="fas fa-eye"></i></button>';
       }
 
@@ -149,9 +163,8 @@ class Receipt extends Admin_Controller
         $value['vcChequeNo'],
         $value['dtPDDate'],
         $value['vcRemark'],
-        $buttons,
-        $value['ReceiptStatus'],
-        $value['IsRealized']
+        $badge,
+        $buttons
       );
     }
 

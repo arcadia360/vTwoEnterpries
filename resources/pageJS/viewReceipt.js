@@ -250,7 +250,7 @@ function FilterItems(FromDate, ToDate) {
 
 
     $('#manageTable').DataTable({
-        dom: 'Bfrtip',
+        dom: '<"dt-top-container"<l><"dt-center-in-div"B><f>r>t<ip>',
         buttons: [
             'copy', 'csv', 'excel', 'pdf', 'print'
         ],
@@ -258,16 +258,16 @@ function FilterItems(FromDate, ToDate) {
         'order': [],
         "bDestroy": true,
         "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-            if (aData[12] == 1) { // Cancel Receipt
-                $('td', nRow).css('background-color', '#dc3545');
-            } else if (aData[12] == 2) { // Return Cheque
-                $('td', nRow).css('background-color', '#6C757D');
-            }
-            else if (aData[13] == 1) { // Realized
-                $('td', nRow).css('background-color', '#17A2B8');
-            }else if (aData[13] == 0) { // Pending Realizing
-                $('td', nRow).css('background-color', '#FFC108');
-            }      
+            // if (aData[12] == 1) { // Cancel Receipt
+            //     $('td', nRow).css('background-color', '#dc3545');
+            // } else if (aData[12] == 2) { // Return Cheque
+            //     $('td', nRow).css('background-color', '#6C757D');
+            // }
+            // else if (aData[13] == 1) { // Realized
+            //     $('td', nRow).css('background-color', '#17A2B8');
+            // }else if (aData[13] == 0) { // Pending Realizing
+            //     $('td', nRow).css('background-color', '#FFC108');
+            // }      
 
             $(nRow.childNodes[0]).css('text-align', 'center');
             $(nRow.childNodes[1]).css('text-align', 'center');

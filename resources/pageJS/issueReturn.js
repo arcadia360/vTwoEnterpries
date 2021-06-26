@@ -32,7 +32,7 @@ function getIssuedHeaderData() {
             $("#GrandTotal").val(response.decGrandTotal);
 
         });
-    }
+    } 
 }
 
 function getIssuedDetails() {
@@ -62,7 +62,7 @@ function getIssuedDetails() {
                     '<td><input type="text" class="form-control" name="decTotalPrice[]" id="decTotalPrice" style="text-align:right;" value="' + response[index].decTotalPrice + '" disabled></td>' +
                     '<td><input type="text" class="form-control" name="txtBalanceQty[]" id="txtBalanceQty" style="text-align:right;" value="' + response[index].decBalaceReturnQty + '" disabled></td>' +
                     '<td><input type="text" class="form-control only-decimal" returnQty name="txtReturnQty[]" id="txtReturnQty" style="text-align:center;" placeholder="_ _ _ _ _" onkeyup="validateReturnQty(this)" onkeypress="return isNumber(event,this)" ></input></td>' +
-                    '<td><input type="number" total class="form-control" id="total" name="total[]" value="' + total + '"></td>' +
+                    '<td><input type="text" total class="form-control" id="total" name="total[]" value="' + total + '"></td>' +
                     '<td hidden><input type="text" class="form-control" name="txtRv[]" id="txtRv" value="' + response[index].rv + '" ></td>' +
                     '</tr>');
             }
@@ -83,10 +83,12 @@ function validateReturnQty(evnt) {
     if (parseFloat(BalanceQty) == 0) {
         $(evnt).closest("tr").find('#txtReturnQty').val(null);
         toastr["error"]("You can't return this. Because this item already fully returned !");
+        $(evnt).closest("tr").find('#total').val(0);
     } else if (parseFloat(BalanceQty) > 0) {
         if (parseFloat($(evnt).closest("tr").find('#txtReturnQty').val()) > parseFloat(BalanceQty)) {
             toastr["error"]("You can't exceed balance quantity  !");
             $(evnt).closest("tr").find('#txtReturnQty').val(null);
+            $(evnt).closest("tr").find('#total').val(0);
         }
     }
 
@@ -103,7 +105,8 @@ function CalItemWiseTotal() {
     if (qty != "") {
         var total = (unitPrice * qty);
     }
-    $("#total").val(total);
+    // $("#total").val(total);
+    $("#total").val(parseFloat(total).toFixed(2));
 }
 
 

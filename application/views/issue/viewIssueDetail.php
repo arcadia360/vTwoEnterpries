@@ -89,30 +89,13 @@
                     </div>
                 </div>
                 <div class="row">
-
-                    <div class="form-group col-md-6 col-sm-12">
-
-                        <label for="customer">Payment Mode </label>
-                        <!-- <div class="col-sm-10"> -->
-                        <div class="form-check col-xs-2">
-                            <input class="form-check-input" type="radio" name="paymentmode" id="cash" value="1"  input <?php if ($issue_header_data['intPaymentTypeID'] == 1) {
-                                      print ' checked ';
-                                    } ?>>
-                            <label class="form-check-label" for="gridRadios1">
-                                Cash
-                            </label>
-                        </div>
-                        <div class="form-check col-xs-2">
-                            <input class="form-check-input" type="radio" name="paymentmode" id="credit" value="2" input <?php if ($issue_header_data['intPaymentTypeID'] == 2) {
-                                      print ' checked ';
-                                    } ?>>
-                            <label class="form-check-label" for="gridRadios2">
-                                Credit
-                            </label>
-                        </div>
-
-                        <!-- </div> -->
-
+                    <div class="form-group col-md-3">
+                        <label for="credit_limit">Term</label>
+                        <input type="text" class="form-control" id="Term" name="Term" value="<?= $issue_header_data['vcPaymentType']; ?>" style="cursor: not-allowed; color:#000000;" required disabled>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="credit_limit">Remark</label>
+                        <input type="text" class="form-control" id="Remark" name="Remark" value="<?= $issue_header_data['vcRemark']; ?>" style="cursor: not-allowed; color:#000000;" required disabled>
                     </div>
                     <div class="form-group col-md-6">
                         <label>Issued Date</label>
@@ -122,17 +105,16 @@
                                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                             </div>
                         </div>
-
                     </div>
                 </div>
                 <table class="table table-striped arcadia-table" id="itemTable">
                     <thead>
                         <tr>
                             <th style="text-align:center;">Item</th>
-                            <th style="width: 200px; text-align:center;">Unit Price</th>
-                            <!-- <th style="width: 200px; text-align:center;">Stock Qty</th> -->
                             <th style="width: 100px; text-align:center;">Unit</th>
+                            <th style="width: 200px; text-align:center;">Unit Price</th>
                             <th style="width: 100px; text-align:center;">Issue Qty</th>
+                            <th style="width: 100px; text-align:center;">Discount (%)</th>
                             <th style="width: 200px; text-align:center;">Total Price</th>
                         </tr>
                     </thead>
@@ -142,9 +124,10 @@
                         foreach ($issue_detail_Date as $k => $v) { ?>
                             <tr>
                                 <td><?= $v['vcItemName'] ?></td>
-                                <td style="text-align:right;"><?= $v['decUnitPrice'] ?></td>
                                 <td style="text-align:center;"><?= $v['vcMeasureUnit'] ?></td>
+                                <td style="text-align:right;"><?= $v['decUnitPrice'] ?></td>
                                 <td style="text-align:right;"><?= $v['decIssueQty'] ?></td>
+                                <td style="text-align:right;"><?= $v['decDiscountPercentage'] ?> %</td>
                                 <td style="text-align:right;"><?= $v['decTotalPrice'] ?></td>
                             </tr>
                         <?php
