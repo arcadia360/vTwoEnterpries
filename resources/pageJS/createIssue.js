@@ -650,34 +650,34 @@ $('#btnSubmit').click(function () {
 
 });
 
-function remove() {
-    $(".red").click(function () {
+// function remove() {
+//     $(".red").click(function () {
 
-        alert("yesssssssssssss");
+//         alert("yesssssssssssss");
 
-        var itemID = $(this).closest("tr").find('.itemID').val();
-        var itemName = $(this).closest("tr").find('.itemName').val();
+//         var itemID = $(this).closest("tr").find('.itemID').val();
+//         var itemName = $(this).closest("tr").find('.itemName').val();
 
-        var IsAlreadyIncluded = false;
+//         var IsAlreadyIncluded = false;
 
-        $("#cmbItem option").each(function () {
-            if (itemID == $(this).val()) {
-                IsAlreadyIncluded = true;
-                return false;
-            }
-        });
+//         $("#cmbItem option").each(function () {
+//             if (itemID == $(this).val()) {
+//                 IsAlreadyIncluded = true;
+//                 return false;
+//             }
+//         });
 
-        if (!IsAlreadyIncluded) {
-            var cmbItem = $('#cmbItem');
-            cmbItem.append(
-                $('<option></option>').val(itemID).html(itemName)
-            );
-            $(this).closest("tr").remove();
-        }
-        CalculateItemCount();
-        CalculateGrandTotal();
-    });
-}
+//         if (!IsAlreadyIncluded) {
+//             var cmbItem = $('#cmbItem');
+//             cmbItem.append(
+//                 $('<option></option>').val(itemID).html(itemName)
+//             );
+//             $(this).closest("tr").remove();
+//         }
+//         CalculateItemCount();
+//         CalculateGrandTotal();
+//     });
+// }
 
 
 // on first focus (bubbles up to document), open the menu
