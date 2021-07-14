@@ -56,7 +56,7 @@
                     </a>
                 </li>
 
-                <li class="nav-item has-treeview <?php if ($this->uri->segment(1) == "User" || $this->uri->segment(2) == "UserGroup" || $this->uri->segment(2) == "MeasureUnit" || $this->uri->segment(2) =="MainCategory" || $this->uri->segment(2) =="SubCategory" || $this->uri->segment(2) == "manageSalesRep") {
+                <li class="nav-item has-treeview <?php if ($this->uri->segment(1) == "User" || $this->uri->segment(2) == "UserGroup" || $this->uri->segment(2) == "MeasureUnit" || $this->uri->segment(2) == "MainCategory" || $this->uri->segment(2) == "SubCategory" || $this->uri->segment(2) == "manageSalesRep") {
                                                         echo 'menu-open';
                                                     } ?>">
                     <a href="#" class="nav-link">
@@ -119,7 +119,7 @@
                             </a>
                         </li>
 
-                      </ul>
+                    </ul>
                 </li>
                 <li class="nav-item has-treeview <?php if ($this->uri->segment(2) == "CustomersList" || $this->uri->segment(2) == "manageCustomerUnitPriceConfig") {
                                                         echo 'menu-open';
@@ -291,7 +291,7 @@
                                                         echo 'menu-open';
                                                     } ?>">
                     <a href="#" class="nav-link">
-                        <i class="fas fa-layer-group"></i>
+                        <i class="fas fa-cubes"></i>
                         <p>&nbsp;&nbsp;&nbsp;Stock
                             <i class="right fas fa-angle-left"></i>
                         </p>
@@ -362,7 +362,7 @@
                                                         echo 'menu-open';
                                                     } ?>">
                     <a href="#" class="nav-link">
-                        <i class="fas fa-layer-group"></i>
+                        <i class="fas fa-dolly"></i>
                         <p>&nbsp;&nbsp;&nbsp;Issue
                             <i class="right fas fa-angle-left"></i>
                         </p>
@@ -395,6 +395,26 @@
                     </ul>
                 </li>
 
+                <li class="nav-item has-treeview <?php if ($this->uri->segment(2) == "IssueWiseCostAndProfitReport") {
+                                                        echo 'menu-open';
+                                                    } ?>">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-file-alt"></i>
+                        <p>&nbsp;&nbsp;&nbsp;Report
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="<?php echo base_url('Report/IssueWiseCostAndProfitReport') ?>" class="nav-link <?php if ($this->uri->segment(2) == "IssueWiseCostAndProfitReport") {
+                                                                                                                    echo 'active';
+                                                                                                                } ?>">
+                                <i class="fas fa-hand-holding-usd"></i>
+                                <p>&nbsp;&nbsp;Issue Wise Cost & Profit</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 <li class="nav-item">
                     <a href="<?= base_url('auth/logout') ?>" class="nav-link">
                         <i class="fas fa-power-off"></i>

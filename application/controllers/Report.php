@@ -7,20 +7,20 @@ class Report extends Admin_Controller
     {
         parent::__construct();
         $this->not_logged_in();
-        // $this->load->model('model_branch');
+        // $this->load->model('model_branch'); 
         // $this->load->model('model_groups');
 
         // $user_group_data = $this->model_groups->getUserGroupData();
         // $this->data['user_groups_data'] = $user_group_data;
     }
 
-    public function IssueWiseProfitReport(){
+    public function IssueWiseCostAndProfitReport(){
         if (!$this->isAdmin) {
-            if (!in_array('issueWiseProfitReport', $this->permission)) {
+            if (!in_array('issueWiseCostAndProfitReport', $this->permission)) {
                 redirect('dashboard', 'refresh');
             }
         }
 
-        // $this->render_template('report/issueWiseProfitReport', 'Profit Report', $this->data);
+        $this->render_template('report/issueWiseCostAndProfitReport', 'Cost & Profit Report', $this->data);
     }
 }
