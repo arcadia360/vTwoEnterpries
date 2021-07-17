@@ -12,25 +12,15 @@
         border: 1px solid #263238;
     }
 
-    /* .table th {
+    .table th {
         background-color: #263238 !important;
         color: #FFFFFF;
-    } */
+    }
 
     /* .modal-ku {
         width: 650px;
         margin: auto;
     } */
-
-    th.tableHeader{
-        background-color: #263238;
-        color: #FFFFFF;
-    }
-
-    th.tableFooter{
-        background-color: #6B6F70;
-        color: #FFFFFF;
-    }
 
     tbody td {
         padding: 0 !important;
@@ -56,12 +46,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Issue Wise Cost & Profit Report</h1>
+                    <h1>View Issue Return</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Report</a></li>
-                        <li class="breadcrumb-item active">Issue Wise Cost & Profit</li>
+                        <li class="breadcrumb-item"><a href="#">Issue Return</a></li>
+                        <li class="breadcrumb-item active">View Issue Return</li>
                     </ol>
                 </div>
             </div>
@@ -71,20 +61,48 @@
     <section class="content">
         <!-- Small boxes (Stat box) -->
         <div class="card">
-            <div class="card-header">
+            <!-- <div class="card-header">
                 <div class="row">
-                    <div class="form-group col-md-2">
-                        <label>Issue No</label>
-                        <select class="form-control select2" style="width: 100%;" id="cmbIssueNo" name="cmbIssueNo">
-                            <option value=" 0" disabled selected hidden>Select Issue No</option>
-                            <?php foreach ($issue_No as $k => $v) { ?>
-                                <option value="<?= $v['intIssueHeaderID'] ?>"><?= $v['vcIssueNo'] ?></option>
-                            <?php } ?>
-                        </select>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Credit Term :</label>
+                            <select class="form-control select2" style="width: 100%;" id="cmbpayment" name="cmbpayment">
+                                <option value="0" selected hidden>All Payments</option>
+                                <?php foreach ($payment_data as $k => $v) { ?>
+                                    <option value="<?= $v['intPaymentTypeID'] ?>"><?= $v['vcPaymentType'] ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="customer">Customer</label>
+                            <select class="form-control select2" style="width: 100%;" id="cmbcustomer" name="cmbcustomer">
+                                <option value="0" selected hidden>All Customers</option>
+                                <?php foreach ($customer_data as $k => $v) { ?>
+                                    <option value="<?= $v['intCustomerID'] ?>"><?= $v['vcCustomerName'] ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Date Range :</label>
+
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <i class="far fa-calendar-alt"></i>
+                                    </span>
+                                </div>
+                                <input type="text" class="form-control float-right" name="daterange">
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <div class="card-body">
+
                 <div class="box">
                     <div class="box-body">
                         <!-- <div>
@@ -94,28 +112,15 @@
                             <!-- style="display:block !important;" -->
                             <thead>
                                 <tr>
-                                    <th class="tableHeader">Item Name</th>
-                                    <th class="tableHeader">GRN Value</th>
-                                    <th class="tableHeader">Issued Value</th>
-                                    <th class="tableHeader">Issued Qty</th>
-                                    <th class="tableHeader">Issued Discount (%)</th>
-                                    <th class="tableHeader">Issued Amount</th>
-                                    <th class="tableHeader">GRN Amount</th>
-                                    <th class="tableHeader">Profit Amount</th>
+                                    <th>Return No</th>
+                                    <th>Customer Name</th>
+                                    <th>Issue No</th>
+                                    <th>Return Date</th>
+                                    <th>Reason</th>
+                                    <th>Grand Total</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
-                            <tfoot align="center">
-                                <tr>
-                                    <th class="tableFooter"></th>
-                                    <th class="tableFooter"></th>
-                                    <th class="tableFooter"></th>
-                                    <th class="tableFooter"></th>
-                                    <th class="tableFooter"></th>
-                                    <th class="tableFooter"></th>
-                                    <th class="tableFooter"></th>
-                                    <th class="tableFooter"></th>
-                                </tr>
-                            </tfoot>
                         </table>
                         <hr>
                         <!-- Color tags : <span class="badge badge-pill badge-warning">Pending Approvals</span> <span class="badge badge-pill badge-light" style="border: 1px #000000 solid;">Approved GRNs</span> <span class="badge badge-pill badge-danger">Rejected GRNs</span> -->
@@ -135,7 +140,7 @@
     <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="viewModal">View Settlement Details</h5>
+                <h5 class="modal-title" id="viewModal">View Return Details</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -144,10 +149,9 @@
             <table class="table" id="IssueItemTable">
                 <thead>
                     <tr>
-                        <th style="width: 150px; text-align:center;">Receipt No</th>
-                        <th style="width: 100px; text-align:center;">Cheque No</th>
-                        <th style="width: 20px; text-align:center;">Realized</th>
-                        <th style="width: 80px; text-align:center;">Paid Amount</th>
+                        <th style="width: 150px; text-align:center;">Item</th>
+                        <th style="width: 100px; text-align:center;">Unit Price</th>
+                        <th style="width: 20px; text-align:center;">Return Qty</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -161,4 +165,4 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<script src="<?php echo base_url('resources/pageJS/issueWiseCostAndProfitReport.js') ?>"></script>
+<script src="<?php echo base_url('resources/pageJS/viewIssueReturn.js') ?>"></script>

@@ -145,11 +145,11 @@
 					<div class="row">
 						<div class="form-group">
 							<label for="txtCredit">Credit Limit</label>
-							<input type="text" class="form-control only-decimal" id="edit_credit_limit" name="edit_credit_limit" placeholder="Enter Credit Limit">
+							<input type="number" class="form-control only-decimal" id="edit_credit_limit" name="edit_credit_limit" placeholder="Enter Credit Limit">
 						</div>
 						&nbsp;&nbsp;&nbsp;
 						<div class="form-group">
-							<label for="txtCredit">Available Limit</label>
+							<label for="txtCredit">Customer's Credit</label>
 							<input type="text" class="form-control only-decimal" id="available_limit" name="available_limit" disabled>
 						</div>
 					</div>

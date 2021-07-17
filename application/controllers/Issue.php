@@ -155,7 +155,7 @@ class Issue extends Admin_Controller
      
     <table width="100%" style="color:#000000;">
         <tr>
-            <td width="85%">
+            <td width="80%">
                 <h5><strong>' . $issue_Header_Date['vcCustomerName'] . '</strong></h5>
                 <h5>' . $issue_Header_Date['vcBuildingNumber'] . ' , ' . $issue_Header_Date['vcStreet'] . ',</h5>
                 <h5>' . $issue_Header_Date['vcCity'] . '.</h5>
@@ -167,6 +167,7 @@ class Issue extends Admin_Controller
                     <h5>DATE : ' . $issue_Header_Date['dtCreatedDate'] . '</h5>
                     <h5>INVOICE # : ' . $issue_Header_Date['vcIssueNo'] . '</h5>
                     <h5>TERM : <strong>' . $issue_Header_Date['vcPaymentType'] . '</strong></h5>
+                    <h5>SALES REP : ' . $issue_Header_Date['vcSalesRepName'] . '</h5>
                 </div>
             </td>
         </tr>
@@ -384,6 +385,13 @@ class Issue extends Admin_Controller
   // Issue Return
   //-----------------------------------
 
+  public function viewIssueReturnWiseDetails()
+  {
+    $IssueReturnHeaderID = $this->input->post('intIssueReturnHeaderID');
+    $data = $this->model_issue->getIssueReturnWiseDetails($IssueReturnHeaderID);
+    echo json_encode($data);
+  }
+
   public function IssueReturn()
   {
     if (!$this->isAdmin) {
@@ -397,6 +405,54 @@ class Issue extends Admin_Controller
 
     $this->render_template('Issue/IssueReturn', 'Issue Return', $this->data);
   }
+
+  public function ViewIssueReturn()
+  {
+    if (!$this->isAdmin) {
+      if (!in_array('viewIssue', $this->permission)) {
+        redirect('dashboard', 'refresh');
+      }
+    }
+    $this->render_template('Issue/viewIssueReturn', 'View Issue Return', null);
+  }
+
+  public function FilterIssueReturnHeaderData()
+  {
+    if (!$this->isAdmin) {
+      if (!in_array('viewIssue', $this->permission)) {
+        redirect('dashboard', 'refresh');
+      }
+    }
+
+    $result = array('data' => array());
+
+
+    $issue_data = $this->model_issue->GetIssueReturnHeaderData();
+
+    // $this->data['grn_data'] = $grn_data;
+
+    foreach ($issue_data as $key => $value) {
+
+      $buttons = '';
+
+      if (in_array('viewIssueReturn', $this->permission) || $this->isAdmin) {
+        $buttons .= ' <button type="button" class="btn btn-default" onclick="viewIssueReturnWiseDetails(' . $value['intIssueReturnHeaderID'] . ')" data-toggle="modal" data-target="#viewModal"><i class="fas fa-eye"></i></button>';
+      }
+
+      $result['data'][$key] = array(
+        $value['vcIssueReturnNo'],
+        $value['vcCustomerName'],
+        $value['vcIssueNo'],
+        $value['dtReturnedDate'],
+        $value['vcReason'],
+        number_format((float)$value['decTotal'], 2, '.', ''),
+        $buttons
+      );
+    }
+
+    echo json_encode($result);
+  }
+
 
 
   public function ViewIssueDetailsToReturnData()

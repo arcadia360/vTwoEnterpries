@@ -1,6 +1,21 @@
 <!-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script> -->
 
+<style>
+  div.dt-top-container {
+        display: grid;
+        grid-template-columns: auto auto auto;
+    }
+
+    div.dt-center-in-div {
+        margin: 0 auto;
+    }
+
+    div.dt-filter-spacer {
+        margin: 10px 0;
+    }
+</style>
+
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
 	<!-- Content Header (Page header) -->

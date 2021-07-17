@@ -313,6 +313,14 @@
                                 <p>&nbsp;&nbsp;View GRN</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="<?php echo base_url('GRN/ItemWiseLastGRNUnitPrice') ?>" class="nav-link <?php if ($this->uri->segment(2) == "ViewGRN" || $this->uri->segment(2) == "ViewGRNDetails" || $this->uri->segment(2) == "EditGRN" || $this->uri->segment(2) == "ApproveOrRejectGRN") {
+                                                                                                echo 'active';
+                                                                                            } ?>">
+                                <i class="fas fa-search"></i>
+                                <p>&nbsp;&nbsp;Item Wise Last GRN Unit Price</p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
 
@@ -390,6 +398,14 @@
                                                                                                     } ?>">
                                 <i class="fas fa-search"></i>
                                 <p>&nbsp;&nbsp;Issue Return</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?php echo base_url('Issue/ViewIssueReturn') ?>" class="nav-link <?php if ($this->uri->segment(2) == "ViewIssueReturn") {
+                                                                                                        echo 'active';
+                                                                                                    } ?>">
+                                <i class="fas fa-search"></i>
+                                <p>&nbsp;&nbsp;View Issue Return</p>
                             </a>
                         </li>
                     </ul>

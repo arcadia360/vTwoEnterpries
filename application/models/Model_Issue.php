@@ -203,7 +203,7 @@ class Model_issue extends CI_Model
     public function GetIssueHeaderData($IssueHeaderID = null, $PaymentType = null, $CustomerID = null, $FromDate = null, $ToDate = null)
     {
         if ($IssueHeaderID) {
-            
+
             $sql = "SELECT  IH.intIssueHeaderID,
                                 IH.intCustomerID,
                                 IFNULL(SR.vcSalesRepName,'N/A') AS vcSalesRepName,
@@ -297,6 +297,18 @@ class Model_issue extends CI_Model
         return $query->result_array();
     }
 
+    public function GetIssueReturnHeaderData()
+    {
+        $sql = "SELECT IR.intIssueReturnHeaderID, IR.vcIssueReturnNo,C.vcCustomerName, IH.vcIssueNo, IR.vcReason , IR.decTotal, IR.dtReturnedDate
+        FROM  issuereturnheader AS IR
+        INNER JOIN issueheader AS IH ON IR.intIssueHeaderID = IH.intIssueHeaderID
+        INNER JOIN customer AS C ON IH.intCustomerID = C.intCustomerID ";
+
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
     public function GetIssueDetailsData($IssueHeaderID = null)
     {
 
@@ -345,11 +357,31 @@ class Model_issue extends CI_Model
     // Issue Return
     //-----------------------------------
 
+
+    public function getIssueReturnWiseDetails($IssueReturnHeaderID)
+    {
+        if ($IssueReturnHeaderID) {
+            $sql = "SELECT  I.vcItemName, RD.decUnitPrice, RD.decReturnQty FROM issuereturndetail AS RD
+            INNER JOIN item AS I ON RD.intItemID = I.intItemID
+            WHERE RD.intIssueReturnHeaderID = ?";
+            $query = $this->db->query($sql, array($IssueReturnHeaderID));
+            return $query->result_array();
+        }
+    }
+
     public function getReturnIssueNo()
     {
         $sql = "SELECT IH.intIssueHeaderID,IH.vcIssueNo 
         FROM issueheader IH
         WHERE IH.intIssueHeaderID NOT IN (select intIssueHeaderID from receiptdetail);";
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    public function getAllIssueNo()
+    {
+        $sql = "SELECT IH.intIssueHeaderID,IH.vcIssueNo 
+        FROM issueheader IH";
         $query = $this->db->query($sql);
         return $query->result_array();
     }
@@ -385,24 +417,25 @@ class Model_issue extends CI_Model
 
         $IssueHeaderID = $this->input->post('cmbIssueNo');
 
-        // $query = $this->db->query("SELECT fnGenerateIssueNo() AS IssueNo");
-        // $ret = $query->row();
-        // $IssueNo = $ret->IssueNo;
+        $query = $this->db->query("SELECT fnGenerateIssueReturnNo() AS ReturnNo");
+        $ret = $query->row();
+        $ReturnNo = $ret->ReturnNo;
 
         $response = array();
 
-        $ReturnNo = "Return-001";
+        // $ReturnNo = "Return-001";
 
         $Reason = "";
         $UserID = 0;
         $Reason = $this->input->post('Reason');
+        $GrandTotal = str_replace(',', '', $this->input->post('grandTotal'));
         // $UserID = $this->session->userdata('user_id');
         $UserID = 1;
 
         $data = array(
             'vcIssueReturnNo' => $ReturnNo,
             'intIssueHeaderID' => $IssueHeaderID,
-            'decTotal' => 33333,
+            'decTotal' => $GrandTotal,
             'vcReason' => $Reason,
             'intReturnedUserID' => $UserID,
         );
@@ -453,6 +486,8 @@ class Model_issue extends CI_Model
             }
         }
 
+        $IssueHeaderData = $this->GetIssueHeaderData($IssueHeaderID, null, null, null, null);
+
         // $sql = "UPDATE customer AS C
         // INNER JOIN issueheader AS I ON C.intCustomerID = I.intCustomerID 
         // LEFT OUTER JOIN customeradvancepayment AS A ON I.intIssueHeaderID = A.intIssueHeaderID
@@ -461,9 +496,9 @@ class Model_issue extends CI_Model
         // $this->db->query($sql, array($IssueHeaderID));
 
         $sql = "UPDATE customer AS C
-        SET C.decAvailableCredit =  (C.decAvailableCredit + ?)
+        SET C.decAvailableCredit =  (C.decAvailableCredit + " . $GrandTotal . ")
         WHERE C.intCustomerID = ? ";
-        $this->db->query($sql, array($IssueHeaderID));
+        $this->db->query($sql, array($IssueHeaderData['intCustomerID']));
 
         // $sql = "UPDATE customeradvancepayment
         // SET intIssueHeaderID = NULL

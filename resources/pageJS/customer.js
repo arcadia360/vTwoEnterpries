@@ -10,7 +10,7 @@ $(document).ready(function () {
     $('#edit_credit_limit').on('keyup', function (e) {
         if ($('#edit_credit_limit').val() > 0) {
             if (parseFloat($('#edit_credit_limit').val()) < parseFloat($('#available_limit').val())) {
-                toastr["error"]("You can't enter lower than available limit  !");
+                toastr["error"]("You can't enter lower than Customer's Credit  !");
                 $("#btnUpDateCustomer").prop('disabled', true);
             }
             else{
@@ -18,6 +18,10 @@ $(document).ready(function () {
             }
         }
 
+    });
+
+    $("#editCustomerModal").on("hidden.bs.modal", function () {
+        $("#btnUpDateCustomer").prop('disabled', false);
     });
 
 
@@ -96,9 +100,10 @@ function editCustomer(id) {
             $("#edit_contact_no_1").val(response.vcContactNo1);
             $("#edit_contact_no_2").val(response.vcContactNo2);
             $("#edit_credit_limit").val(response.decCreditLimit);
-            $("#available_limit").val(response.decAvailableCredit);
+            $("#available_limit").val(response.CustomerCredit);
             // submit the edit from 
             $("#updateCustomerForm").unbind('submit').bind('submit', function () {
+
                 var form = $(this);
 
                 // remove the text-danger

@@ -19,7 +19,7 @@ class Model_customer extends CI_Model
     public function getCustomerData($id = null)
     {
         if ($id) {
-            $sql = "SELECT cs.intCustomerID,cs.vcCustomerName,cs.vcBuildingNumber,cs.vcStreet,cs.vcCity,cs.vcContactNo1,cs.vcContactNo2,cs.decCreditLimit,cs.decAvailableCredit,IFNULL(ca.decAmount,0.00) as decAdvanceAmount, (cs.decAvailableCredit + IFNULL(ca.decAmount,0.00)) AS decCreditBuyAmount
+            $sql = "SELECT cs.intCustomerID,cs.vcCustomerName,cs.vcBuildingNumber,cs.vcStreet,cs.vcCity,cs.vcContactNo1,cs.vcContactNo2,cs.decCreditLimit,cs.decAvailableCredit,IFNULL(ca.decAmount,0.00) as decAdvanceAmount, (cs.decAvailableCredit + IFNULL(ca.decAmount,0.00)) AS decCreditBuyAmount, decCreditLimit - decAvailableCredit AS CustomerCredit
             FROM customer cs
             LEFT OUTER JOIN customeradvancepayment as ca on cs.intCustomerID = ca.intCustomerID AND ca.intIssueHeaderID IS NULL WHERE cs.intCustomerID = ? AND cs.IsActive = 1";
             $query = $this->db->query($sql, array($id));
@@ -50,7 +50,7 @@ class Model_customer extends CI_Model
     public function chkexists($id = null)
     {
         if ($id) {
-            $sql = "SELECT EXISTS(SELECT intCustomerID  FROM issu WHERE intCustomerID = ?) AS value";
+            $sql = "SELECT EXISTS(SELECT intCustomerID  FROM issueheader WHERE intCustomerID = ?) AS value";
             $query = $this->db->query($sql, array($id));
             return $query->result_array();
         }
@@ -62,6 +62,18 @@ class Model_customer extends CI_Model
             $this->db->where('intCustomerID', $id);
             $update = $this->db->update('customer', $data);
             return ($update == true) ? true : false;
+        }
+    }
+
+    public function removeCustomer($intCustomerID)
+    {
+        if ($intCustomerID) {
+            $data = [
+                'IsActive' => '0',
+            ];
+            $this->db->where('intCustomerID', $intCustomerID);
+            $delete = $this->db->update('customer', $data);
+            return ($delete == true) ? true : false;
         }
     }
 

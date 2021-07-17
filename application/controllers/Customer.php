@@ -156,7 +156,27 @@ class Customer extends Admin_Controller
 
 			$this->form_validation->set_error_delimiters('<p class="text-danger">', '</p>');
 
+			$CurrentData = $this->model_customer->getCustomerData($id);
+
+
+
 			if ($this->form_validation->run() == TRUE) {
+
+				$decCreditLimit = $CurrentData['decCreditLimit'];
+				$decAvailableCredit = $CurrentData['decAvailableCredit'];
+				$inputLimit = $this->input->post('edit_credit_limit');
+				$ChangingValue = 0;
+
+				if ($inputLimit >= $decCreditLimit) {
+					$ChangingValue = $inputLimit - $decCreditLimit;
+					$decCreditLimit =  $decCreditLimit + $ChangingValue;
+					$decAvailableCredit = $decAvailableCredit + $ChangingValue;
+				} else {
+					$ChangingValue = $decCreditLimit - $inputLimit;
+					$decCreditLimit = $decCreditLimit - $ChangingValue;
+					$decAvailableCredit = $decAvailableCredit - $ChangingValue;
+				}
+
 				$data = array(
 					'vcCustomerName' => $this->input->post('edit_customer_name'),
 					'vcBuildingNumber' => $this->input->post('edit_building_number'),
@@ -164,7 +184,8 @@ class Customer extends Admin_Controller
 					'vcCity' => $this->input->post('edit_city'),
 					'vcContactNo1' => $this->input->post('edit_contact_no_1'),
 					'vcContactNo2' => $this->input->post('edit_contact_no_2'),
-					'decCreditLimit' => $this->input->post('edit_credit_limit'),
+					'decCreditLimit' => $decCreditLimit,
+					'decAvailableCredit' => $decAvailableCredit,
 				);
 
 				$intEnteredBy = array(
@@ -209,14 +230,14 @@ class Customer extends Admin_Controller
 		$response = array();
 		if ($intCustomerID) {
 
-			//	$result = $this->model_customer->chkexists($intCustomerID);
+		 $result = $this->model_customer->chkexists($intCustomerID);
 			$result = '';
 			if ($result <> '') {
 				if ($result[0]['value'] == 1) {
 					$response['success'] = false;
 					$response['messages'] = "Record already received for the system, can't remove this customer !";
 				} else {
-					$delete = $this->model_customer->remove($intCustomerID);
+					$delete = $this->model_customer->removeCustomer($intCustomerID);
 					if ($delete == true) {
 						$response['success'] = true;
 						$response['messages'] = "Successfully removed !";
@@ -485,13 +506,13 @@ class Customer extends Admin_Controller
 		$CurrentRV = $this->model_customer->getCustomerAdvancePaymentData($intCustomerAdvancePaymentID);
 
 		if ($CurrentRV['rv']  != $rv) {
-            $response['success'] = false;
-            $response['messages'] = 'Another user tries to edit this Data, please refresh the page and try again !';
-        }else {
+			$response['success'] = false;
+			$response['messages'] = 'Another user tries to edit this Data, please refresh the page and try again !';
+		} else {
 			if ($intCustomerAdvancePaymentID) {
 
 				$delete = $this->model_customer->RemoveCustomerAdvancePayment($intCustomerAdvancePaymentID);
-	
+
 				if ($delete == true) {
 					$response['success'] = true;
 					$response['messages'] = "Deleted !";
@@ -503,7 +524,7 @@ class Customer extends Admin_Controller
 				$response['success'] = false;
 				$response['messages'] = "Please refersh the page again !!";
 			}
-		} 
+		}
 
 		echo json_encode($response);
 	}

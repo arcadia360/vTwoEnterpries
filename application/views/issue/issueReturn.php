@@ -1,15 +1,15 @@
 <style>
-    .table,
-    td {
+    #IssueItemTable,
+    #IssueItemTable td {
         border: 1px solid #263238;
     }
 
-    .table th {
+    #IssueItemTable th {
         background-color: #263238 !important;
         color: #FFFFFF;
     }
 
-    tbody td {
+    #IssueItemTable tbody td {
         padding: 0 !important;
     }
 
@@ -58,6 +58,81 @@
     } */
 
     .select2-results__option[id*="Test"] {
+        color: red;
+    }
+    
+</style>
+
+<style>
+    /* body {
+        background: #f6f6f6;
+    } */
+
+    /* #table {
+        position: relative;
+        overflow: hidden;
+        margin-top: 50px;
+    } */
+
+    /* table {
+        background: black;
+        box-shadow: 0 10px 30px rgba(225, 225, 225, 0.5);
+    } */
+
+
+
+    .first-tr {
+        /* background-color: #c2c7d0; */
+        border: 2px solid #3d9970;
+    }
+
+    .button {
+        width: 35px;
+        height: 35px;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        justify-content: center;
+        box-shadow: 0 10px 30px rgba(225, 225, 225, 0.4);
+        border: none;
+    }
+
+    .red,
+    .remove {
+        background: #e74c3c;
+    }
+
+    .green {
+        background: #3d9970;
+    }
+
+    /* tr>td {
+        position: relative;
+    } */
+
+    .static {
+        position: static !important;
+    }
+
+    .center-items {
+        /* align-items: center; */
+        margin: 0 auto;
+
+    }
+
+    input[type=text]:disabled {
+        background: #ffffff;
+        border: 1px solid #ced4da !important;
+
+    }
+
+    input[type=text]:read-only {
+        background: #ffffff;
+        border-color: #ffffff;
+    }
+
+    .select2-results span[lowstock="true"] {
         color: red;
     }
 </style>
@@ -157,22 +232,35 @@
                             </tr>
                         </thead>
                         <tbody>
-
-
+                            <!-- Generated Area -->
                         </tbody>
                     </table>
 
+
+                   
                     <div class="row" style="border-top:1px solid #dee2e6;">
-                        <div class="col-md-6">
-                            <input type="text" class="form-control" style="font-weight: 600; text-align:right; font-size:1.5em !important;" id="grandTotal" name="grandTotal" placeholder="0.00" readonly>
-                            <p style="color: #c2c7d0;" id="itemCount">Item Count : 0</p>
+                        <div class="col-6">
+                            <p style="color: #c2c7d0; position:absolute; bottom:0;" id="itemCount">Item Count : 0</p>
                         </div>
                         <!-- /.col -->
-                        <div class="col-md-6">
-                            <button type="button" id="btnSubmit" class="btn btn-lg btn-info btn-flat float-right" style="margin-top: 10px;"><i class="fas fa-calendar-check"></i>&nbsp;&nbsp;&nbsp;Submit</button>
+                        <div class="col-6">
+                            <div class="table-responsive">
+                                <table class="table">
+                                  
+                                    <tr style="border-top:2px solid #dee2e6; border-bottom:2px solid #dee2e6;">
+                                        <th style="font-size:1.5em;">Grand Total:</th>
+                                        <td>
+                                            <input type="text" class="form-control" style="font-weight: 600; text-align:right; font-size:1.5em !important;" id="grandTotal" name="grandTotal" placeholder="0.00" readonly>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <button type="button" id="btnSubmit" class="btn btn-lg btn-info btn-flat float-right"><i class="fas fa-calendar-check"></i>&nbsp;&nbsp;&nbsp;Submit</button>
                         </div>
                         <!-- /.col -->
                     </div>
+
+
                 </form>
             </div>
             <!-- /.card-body -->

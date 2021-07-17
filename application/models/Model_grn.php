@@ -177,6 +177,17 @@ class Model_grn extends CI_Model
         return $query->result_array();
     }
 
+    public function getItemWiseGrnPriceData($ItemID)
+    {
+        $sql = "SELECT  GH.vcGRNNo,GH.vcInvoiceNo,SU.vcSupplierName,GH.dtReceivedDate,GD.decQty,GD.decUnitPrice FROM grndetail AS GD
+        INNER JOIN grnheader AS GH ON GD.intGRNHeaderID = GH.intGRNHeaderID 
+        INNER JOIN supplier AS SU ON GH.intSupplierID = SU.intSupplierID
+        where GD.intItemID = ? AND  GH.intApprovedBy IS NOT NULL
+        ORDER BY GH.dtReceivedDate desc";
+        $query = $this->db->query($sql, array($ItemID));
+        return $query->result_array();
+    }
+
 
     // Edit GRN
 

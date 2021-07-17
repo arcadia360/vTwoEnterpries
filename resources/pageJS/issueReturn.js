@@ -1,15 +1,14 @@
 $(document).ready(function () {
 
 
-    $('#cmbIssueNo').on('select2:close', function (e) {
-        getIssuedHeaderData();
-        getIssuedDetails();
-    });
+});
 
-
-
+$('#cmbIssueNo').on('select2:close', function (e) {
+    getIssuedHeaderData();
+    getIssuedDetails();
 
 });
+
 
 var Issue = function () {
     this.intIssueHeaderID = 0;
@@ -35,6 +34,27 @@ function getIssuedHeaderData() {
     } 
 }
 
+function CalculateGrandTotal() {
+    if ($('#IssueItemTable tr').length > 1) { // Because table header row in here
+
+        var Total = 0;
+
+        $('#IssueItemTable tbody tr').each(function () {
+            var value = parseFloat($(this).closest("tr").find('#total').val());
+            if (!isNaN(value)) {
+                Total += value;
+            }
+           
+        });
+
+        $("#grandTotal").val(currencyFormat(Total));
+
+    } else {
+      
+        $("#grandTotal").val("0.00");
+    }
+}
+
 function getIssuedDetails() {
     var IssueHeaderID = $("#cmbIssueNo").val();
     if (IssueHeaderID > 0) {
@@ -53,8 +73,8 @@ function getIssuedDetails() {
                 $("#IssueItemTable tbody").append('<tr>' +
                     '<td hidden><input type="number" class="form-control" name="txtGRNDetailID[]" value="' + response[index].intGRNDetailID + '"></td>' +
                     '<td hidden><input type="number" class="form-control" name="txtIssueDetailID[]" value="' + response[index].intIssueDetailID + '"></td>' +
-                    '<td hidden><input type="number" class="form-control" name="txtItemID[]" value="' + response[index].intItemID + '"></td>' +
-                    '<td hidden><input type="text" class="form-control" name="txtUnitPrice[]" id="txtUnitPrice" style="text-align:right;" value="' + response[index].decUnitPrice + '"></td>' +
+                    '<td hidden><input type="number" class="form-control itemID" name="txtItemID[]" value="' + response[index].intItemID + '"></td>' +
+                    '<td hidden><input type="text" class="form-control txtUnitPrice" name="txtUnitPrice[]" id="txtUnitPrice" style="text-align:right;" value="' + response[index].decUnitPrice + '"></td>' +
                     '<td><input type="text" class="form-control" name="txtMeasureUnit[]" id="txtMeasureUnit" style="text-align:center;" value="' + response[index].vcItemName.replace(/"/g, "\'\'") + '" disabled></td>' +
                     '<td><input type="text" class="form-control" name="txtExpectedQty[]" id="txtExpectedQty" style="text-align:right;" value="' + response[index].vcMeasureUnit + '" disabled></td>' +
                     '<td><input type="text" class="form-control" unitPrice name="decUnitPrice[]" id="decUnitPrice" style="text-align:right;" value="' + response[index].decUnitPrice + '" disabled></td>' +
@@ -62,10 +82,11 @@ function getIssuedDetails() {
                     '<td><input type="text" class="form-control" name="decTotalPrice[]" id="decTotalPrice" style="text-align:right;" value="' + response[index].decTotalPrice + '" disabled></td>' +
                     '<td><input type="text" class="form-control" name="txtBalanceQty[]" id="txtBalanceQty" style="text-align:right;" value="' + response[index].decBalaceReturnQty + '" disabled></td>' +
                     '<td><input type="text" class="form-control only-decimal" returnQty name="txtReturnQty[]" id="txtReturnQty" style="text-align:center;" placeholder="_ _ _ _ _" onkeyup="validateReturnQty(this)" onkeypress="return isNumber(event,this)" ></input></td>' +
-                    '<td><input type="text" total class="form-control" id="total" name="total[]" value="' + total + '"></td>' +
+                    '<td><input type="text" total class="form-control" id="total" name="total[]" value="' + total + '" disabled></td>' +
                     '<td hidden><input type="text" class="form-control" name="txtRv[]" id="txtRv" value="' + response[index].rv + '" ></td>' +
                     '</tr>');
             }
+            CalculateItemCount();
 
         });
     }
@@ -76,7 +97,8 @@ function getIssuedDetails() {
 
 function validateReturnQty(evnt) {
 
-    CalItemWiseTotal();
+
+    CalItemWiseTotal(evnt);
 
     var BalanceQty = $(evnt).closest("tr").find('#txtBalanceQty').val();
 
@@ -98,34 +120,33 @@ function validateReturnQty(evnt) {
 }
 
 
-function CalItemWiseTotal() {
-    var unitPrice = $("#txtUnitPrice").val();
-    var qty = $("#txtReturnQty").val()
+function CalItemWiseTotal(evnt) {
+
+    var unitPrice = $(evnt).closest("tr").find('#txtUnitPrice').val();
+    var qty = $(evnt).closest("tr").find('#txtReturnQty').val();
+
     var total = 0;
     if (qty != "") {
         var total = (unitPrice * qty);
     }
     // $("#total").val(total);
-    $("#total").val(parseFloat(total).toFixed(2));
+    // $("#total").val(parseFloat(total).toFixed(2));
+    $(evnt).closest("tr").find('#total').val(parseFloat(total).toFixed(2));
 }
 
+function CalculateItemCount() {
+    var itemCount = 0;
+    var lastItemID = 0;
+    $('#IssueItemTable tbody tr').each(function () {
+        var value = parseFloat($(this).closest("tr").find('.itemID').val());
+        if (!isNaN(value) && lastItemID != value) {
+            itemCount++;
+            lastItemID = value;
+        }
+    });
 
-function CalculateGrandTotal() {
-    if ($('#IssueItemTable tr').length > 1) { // Because table header and item add row in here
-        var total = 0;
-        $('#IssueItemTable tbody tr').each(function () {
-            var value = parseFloat($(this).closest("tr").find('.total').val());
-            if (!isNaN(value)) {
-                total += value;
-            }
-          
-        });
+    $("#itemCount").text("Item Count : " + (itemCount));
 
-        $("#grandTotal").val(currencyFormat(total));
-
-    } else {
-        $("#grandTotal").val("0.00");
-    }
 }
 
 

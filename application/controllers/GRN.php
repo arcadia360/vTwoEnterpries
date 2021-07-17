@@ -22,7 +22,7 @@ class GRN extends Admin_Controller
     public function CreateGRN()
     {
         if (!$this->isAdmin) {
-            if (!in_array('createGRN',$this->permission)) {
+            if (!in_array('createGRN', $this->permission)) {
                 redirect('dashboard', 'refresh');
             }
         }
@@ -87,7 +87,7 @@ class GRN extends Admin_Controller
             }
         }
 
-        $this->render_template('GRN/viewGRN','View GRN');
+        $this->render_template('GRN/viewGRN', 'View GRN');
     }
 
     public function ViewGRNDetails($GRNHeaderID)
@@ -116,11 +116,9 @@ class GRN extends Admin_Controller
             $this->data['grn_header_data'] = $grn_header_data;
 
             $this->render_template('GRN/viewGRNDetail', 'View GRN', $this->data);
-        }else{
+        } else {
             // redirect(base_url() . 'GRN/viewGRNDetail', 'refresh');
         }
-
-       
     }
 
     public function FilterGRNHeaderData($StatusType, $FromDate, $ToDate)
@@ -151,7 +149,7 @@ class GRN extends Admin_Controller
                 if (in_array('viewSupplierCreditSettlement', $this->permission) || $this->isAdmin) {
                     $buttons .= ' <button type="button" class="btn btn-default" onclick="viewGRNWiseSettlementDetails(' . $value['intGRNHeaderID'] . ')" data-toggle="modal" data-target="#viewModal"><i class="fas fa-money-bill-alt"></i></button>';
                 }
-            }    
+            }
 
             if ($value['ApprovedUser'] == null && $value['RejectedUser'] == null) { // Pending 
                 if (in_array('editGRN', $this->permission) || $this->isAdmin) {
@@ -165,26 +163,22 @@ class GRN extends Admin_Controller
                 }
             }
 
-            
-            if($value['TotalPaidAmount'] <  $value['decGrandTotal'] &&  $value['intPaymentTypeID'] == 2) 
-            {
+
+            if ($value['TotalPaidAmount'] <  $value['decGrandTotal'] &&  $value['intPaymentTypeID'] == 2) {
                 $badge = '<span class="badge badge-secondary" style="padding: 4px 10px; float:right; margin-right:10px;">Partially Paid</span>';
             }
-        
+
             if ($value['RejectedUser'] != null) {
                 $badge = '<span class="badge badge-danger" style="padding: 4px 10px; float:right; margin-right:10px;">Rejected GRN</span>';
-            }
-            else if($value['TotalPaidAmount'] == 0 &&  $value['intPaymentTypeID'] == 2) 
-            {
+            } else if ($value['TotalPaidAmount'] == 0 &&  $value['intPaymentTypeID'] == 2) {
                 $badge = '<span class="badge badge-warning" style="padding: 4px 10px; float:right; margin-right:10px;">Total Pending</span>';
-            }  
+            }
 
-            if($value['TotalPaidAmount'] ==  $value['decGrandTotal'] || $value['intPaymentTypeID'] == 1) 
-            {
+            if ($value['TotalPaidAmount'] ==  $value['decGrandTotal'] || $value['intPaymentTypeID'] == 1) {
                 $badge = '<span class="badge badge-success" style="padding: 4px 10px; float:right; margin-right:10px;">Fully Paid</span>';
             }
 
-         
+
 
             $result['data'][$key] = array(
                 $value['vcGRNNo'],
@@ -210,6 +204,39 @@ class GRN extends Admin_Controller
         echo json_encode($result);
     }
 
+    public function ItemWiseLastGRNUnitPrice()
+    {
+        $item_data = $this->model_item->getItemData();
+        $this->data['item_data'] = $item_data;
+
+        $this->render_template('GRN/itemWiseLastGRNUnitPrice', 'View Item Wise Last GRN Unit Price', $this->data);
+    }
+
+    public function fetchItemWiseGrnPriceData($ItemID = NULL)
+    {
+		$result = array('data' => array());
+
+        $buttons = '';
+        $buttons .= '<a class="button btn btn-default" style="margin:0 !important; disabled"><i class="fas fa-eye"></i></a>';
+
+		$grn_data = $this->model_grn->getItemWiseGrnPriceData($ItemID);
+		foreach ($grn_data as $key => $value) {
+
+			$result['data'][$key] = array(
+				$value['vcGRNNo'],
+				$value['vcInvoiceNo'],
+				$value['vcSupplierName'],
+                $value['dtReceivedDate'],
+                $value['decQty'],
+                $value['decUnitPrice'],
+                $buttons
+			);
+		}
+
+		echo json_encode($result);
+    }
+
+
     //-----------------------------------
     // Edit GRN
     //-----------------------------------
@@ -230,7 +257,7 @@ class GRN extends Admin_Controller
 
         if ($grn_header_data['dtApprovedOn'] != NULL || $grn_header_data['dtRejectedOn'] != NULL) {
             // Notify To Admin & Redirect
-            redirect(base_url(). 'GRN/ViewGRN', 'refresh');
+            redirect(base_url() . 'GRN/ViewGRN', 'refresh');
         }
 
         $grn_detail_data = $this->model_grn->getGRNDetailData($GRNHeaderID);
@@ -244,10 +271,11 @@ class GRN extends Admin_Controller
         $this->data['grn_header_data'] = $grn_header_data;
 
 
-        $this->render_template('GRN/editGRN','Edit GRN', $this->data);
+        $this->render_template('GRN/editGRN', 'Edit GRN', $this->data);
     }
 
-    public function EditGRNDetails($GRNHeaderID){
+    public function EditGRNDetails($GRNHeaderID)
+    {
         if (!$this->isAdmin) {
             if (!in_array('editGRN', $this->permission)) {
                 redirect('dashboard', 'refresh');
@@ -275,10 +303,8 @@ class GRN extends Admin_Controller
         }
         echo json_encode($response);
     }
-
-// Remove GRN
-
-public function removeGRN(){
+    public function removeGRN()
+    {
         if (!$this->isAdmin) {
             if (!in_array('deleteGRN', $this->permission)) {
                 redirect('dashboard', 'refresh');
@@ -291,7 +317,7 @@ public function removeGRN(){
             $canRemove = $this->model_grn->canRemoveGRN($intGRNHeaderID);
 
             if ($canRemove) {
-                
+
                 $delete = $this->model_grn->removeGRN($intGRNHeaderID);
 
                 if ($delete == true) {
@@ -301,21 +327,19 @@ public function removeGRN(){
                     $response['success'] = false;
                     $response['messages'] = "Error in the database while removing the GRN information !";
                 }
-
-            }else{
+            } else {
                 $response['success'] = false;
                 $response['messages'] = "You can't remove this GRN, Please check and try again !";
             }
-
-           
         } else {
             $response['success'] = false;
             $response['messages'] = "Please refersh the page again !!";
         }
         echo json_encode($response);
-}
+    }
 
-public function ApproveOrRejectGRN($GRNHeaderID){
+    public function ApproveOrRejectGRN($GRNHeaderID)
+    {
         if (!$this->isAdmin) {
             if (!in_array('approveGRN', $this->permission)) {
                 redirect('dashboard', 'refresh');
@@ -345,9 +369,10 @@ public function ApproveOrRejectGRN($GRNHeaderID){
 
 
         $this->render_template('GRN/approveGRN', 'Approve / Reject GRN', $this->data);
-}
+    }
 
-public function ApproveGRN(){
+    public function ApproveGRN()
+    {
         if (!$this->isAdmin) {
             if (!in_array('approveGRN', $this->permission)) {
                 redirect('dashboard', 'refresh');
@@ -356,7 +381,7 @@ public function ApproveGRN(){
         $intGRNHeaderID = $this->input->post('intGRNHeaderID');
 
         $response = array();
-        if ($intGRNHeaderID) { 
+        if ($intGRNHeaderID) {
 
             $canApproveOrReject = $this->model_grn->canRemoveGRN($intGRNHeaderID);
 
@@ -379,7 +404,7 @@ public function ApproveGRN(){
             $response['messages'] = "Please refersh the page again !!";
         }
         echo json_encode($response);
-}
+    }
 
     public function RejectGRN()
     {
@@ -414,5 +439,9 @@ public function ApproveGRN(){
         }
         echo json_encode($response);
     }
+
+    // Remove GRN
+
+
 
 }

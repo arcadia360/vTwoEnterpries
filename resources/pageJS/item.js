@@ -48,6 +48,10 @@ $(document).ready(function () {
     });
 
     manageTable = $('#manageTable').DataTable({
+        dom: '<"dt-top-container"<l><"dt-center-in-div"B><f>r>t<ip>',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ],
         'ajax': 'getStockAvailableItemData',
         'order': [],
         "bDestroy": true,
