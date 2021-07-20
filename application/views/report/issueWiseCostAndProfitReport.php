@@ -22,12 +22,12 @@
         margin: auto;
     } */
 
-    th.tableHeader{
+    th.tableHeader {
         background-color: #263238;
         color: #FFFFFF;
     }
 
-    th.tableFooter{
+    th.tableFooter {
         background-color: #6B6F70;
         color: #FFFFFF;
     }
@@ -47,6 +47,11 @@
 
     div.dt-filter-spacer {
         margin: 10px 0;
+    }
+
+    table.dataTable tbody th,
+    table.dataTable tbody td {
+        padding: 5px 10px !important;
     }
 </style>
 
@@ -92,7 +97,7 @@
                         </div> -->
                         <table id="manageTable" class="table table-bordered table-striped">
                             <!-- style="display:block !important;" -->
-                            <thead>
+                            <thead style="text-align: center;">
                                 <tr>
                                     <th class="tableHeader">Item Name</th>
                                     <th class="tableHeader">GRN Value</th>
@@ -104,16 +109,16 @@
                                     <th class="tableHeader">Profit Amount</th>
                                 </tr>
                             </thead>
-                            <tfoot align="center">
+                            <tfoot>
                                 <tr>
+                                    <th class="tableFooter" style="text-align: center;"></th>
                                     <th class="tableFooter"></th>
                                     <th class="tableFooter"></th>
                                     <th class="tableFooter"></th>
                                     <th class="tableFooter"></th>
                                     <th class="tableFooter"></th>
                                     <th class="tableFooter"></th>
-                                    <th class="tableFooter"></th>
-                                    <th class="tableFooter"></th>
+                                    <th class="tableFooter" style="text-align: right;"></th>
                                 </tr>
                             </tfoot>
                         </table>

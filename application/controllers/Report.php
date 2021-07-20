@@ -47,9 +47,9 @@ class Report extends Admin_Controller
 				$value['IssuedValue'],
 				$value['IssuedQty'],
 				$value['IssuedDiscountPercentage'],
-				$value['IssuedAmount'],
-                $value['GRNAmount'],
-                $value['ProfitAmount'],
+                number_format((float)$value['IssuedAmount'], 2, '.', ''),
+                number_format((float)$value['GRNAmount'], 2, '.', ''),
+                number_format((float)$value['ProfitAmount'], 2, '.', ''),
 			);
 		}
 

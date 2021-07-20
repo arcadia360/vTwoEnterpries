@@ -37,14 +37,14 @@ function getIssueWiseCostAndProfitData() {
         "bDestroy": true,
         "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
 
-            $(nRow.childNodes[0]).css('text-align', 'center');
-            $(nRow.childNodes[1]).css('text-align', 'center');
-            $(nRow.childNodes[2]).css('text-align', 'center');
+            $(nRow.childNodes[0]).css('text-align', 'left');
+            $(nRow.childNodes[1]).css('text-align', 'right');
+            $(nRow.childNodes[2]).css('text-align', 'right');
             $(nRow.childNodes[3]).css('text-align', 'center');
             $(nRow.childNodes[4]).css('text-align', 'center');
-            $(nRow.childNodes[5]).css('text-align', 'center');
-            $(nRow.childNodes[6]).css('text-align', 'center');
-            $(nRow.childNodes[7]).css('text-align', 'center');
+            $(nRow.childNodes[5]).css('text-align', 'right');
+            $(nRow.childNodes[6]).css('text-align', 'right');
+            $(nRow.childNodes[7]).css('text-align', 'right');
       
             var api = this.api(), data;
             // converting to interger to find total
@@ -63,7 +63,7 @@ function getIssueWiseCostAndProfitData() {
             }, 0 );
 
             $( api.column( 0 ).footer() ).html('Profit Total');
-            $( api.column( 7 ).footer() ).html(ProfitTotal);
+            $(api.column(7).footer()).html(parseFloat(Math.round(ProfitTotal * 100) / 100).toFixed(2));
         }
            
         
