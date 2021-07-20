@@ -297,7 +297,7 @@ function calculateTotalAllocatedAndAvailableAmount() {
         }
     });
 
-    totalAvailableAmount = totalPayAmount - totalAllocatedAmount;
+    totalAvailableAmount = totalPayAmount - Math.round(totalAllocatedAmount * 100) / 100;
 
     $("#txtTotalAllocated").val(parseFloat(totalAllocatedAmount).toFixed(2));
     $("#txtTotalAvailable").val(parseFloat(totalAvailableAmount).toFixed(2));
