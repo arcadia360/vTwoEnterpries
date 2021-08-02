@@ -87,7 +87,7 @@ $(document).ready(function () {
     var row_id = 1;
 
     function AddToGrid() {
-        if ($("input[name=cmbItem]").val(0), $("input[name=txtUnitPrice]").val(), $("input[name=txtQty]").val() == "") {
+        if ($("#cmbItem option:selected").val() == 0 || $("input[name=txtUnitPrice]").val() == "" || $("input[name=txtQty]").val() == "") {
             toastr["error"]("Please fill in all fields !");
         } else {
             if ($("#cmbItem option:selected").val() > 0) {

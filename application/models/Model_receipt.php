@@ -8,36 +8,39 @@ class Model_receipt extends CI_Model
 
     public function getCustomerToBeSettleIssueNos($CustomerID)
     {
-        // $sql = "
-        //     SELECT 
-        //         IH.intIssueHeaderID,
-        //         IH.vcIssueNo,
-        //         IH.decGrandTotal,
-        //         SUM(IFNULL(RD.decPaidAmount,0)) AS decPaidAmount 
-        //     FROM 
-        //         IssueHeader AS IH
-        //         LEFT OUTER JOIN ReceiptDetail AS RD ON IH.intIssueHeaderID = RD.intIssueHeaderID
-        //     WHERE 
-        //         intPaymentTypeID = 2 AND IH.intCustomerID = ?
-        //     GROUP BY
-        //         IH.intIssueHeaderID
-        //     HAVING
-        //         IH.decGrandTotal > SUM(IFNULL(RD.decPaidAmount,0)) ";
+        ///Commented On 2021-07-25
+
+        // $sql = "SELECT 
+        //             IH.intIssueHeaderID,
+        //             IH.vcIssueNo,
+        //             IH.decGrandTotal,
+        //             SUM(IFNULL(RD.decPaidAmount,0)) AS decPaidAmount 
+        //         FROM 
+        //             IssueHeader AS IH
+        //             LEFT OUTER JOIN ReceiptDetail AS RD ON IH.intIssueHeaderID = RD.intIssueHeaderID
+        //         WHERE 
+        //             IH.intCustomerID = ?
+        //         GROUP BY
+        //             IH.intIssueHeaderID
+        //         HAVING
+        //             IH.decGrandTotal > SUM(IFNULL(RD.decPaidAmount,0)) ";
 
         $sql = "SELECT 
                     IH.intIssueHeaderID,
                     IH.vcIssueNo,
                     IH.decGrandTotal,
-                    SUM(IFNULL(RD.decPaidAmount,0)) AS decPaidAmount 
+                    SUM(IFNULL(RD.decPaidAmount,0)) AS decPaidAmount,
+                    IFNULL(IRH.decTotal,0) AS decReturnTotal
                 FROM 
                     IssueHeader AS IH
                     LEFT OUTER JOIN ReceiptDetail AS RD ON IH.intIssueHeaderID = RD.intIssueHeaderID
+                    LEFT OUTER JOIN IssueReturnHeader AS IRH ON IH.intIssueHeaderID = IRH.intIssueHeaderID
                 WHERE 
                     IH.intCustomerID = ?
                 GROUP BY
                     IH.intIssueHeaderID
                 HAVING
-                    IH.decGrandTotal > SUM(IFNULL(RD.decPaidAmount,0)) ";
+                    IH.decGrandTotal > SUM(IFNULL(RD.decPaidAmount,0))";
 
         $query = $this->db->query($sql, array($CustomerID));
         return $query->result_array();

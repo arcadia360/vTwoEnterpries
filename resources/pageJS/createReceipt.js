@@ -207,14 +207,16 @@ function setCustomerIssueDetails() {
 
         var issueTotal = 0;
         var paidTotal = 0;
+        var returnTotal = 0;
         var issueNoHTML = '<option value="0" disabled selected hidden>Select Issue No</option>';
 
         for (let index = 0; index < response.length; index++) {
             issueNoHTML += '<option value="' + response[index].intIssueHeaderID + '">' + response[index].vcIssueNo + '</option>';
             issueTotal += parseFloat(response[index].decGrandTotal);
             paidTotal += parseFloat(response[index].decPaidAmount);
+            returnTotal += parseFloat(response[index].decReturnTotal);
         }
-        $("#txtTotalOutstanding").val(parseFloat(issueTotal - paidTotal).toFixed(2));
+        $("#txtTotalOutstanding").val(parseFloat(issueTotal - paidTotal - returnTotal).toFixed(2));
         $("#cmbIssueNo").empty();
         $("#cmbIssueNo").append(issueNoHTML);
     });
