@@ -61,12 +61,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Issue Wise Cost & Profit Report</h1>
+                    <h1>Issue Summary Report</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Report</a></li>
-                        <li class="breadcrumb-item active">Issue Wise Cost & Profit</li>
+                        <li class="breadcrumb-item active">Issue Summary Report</li>
                     </ol>
                 </div>
             </div>
@@ -78,16 +78,20 @@
         <div class="card">
             <div class="card-header">
                 <div class="row">
-                    <div class="form-group col-md-2">
-                        <label>Issue No</label>
-                        <select class="form-control select2" style="width: 100%;" id="cmbIssueNo" name="cmbIssueNo">
-                            <option value=" 0" disabled selected hidden>Select Issue No</option>
-                            <?php foreach ($issue_No as $k => $v) { ?>
-                                <option value="<?= $v['intIssueHeaderID'] ?>"><?= $v['vcIssueNo'] ?></option>
-                            <?php } ?>
-                        </select>
+                    <!-- Date range -->
+                    <div class="form-group col-md-3">
+                        <label>Date Range :</label>
+
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <i class="far fa-calendar-alt"></i>
+                                </span>
+                            </div>
+                            <input type="text" class="form-control float-right" name="daterange">
+                        </div>
+                        <!-- /.input group -->
                     </div>
-                    
                 </div>
             </div>
             <div class="card-body">
@@ -139,34 +143,6 @@
 </div>
 
 
-<div class="modal fade" tabindex="-1" role="dialog" id="viewModal">
-    <div class="modal-dialog modal-xl" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="viewModal">View Settlement Details</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-
-            <table class="table" id="IssueItemTable">
-                <thead>
-                    <tr>
-                        <th style="width: 150px; text-align:center;">Receipt No</th>
-                        <th style="width: 100px; text-align:center;">Cheque No</th>
-                        <th style="width: 20px; text-align:center;">Realized</th>
-                        <th style="width: 80px; text-align:center;">Paid Amount</th>
-                    </tr>
-                </thead>
-                <tbody>
 
 
-                </tbody>
-            </table>
-
-
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
-<script src="<?php echo base_url('resources/pageJS/issueWiseCostAndProfitReport.js') ?>"></script>
+<script src="<?php echo base_url('resources/pageJS/issueSummaryReport.js') ?>"></script>

@@ -1,38 +1,48 @@
 
-var ProfitTotal = 0;
+// var manageTable;
+var Report = function () {
+    this.ReportID = 0;
+}
+
+
 $(document).ready(function () {
-    getIssueWiseCostAndProfitData();
-});
-
-$('#cmbIssueNo').on('select2:close', function (e) {
-    getIssueWiseCostAndProfitData();
-});
-
-// $('#manageTable th.tableHeader').each(function(){
-//     $(this).css('background-color','#263238');
-//     $(this).css('color','#FFFFFF'); 
-// });
 
 
-// $('#manageTable th.tableFooter').each(function(){
-//         $(this).css('background-color','#6B6F70');
-//         $(this).css('color','#FFFFFF'); 
+    var date = new Date();
+    var monthStartDate = new Date(date.getFullYear(), date.getMonth(), 1);
+
+    var selectedFromDate = "";
+    var selectedToDate = "";
+
+    FilterItems(convertToShortDate(monthStartDate), convertToShortDate(date));
+
+    $('input[name="daterange"]').daterangepicker({
+        opens: 'center',
+        startDate: new Date(date.getFullYear(), date.getMonth(), 1),
+        endDate: date,
+        maxDate: new Date()
+    }, function (start, end) {
+            selectedFromDate = start.format('YYYY-MM-DD');
+            selectedToDate = end.format('YYYY-MM-DD');
+            FilterItems(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'))
+    });
+
     
-// });
+     
 
+});
 
-
-function getIssueWiseCostAndProfitData() {
+function FilterItems(FromDate,ToDate) {
     ProfitTotal = 0;
     var IssueHeaderID = $('#cmbIssueNo').val();
 
     $('#manageTable').DataTable({
-        'iDisplayLength': 100,
-        dom: '<"dt-top-container"<l><"dt-center-in-div"B><f>r>t<ip>',
-        buttons: [
-            'copy', 'csv', 'excel', 'pdf', 'print'
-        ],
-        'ajax':  base_url + 'Report/getIssueWiseCostAndProfitData/' + IssueHeaderID,
+        "bPaginate": false,
+        "bLengthChange": false,
+        "bFilter": false,
+        "bInfo": false,
+    
+            'ajax': base_url + 'Report/FilterIssueSummaryReport/'+FromDate+'/'+ToDate,
         'order': [], 
         "bDestroy": true,
         "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {

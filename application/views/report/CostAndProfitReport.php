@@ -24,12 +24,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>GRN Wise Cost & Profit Report</h1>
+                    <h1>Cost & Profit Report</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Report</a></li>
-                        <li class="breadcrumb-item active">GRN Wise Cost & Profit Report</li>
+                        <li class="breadcrumb-item active">Cost & Profit Report</li>
                     </ol>
                 </div>
             </div>
@@ -43,7 +43,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <!-- Date range -->
-                        <div class="form-group">
+                        <div class="form-group col-md-6">
                             <label>Date Range :</label>
 
                             <div class="input-group">
@@ -52,7 +52,7 @@
                                         <i class="far fa-calendar-alt"></i>
                                     </span>
                                 </div>
-                                <input type="text" class="form-control float-right" name="daterange">
+                                <input type="text" class="form-control float-right" name="daterange" id="daterange">
                             </div>
                             <!-- /.input group -->
                         </div>
@@ -71,7 +71,7 @@
                             <!-- style="display:block !important;" -->
                             <thead>
                                 <tr>
-                                    <th>Grand Total</th>
+                                    <th>GRN Total</th>
                                     <th>Issue Total</th>
                                     <th>Profit Total</th>
                                 </tr>
@@ -88,4 +88,4 @@
     </section>
 </div>
 
-<script src="<?php echo base_url('resources/pageJS/GRNWiseCostAndProfitReport.js') ?>"></script>
+<script src="<?php echo base_url('resources/pageJS/costAndProfitReport.js') ?>"></script>

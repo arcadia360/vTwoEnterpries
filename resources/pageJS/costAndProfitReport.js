@@ -7,6 +7,10 @@ var Report = function () {
 
 $(document).ready(function () {
 
+    // $( ".daterangepicker" ).datepicker({
+    //     dateFormat: 'dd-mm-yy'
+    //  });
+
 
     var date = new Date();
     var monthStartDate = new Date(date.getFullYear(), date.getMonth(), 1);
@@ -17,6 +21,7 @@ $(document).ready(function () {
     FilterItems(convertToShortDate(monthStartDate), convertToShortDate(date));
 
     $('input[name="daterange"]').daterangepicker({
+        format: 'dd/mm/yyyy',
         opens: 'center',
         startDate: new Date(date.getFullYear(), date.getMonth(), 1),
         endDate: date,

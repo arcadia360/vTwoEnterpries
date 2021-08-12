@@ -48,6 +48,7 @@ class Report extends Admin_Controller
 				$value['IssuedQty'],
 				$value['IssuedDiscountPercentage'],
                 number_format((float)$value['IssuedAmount'], 2, '.', ''),
+                number_format((float)$value['ReturnedAmount'], 2, '.', ''),
                 number_format((float)$value['GRNAmount'], 2, '.', ''),
                 number_format((float)$value['ProfitAmount'], 2, '.', ''),
 			);
@@ -57,13 +58,14 @@ class Report extends Admin_Controller
     }
 
 
-    public function GRNWiseCostAndProfitReport(){
+    public function CostAndProfitReport()
+    {
         if (!$this->isAdmin) {
-            if (!in_array('GRNWiseCostAndProfitReport', $this->permission)) {
+            if (!in_array('CostAndProfitReport', $this->permission)) {
                 redirect('dashboard', 'refresh');
             }
         }
-        $this->render_template('report/GRNWiseCostAndProfitReport', 'Cost & Profit Report', NULL);
+        $this->render_template('report/CostAndProfitReport', 'Cost & Profit Report', NULL);
     }
 
     public function FilterGRNWiseCostAndProfitData($FromDate,$ToDate)
@@ -77,6 +79,41 @@ class Report extends Admin_Controller
                 number_format((float)$value['decGrandTotal'], 2, ".", ","),
                 number_format((float)$value['decIssueTotal'], 2, ".", ","),
                 number_format((float)$value['decProfitTotal'], 2, ".", ","),
+			);
+		}
+
+		echo json_encode($result);
+    }
+
+    public function IssueSummaryReport()
+    {
+        if (!$this->isAdmin) {
+            if (!in_array('IssueSummaryReport', $this->permission)) {
+                redirect('dashboard', 'refresh');
+            }
+        }
+        $this->render_template('report/issueSummaryReport', 'Issue Summary Report', NULL);
+    }
+
+    public function FilterIssueSummaryReport($FromDate,$ToDate)
+    {
+        $result = array('data' => array());
+
+		$data = $this->model_report->getIssueSummaryData($FromDate,$ToDate);
+		foreach ($data as $key => $value) {
+
+			$buttons = '';
+
+			$result['data'][$key] = array(
+				$value['vcItemName'],
+				$value['GRNValue'],
+				$value['IssuedValue'],
+				$value['IssuedQty'],
+				$value['IssuedDiscountPercentage'],
+                number_format((float)$value['IssuedAmount'], 2, '.', ''),
+                number_format((float)$value['ReturnedAmount'], 2, '.', ''),
+                number_format((float)$value['GRNAmount'], 2, '.', ''),
+                number_format((float)$value['ProfitAmount'], 2, '.', ''),
 			);
 		}
 

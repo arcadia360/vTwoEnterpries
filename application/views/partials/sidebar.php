@@ -404,13 +404,23 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="<?php echo base_url('Report/GRNWiseCostAndProfitReport') ?>" class="nav-link <?php if ($this->uri->segment(2) == "GRNWiseCostAndProfitReport") {
+                            <a href="<?php echo base_url('Report/CostAndProfitReport') ?>" class="nav-link <?php if ($this->uri->segment(2) == "CostAndProfitReport") {
                                                                                                                     echo 'active';
                                                                                                                 } ?>">
                                 <i class="fas fa-hand-holding-usd"></i>
-                                <p>&nbsp;&nbsp;GRN Wise Cost & Profit</p>
+                                <p>&nbsp;&nbsp;Cost & Profit</p>
                             </a>
                         </li>
+
+                        <li class="nav-item">
+                            <a href="<?php echo base_url('Report/IssueSummaryReport') ?>" class="nav-link <?php if ($this->uri->segment(2) == "IssueSummaryReport") {
+                                                                                                                    echo 'active';
+                                                                                                                } ?>">
+                                <i class="fas fa-hand-holding-usd"></i>
+                                <p>&nbsp;&nbsp;Issue Summary Report</p>
+                            </a>
+                        </li>
+
                     </ul>
                 </li>
                 <li class="nav-item">
