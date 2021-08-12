@@ -529,4 +529,16 @@ class Model_issue extends CI_Model
 
         return $response;
     }
+
+    public function  getItemWiseIssuedPriceData($ItemID)
+    {
+        $sql = "SELECT IH.vcIssueNo, CS.vcCustomerName ,IH.dtIssueDate,ID.decIssueQty,ID.decUnitPrice, 
+        TRUNCATE((ID.decUnitPrice - (ID.decUnitPrice * ID.decDiscountPercentage)/100),2) AS decDiscountedUnitPrice  FROM issuedetail AS ID
+        INNER JOIN issueheader AS IH ON ID.intIssueHeaderID = IH.intIssueHeaderID
+        INNER JOIN customer AS CS ON IH.intCustomerID = CS.intCustomerID
+        WHERE ID.intItemID = ?
+        ORDER BY IH.dtIssueDate desc;";
+        $query = $this->db->query($sql, array($ItemID));
+        return $query->result_array();
+    }
 }

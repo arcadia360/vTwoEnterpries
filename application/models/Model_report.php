@@ -29,4 +29,39 @@ class Model_report extends CI_Model
         $query = $this->db->query($sql, array($IssueHeaderID));
         return $query->result_array();
     }
+
+    public function getGRNWiseCostAndProfitData($FromDate,$ToDate)
+    {
+    $sql = "SELECT SUM(decGrandTotal) AS decGrandTotal, SUM(decIssueTotal) AS decIssueTotal, SUM(decProfitTotal) AS decProfitTotal 
+    FROM(
+            SELECT SUM(decGrandTotal) AS  decGrandTotal, 0 AS decIssueTotal, 0 AS decProfitTotal
+            FROM GRNHeader AS GH
+            WHERE GH.dtApprovedOn IS NOT NULL AND CAST(GH.dtApprovedOn AS DATE) between '" . $FromDate . "' AND  '" . $ToDate . "'
+    
+            UNION
+            
+            SELECT 
+            0 AS decGrandTotal,
+            SUM(IH.decGrandTotal- IFNULL(RH.decTotal,0)) AS decIssueTotal,
+            0 AS decProfitTotal
+            FROM IssueHeader AS IH
+            LEFT OUTER JOIN IssueReturnHeader AS RH ON IH.intIssueHeaderID = RH.intIssueHeaderID 
+            WHERE CAST(IH.dtCreatedDate AS DATE) between '" . $FromDate . "' AND  '" . $ToDate . "'
+            
+            UNION 
+    
+            SELECT  
+            0 AS decGrandTotal,
+            0 AS decIssueTotal,
+            (SUM(ID.decDiscountedPrice) - SUM((IFNULL(IRD.decUnitPrice,0) * IFNULL(IRD.decReturnQty,0)))) - SUM(ID.decIssueQty  * GD.decUnitPrice) AS decProfitTotal
+            FROM IssueDetail AS ID
+            INNER JOIN IssueHeader AS IH ON ID.intIssueHeaderID = IH.intIssueHeaderID
+            LEFT OUTER JOIN IssueReturnDetail AS IRD ON ID.intIssueDetailID = IRD.intIssueDetailID
+            INNER JOIN GRNDetail AS GD ON ID.intGRNDetailID = GD.intGRNDetailID
+            WHERE CAST(IH.dtCreatedDate AS DATE) between '" . $FromDate . "' AND  '" . $ToDate . "'
+    ) AS A
+    ";
+    $query = $this->db->query($sql);
+    return $query->result_array();
+    }
 }

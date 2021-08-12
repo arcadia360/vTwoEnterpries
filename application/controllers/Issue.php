@@ -499,4 +499,37 @@ class Issue extends Admin_Controller
 
     echo json_encode($response);
   }
+
+
+  public function ItemWiseLastIssuedUnitPrice()
+  {
+    $item_data = $this->model_item->getItemData();
+    $this->data['item_data'] = $item_data;
+
+    $this->render_template('Issue/ItemWiseLastIssuedUnitPrice', 'View Item Wise Last Issued Unit Price', $this->data);
+  }
+
+  public function fetchItemWiseIssuedPriceData($ItemID = NULL)
+  {
+    $result = array('data' => array());
+
+    $buttons = '';
+    $buttons .= '<a class="button btn btn-default" style="margin:0 !important; disabled"><i class="fas fa-eye"></i></a>';
+
+    $issue_data = $this->model_issue->getItemWiseIssuedPriceData($ItemID);
+    foreach ($issue_data as $key => $value) {
+
+      $result['data'][$key] = array(
+        $value['vcIssueNo'],
+        $value['vcCustomerName'],
+        $value['dtIssueDate'],
+        $value['decIssueQty'],
+        $value['decUnitPrice'],
+        $value['decDiscountedUnitPrice'],
+        $buttons
+      );
+    }
+
+    echo json_encode($result);
+  }
 }

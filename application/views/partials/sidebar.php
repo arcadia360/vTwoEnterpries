@@ -326,42 +326,7 @@
 
                 <?php
                 if ($_SESSION['Is_main_branch'] == 1) { ?>
-                    <!-- <li class="nav-item has-treeview <?php if ($this->uri->segment(2) == "CreateDispatch" || $this->uri->segment(2) == "ViewDispatch" || $this->uri->segment(2) == "CollectDispatchedItems") {
-                                                                echo 'menu-open';
-                                                            } ?>">
-                        <a href="#" class="nav-link">
-                            <i class="fas fa-layer-group"></i>
-                            <p>&nbsp;&nbsp;&nbsp;Dispatch
-                                <i class="right fas fa-angle-left"></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="<?php echo base_url('Dispatch/CreateDispatch') ?>" class="nav-link <?php if ($this->uri->segment(2) == "CreateDispatch") {
-                                                                                                                echo 'active';
-                                                                                                            } ?>">
-                                    <i class="fas fa-cart-plus"></i>
-                                    <p>&nbsp;&nbsp;Create Dispatch</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="<?php echo base_url('Dispatch/ViewDispatch') ?>" class="nav-link <?php if ($this->uri->segment(2) == "ViewDispatch") {
-                                                                                                                echo 'active';
-                                                                                                            } ?>">
-                                    <i class="fas fa-search"></i>
-                                    <p>&nbsp;&nbsp;View Dispatch</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="<?php echo base_url('Dispatch/CollectDispatchedItems') ?>" class="nav-link <?php if ($this->uri->segment(2) == "CollectDispatchedItems") {
-                                                                                                                        echo 'active';
-                                                                                                                    } ?>">
-                                    <i class="fas fa-dolly"></i>
-                                    <p>&nbsp;&nbsp;Collect Dispatched Items</p>
-                                </a>
-                            </li>
-                        </ul>
-                    </li> -->
+     
                 <?php
                 }
                 ?>
@@ -408,6 +373,14 @@
                                 <p>&nbsp;&nbsp;View Issue Return</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="<?php echo base_url('Issue/ItemWiseLastIssuedUnitPrice') ?>" class="nav-link <?php if ($this->uri->segment(2) == "ViewGRN" || $this->uri->segment(2) == "ViewGRNDetails" || $this->uri->segment(2) == "EditGRN" || $this->uri->segment(2) == "ApproveOrRejectGRN") {
+                                                                                                echo 'active';
+                                                                                            } ?>">
+                                <i class="fas fa-search"></i>
+                                <p>&nbsp;&nbsp;Item Wise Last Issued Unit Price</p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
 
@@ -427,6 +400,15 @@
                                                                                                                 } ?>">
                                 <i class="fas fa-hand-holding-usd"></i>
                                 <p>&nbsp;&nbsp;Issue Wise Cost & Profit</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="<?php echo base_url('Report/GRNWiseCostAndProfitReport') ?>" class="nav-link <?php if ($this->uri->segment(2) == "GRNWiseCostAndProfitReport") {
+                                                                                                                    echo 'active';
+                                                                                                                } ?>">
+                                <i class="fas fa-hand-holding-usd"></i>
+                                <p>&nbsp;&nbsp;GRN Wise Cost & Profit</p>
                             </a>
                         </li>
                     </ul>

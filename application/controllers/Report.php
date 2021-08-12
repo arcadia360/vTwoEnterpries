@@ -55,4 +55,31 @@ class Report extends Admin_Controller
 
 		echo json_encode($result);
     }
+
+
+    public function GRNWiseCostAndProfitReport(){
+        if (!$this->isAdmin) {
+            if (!in_array('GRNWiseCostAndProfitReport', $this->permission)) {
+                redirect('dashboard', 'refresh');
+            }
+        }
+        $this->render_template('report/GRNWiseCostAndProfitReport', 'Cost & Profit Report', NULL);
+    }
+
+    public function FilterGRNWiseCostAndProfitData($FromDate,$ToDate)
+    {
+        $result = array('data' => array());
+
+		$data = $this->model_report->getGRNWiseCostAndProfitData($FromDate,$ToDate);
+		foreach ($data as $key => $value) {
+
+			$result['data'][$key] = array(
+                number_format((float)$value['decGrandTotal'], 2, ".", ","),
+                number_format((float)$value['decIssueTotal'], 2, ".", ","),
+                number_format((float)$value['decProfitTotal'], 2, ".", ","),
+			);
+		}
+
+		echo json_encode($result);
+    }
 }
