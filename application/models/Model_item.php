@@ -67,6 +67,7 @@ class Model_item extends CI_Model
                             COALESCE(SUM(GD.decAvailableQty),0) AS decStockInHand,
                             I.decReOrderLevel,
                             IFNULL(I.decUnitPrice,'N/A') AS decUnitPrice,
+                            fnGetStockItemGRNvalue(I.intItemID) AS stockItemGRNvalue,
                             REPLACE(I.rv,' ','-') as rv  FROM
             grnheader AS GH 
             INNER JOIN grndetail AS GD ON GH.intGRNHeaderID = GD.intGRNHeaderID AND GH.intApprovedBy is not null

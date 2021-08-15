@@ -7,9 +7,25 @@ var Report = function () {
 
 $(document).ready(function () {
 
-    // $( ".daterangepicker" ).datepicker({
+    // $( ".daterange" ).datepicker({
     //     dateFormat: 'dd-mm-yy'
     //  });
+
+    //  $("#daterange").daterangepicker({
+    //     locale: {
+    //         format: 'DD/MMM/YYYY'
+    //     }
+    // });
+
+    // $('#daterange').datepicker({ dateFormat: 'dd-mm-yy' }).val();
+
+    // $('#daterange').daterangepicker({
+    //     timePicker: true,
+    //     timePickerIncrement: 30,
+    //     locale: {
+    //         format: 'DD/MM/YYYY'
+    //     }
+    // })
 
 
     var date = new Date();
@@ -21,11 +37,13 @@ $(document).ready(function () {
     FilterItems(convertToShortDate(monthStartDate), convertToShortDate(date));
 
     $('input[name="daterange"]').daterangepicker({
-        format: 'dd/mm/yyyy',
         opens: 'center',
         startDate: new Date(date.getFullYear(), date.getMonth(), 1),
         endDate: date,
-        maxDate: new Date()
+        maxDate: new Date(),
+        locale: {
+            format: 'DD/MM/YYYY'
+        }
     }, function (start, end) {
             selectedFromDate = start.format('YYYY-MM-DD');
             selectedToDate = end.format('YYYY-MM-DD');

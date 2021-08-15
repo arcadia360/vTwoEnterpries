@@ -9,6 +9,7 @@ class Report extends Admin_Controller
         $this->not_logged_in();
         $this->load->model('model_report'); 
         $this->load->model('model_issue');
+        $this->load->model('model_customer');
 
         // $user_group_data = $this->model_groups->getUserGroupData();
         // $this->data['user_groups_data'] = $user_group_data;
@@ -92,14 +93,17 @@ class Report extends Admin_Controller
                 redirect('dashboard', 'refresh');
             }
         }
-        $this->render_template('report/issueSummaryReport', 'Issue Summary Report', NULL);
+
+        $customer_data = $this->model_customer->getCustomerData();
+        $this->data['customer_data'] = $customer_data;
+        $this->render_template('report/issueSummaryReport', 'Issue Summary Report', $this->data);
     }
 
-    public function FilterIssueSummaryReport($FromDate,$ToDate)
+    public function FilterIssueSummaryReport($FromDate,$ToDate,$CustomerID)
     {
         $result = array('data' => array());
 
-		$data = $this->model_report->getIssueSummaryData($FromDate,$ToDate);
+		$data = $this->model_report->getIssueSummaryData($FromDate,$ToDate,$CustomerID);
 		foreach ($data as $key => $value) {
 
 			$buttons = '';

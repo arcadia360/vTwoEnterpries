@@ -69,7 +69,7 @@ class Model_report extends CI_Model
             0 AS decProfitTotal
             FROM IssueHeader AS IH
             LEFT OUTER JOIN IssueReturnHeader AS RH ON IH.intIssueHeaderID = RH.intIssueHeaderID 
-            WHERE CAST(IH.dtCreatedDate AS DATE) between '" . $FromDate . "' AND  '" . $ToDate . "'
+            WHERE CAST(IH.dtCreatedDate AS DATE) between '" . $FromDate . "' AND  '" . $ToDate . "' 
             
             UNION 
     
@@ -81,16 +81,24 @@ class Model_report extends CI_Model
             INNER JOIN IssueHeader AS IH ON ID.intIssueHeaderID = IH.intIssueHeaderID
             LEFT OUTER JOIN IssueReturnDetail AS IRD ON ID.intIssueDetailID = IRD.intIssueDetailID
             INNER JOIN GRNDetail AS GD ON ID.intGRNDetailID = GD.intGRNDetailID
-            WHERE CAST(IH.dtCreatedDate AS DATE) between '" . $FromDate . "' AND  '" . $ToDate . "'
+            WHERE CAST(IH.dtCreatedDate AS DATE) between '" . $FromDate . "' AND  '" . $ToDate . "' 
     ) AS A
     ";
         $query = $this->db->query($sql);
         return $query->result_array();
     }
 
-    public function getIssueSummaryData($FromDate, $ToDate)
+    public function getIssueSummaryData($FromDate, $ToDate, $CustomerID)
     {
-                $sql = "SELECT 
+        $querylast = "";
+
+        if ($CustomerID == 0) {
+            $querylast = " ORDER BY IH.vcIssueNo";
+        } else {
+            $querylast = " AND IH.intCustomerID =   '" . $CustomerID . "' ORDER BY IH.vcIssueNo";
+        }
+
+        $sql = "SELECT 
                 IH.vcIssueNo,
                 IT.vcItemName,
                 GD.decUnitPrice AS GRNValue,
@@ -108,9 +116,10 @@ class Model_report extends CI_Model
             INNER JOIN Item AS IT ON ID.intItemID = IT.intItemID
             INNER JOIN PaymentType AS PY ON IH.intPaymentTypeID = PY.intPaymentTypeID
             INNER JOIN Salesrep AS SR ON IH.intSalesRepID = SR.intSalesRepID
-            WHERE CAST(IH.dtCreatedDate AS DATE) between ? AND ?
-            ORDER BY IH.vcIssueNo;";
-        $query = $this->db->query($sql, array($FromDate,$ToDate));
+            WHERE CAST(IH.dtCreatedDate AS DATE) between '" . $FromDate . "' AND  '" . $ToDate . "'";
+
+        $sql  = $sql . $querylast;
+        $query = $this->db->query($sql);
         return $query->result_array();
     }
 }

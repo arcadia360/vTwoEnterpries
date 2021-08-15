@@ -53,6 +53,7 @@
     table.dataTable tbody td {
         padding: 5px 10px !important;
     }
+    
 </style>
 
 <!-- Content Wrapper. Contains page content -->
@@ -79,9 +80,19 @@
             <div class="card-header">
                 <div class="row">
                     <!-- Date range -->
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="customer">Customer</label>
+                            <select class="form-control select2" style="width: 100%;" id="cmbcustomer" name="cmbcustomer">
+                                <option value="0" selected hidden>All Customers</option>
+                                <?php foreach ($customer_data as $k => $v) { ?>
+                                    <option value="<?= $v['intCustomerID'] ?>"><?= $v['vcCustomerName'] ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </div>
                     <div class="form-group col-md-3">
                         <label>Date Range :</label>
-
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">
@@ -100,7 +111,7 @@
                         <!-- <div>
                             Toggle column: <a class="toggle-vis" data-column="0">ID</a> - <a class="toggle-vis" data-column="1">GRN No</a> - <a class="toggle-vis" data-column="2">Office</a> - <a class="toggle-vis" data-column="3">Age</a> - <a class="toggle-vis" data-column="4">Start date</a> - <a class="toggle-vis" data-column="5">Salary</a>
                         </div> -->
-                        <table id="manageTable" class="table table-bordered table-striped">
+                        <table id="manageTable2" class="table table-bordered table-striped">
                             <!-- style="display:block !important;" -->
                             <thead style="text-align: center;">
                                 <tr>
@@ -122,9 +133,9 @@
                                     <th class="tableFooter"></th>
                                     <th class="tableFooter"></th>
                                     <th class="tableFooter"></th>
-                                    <th class="tableFooter"></th>
-                                    <th class="tableFooter"></th>
-                                    <th class="tableFooter"></th>
+                                    <th class="tableFooter" style="text-align: right;"></th>
+                                    <th class="tableFooter" style="text-align: right;"></th>
+                                    <th class="tableFooter" style="text-align: right;"></th>
                                     <th class="tableFooter" style="text-align: right;"></th>
                                 </tr>
                             </tfoot>

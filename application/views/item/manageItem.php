@@ -66,6 +66,7 @@
 								<tr>
 									<th>Item Name</th>
 									<th>Stock Qty</th>
+									<th>Stock GRN Value Total</th>
 									<th>Unit Price</th>
 									<th>Measure Unit</th>
 									<th>Main Category</th>
