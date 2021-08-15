@@ -48,14 +48,10 @@ function FilterItems(FromDate, ToDate) {
     // $('#manageTable2 tbody').html('');
 
     $('#manageTable2').DataTable({
-        // "bPaginate": false,
-        // "bLengthChange": false,
-        // "bFilter": true,
-        'iDisplayLength': 100,
-        // dom: '<"dt-top-container"<l><"dt-center-in-div"B><f>r>t<ip>',
-        // buttons: [
-        //     'copy', 'csv', 'excel', 'pdf', 'print'
-        // ],
+        dom: '<"dt-top-container"<l><"dt-center-in-div"B><f>r>t<ip>',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ],
         'ajax': base_url + 'Report/FilterIssueSummaryReport/' + FromDate + '/' + ToDate + '/' + CustomerID,
         'order': [],
         "bDestroy": true,
@@ -72,7 +68,6 @@ function FilterItems(FromDate, ToDate) {
             $(nRow.childNodes[8]).css('text-align', 'right');
 
             var api = this.api(), data;
-            // converting to interger to find total
             var intVal = function (i) {
                 return typeof i === 'string' ?
                     i.replace(/[\$,]/g, '') * 1 :
@@ -80,42 +75,42 @@ function FilterItems(FromDate, ToDate) {
                         i : 0;
             };
 
-            // var ProfitTotal = api
-            //     .column(8)
-            //     .data()
-            //     .reduce(function (a, b) {
-            //         return intVal(a) + intVal(b);
-            //     }, 0);
+            var ProfitTotal = api
+                .column(8)
+                .data()
+                .reduce(function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0);
 
-            // $(api.column(0).footer()).html('Total');
-            // $(api.column(8).footer()).html(parseFloat(Math.round(ProfitTotal * 100) / 100).toFixed(2));
+            $(api.column(0).footer()).html('Total');
+            $(api.column(8).footer()).html(parseFloat(Math.round(ProfitTotal * 100) / 100).toFixed(2));
 
-            // var GRNTotal = api
-            //     .column(7)
-            //     .data()
-            //     .reduce(function (a, b) {
-            //         return intVal(a) + intVal(b);
-            //     }, 0);
+            var GRNTotal = api
+                .column(7)
+                .data()
+                .reduce(function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0);
 
-            // $(api.column(7).footer()).html(parseFloat(Math.round(GRNTotal * 100) / 100).toFixed(2));
+            $(api.column(7).footer()).html(parseFloat(Math.round(GRNTotal * 100) / 100).toFixed(2));
 
-            // var ReturnedTotal = api
-            //     .column(6)
-            //     .data()
-            //     .reduce(function (a, b) {
-            //         return intVal(a) + intVal(b);
-            //     }, 0);
+            var ReturnedTotal = api
+                .column(6)
+                .data()
+                .reduce(function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0);
 
-            // $(api.column(6).footer()).html(parseFloat(Math.round(ReturnedTotal * 100) / 100).toFixed(2));
+            $(api.column(6).footer()).html(parseFloat(Math.round(ReturnedTotal * 100) / 100).toFixed(2));
 
-            // var IssuedTotal = api
-            //     .column(5)
-            //     .data()
-            //     .reduce(function (a, b) {
-            //         return intVal(a) + intVal(b);
-            //     }, 0);
+            var IssuedTotal = api
+                .column(5)
+                .data()
+                .reduce(function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0);
 
-            // $(api.column(5).footer()).html(parseFloat(Math.round(IssuedTotal * 100) / 100).toFixed(2));
+            $(api.column(5).footer()).html(parseFloat(Math.round(IssuedTotal * 100) / 100).toFixed(2));
         }
 
 
