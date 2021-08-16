@@ -9,7 +9,7 @@
             <div class="info">
                 <center>
                     <span class="brand-text font-weight-light d-block">
-                        <img src="<?php echo base_url('resources/img/vTwoLogo.png') ?>" alt="AdminLTE Logo" style="width: 60px;">
+                        <img src="<?php echo base_url('resources/img/vTwoLogo.png') ?>" alt="Logo" style="width: 60px;">
                     </span>
 
                     <span class="brand-text font-weight-light d-block">VTwo Enterpries</span>
