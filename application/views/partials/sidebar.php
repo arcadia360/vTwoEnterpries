@@ -7,9 +7,15 @@
 						<img src="<?php echo base_url('resources/img/AdminLTELogo.png') ?>" alt="AdminLTE Logo" class="img-circle elevation-2" style="opacity: .8">
 					</div> -->
             <div class="info">
-                <span class="brand-text font-weight-light d-block">VTwo Enterpries</span>
-                <span class="brand-text font-weight-light d-block" style="font-size: 0.8em;">Business Management</span>
-                <span class="brand-text font-weight-light d-block" style="font-size: 0.8em;">System</span>
+                <center>
+                    <span class="brand-text font-weight-light d-block">
+                        <img src="<?php echo base_url('resources/img/vTwoLogo.png') ?>" alt="AdminLTE Logo" style="width: 60px;">
+                    </span>
+
+                    <span class="brand-text font-weight-light d-block">VTwo Enterpries</span>
+                    <span class="brand-text font-weight-light d-block" style="font-size: 15px;">Business Management System</span>
+                </center>
+                <!-- <span class="brand-text font-weight-light d-block" style="font-size: 20px"></span> -->
             </div>
         </div>
     </a>
@@ -24,7 +30,7 @@
 
 
                 <li class="nav-item has-treeview">
-                    <a href="#" class="nav-link">
+                    <a href="#" class="nav-link pl-0">
                         <div class="user-panel pb-3 mb-3 d-flex">
                             <div class="image">
                                 <img src="<?php echo base_url('resources/img/User-Default.png') ?>" class="img-circle elevation-2" alt="User Image">
@@ -315,8 +321,8 @@
                         </li>
                         <li class="nav-item">
                             <a href="<?php echo base_url('GRN/ItemWiseLastGRNUnitPrice') ?>" class="nav-link <?php if ($this->uri->segment(2) == "ViewGRN" || $this->uri->segment(2) == "ViewGRNDetails" || $this->uri->segment(2) == "EditGRN" || $this->uri->segment(2) == "ApproveOrRejectGRN") {
-                                                                                                echo 'active';
-                                                                                            } ?>">
+                                                                                                                    echo 'active';
+                                                                                                                } ?>">
                                 <i class="fas fa-search"></i>
                                 <p>&nbsp;&nbsp;Item Wise Last GRN Unit Price</p>
                             </a>
@@ -326,7 +332,7 @@
 
                 <?php
                 if ($_SESSION['Is_main_branch'] == 1) { ?>
-     
+
                 <?php
                 }
                 ?>
@@ -367,16 +373,16 @@
                         </li>
                         <li class="nav-item">
                             <a href="<?php echo base_url('Issue/ViewIssueReturn') ?>" class="nav-link <?php if ($this->uri->segment(2) == "ViewIssueReturn") {
-                                                                                                        echo 'active';
-                                                                                                    } ?>">
+                                                                                                            echo 'active';
+                                                                                                        } ?>">
                                 <i class="fas fa-search"></i>
                                 <p>&nbsp;&nbsp;View Issue Return</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="<?php echo base_url('Issue/ItemWiseLastIssuedUnitPrice') ?>" class="nav-link <?php if ($this->uri->segment(2) == "ViewGRN" || $this->uri->segment(2) == "ViewGRNDetails" || $this->uri->segment(2) == "EditGRN" || $this->uri->segment(2) == "ApproveOrRejectGRN") {
-                                                                                                echo 'active';
-                                                                                            } ?>">
+                                                                                                                        echo 'active';
+                                                                                                                    } ?>">
                                 <i class="fas fa-search"></i>
                                 <p>&nbsp;&nbsp;Item Wise Last Issued Unit Price</p>
                             </a>
@@ -396,8 +402,8 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="<?php echo base_url('Report/IssueWiseCostAndProfitReport') ?>" class="nav-link <?php if ($this->uri->segment(2) == "IssueWiseCostAndProfitReport") {
-                                                                                                                    echo 'active';
-                                                                                                                } ?>">
+                                                                                                                        echo 'active';
+                                                                                                                    } ?>">
                                 <i class="fas fa-hand-holding-usd"></i>
                                 <p>&nbsp;&nbsp;Issue Wise Cost & Profit</p>
                             </a>
@@ -405,8 +411,8 @@
 
                         <li class="nav-item">
                             <a href="<?php echo base_url('Report/CostAndProfitReport') ?>" class="nav-link <?php if ($this->uri->segment(2) == "CostAndProfitReport") {
-                                                                                                                    echo 'active';
-                                                                                                                } ?>">
+                                                                                                                echo 'active';
+                                                                                                            } ?>">
                                 <i class="fas fa-hand-holding-usd"></i>
                                 <p>&nbsp;&nbsp;Cost & Profit</p>
                             </a>
@@ -414,8 +420,8 @@
 
                         <li class="nav-item">
                             <a href="<?php echo base_url('Report/IssueSummaryReport') ?>" class="nav-link <?php if ($this->uri->segment(2) == "IssueSummaryReport") {
-                                                                                                                    echo 'active';
-                                                                                                                } ?>">
+                                                                                                                echo 'active';
+                                                                                                            } ?>">
                                 <i class="fas fa-hand-holding-usd"></i>
                                 <p>&nbsp;&nbsp;Issue Summary Report</p>
                             </a>
@@ -431,6 +437,8 @@
                 </li>
                 </li>
             </ul>
+            <span class="brand-text font-weight-light d-block" style="color: #FFFFFF; bottom: 20px;   position: absolute;   width: 100%;   text-align: center;">Developed By <a href="https://www.arcadia360.lk/" target="_blank">arcadia360.lk</a></span>
+
         </nav>
         <!-- /.sidebar-menu -->
     </div>
