@@ -14,6 +14,8 @@
         /* @import url("https://fonts.googleapis.com/css?family=Montserrat:400,600,700|Work+Sans:300,400,700,900"); */
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
 
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
         * {
             outline-width: 0;
             /* font-family: 'Montserrat' !important; */
@@ -190,6 +192,7 @@
             flex-direction: column;
             -webkit-transform: scale(0, 0);
             transform: scale(0, 0);
+            width: 600px;
         }
 
         .logoContainer img,
@@ -246,8 +249,11 @@
             top: -100px;
             opacity: 0;
             color: #FFFFFF;
+            /* color: #faff00 !important; */
             font-size: 4em;
             font-weight: 700;
+            font-family: 'Bebas Neue', cursive;
+            letter-spacing: 2px;
         }
 
         .logoContainer .logo.loadIn {
@@ -341,11 +347,11 @@
         .logoContainer {
 
             background-repeat: no-repeat;
-            background-size: cover;
+            background-size: cover !important;
             /* background: linear-gradient(120deg, rgb(52, 58, 64, 0.9), rgba(0, 0, 0, 0.9)), url(https://www.setaswall.com/wp-content/uploads/2019/08/Whatsapp-Wallpaper-111.jpg); */
 
             background: linear-gradient(0deg, rgb(52, 58, 64, 1), rgba(0, 0, 0, 1));
-            background-image: url(https://www.setaswall.com/wp-content/uploads/2019/08/Whatsapp-Wallpaper-111.jpg);
+            background-image: url(https://t4.ftcdn.net/jpg/00/60/98/11/360_F_60981143_WA1L5hy6vzPZqhBfgwDSrJWW8eksAwpW.jpg);
 
             /* background-color: #bad0b8;
             background-image: -webkit-linear-gradient(bottom, #BF6D6F, #DA7B81);
@@ -354,6 +360,8 @@
             background-image: -ms-linear-gradient(right, #3E2229, #C43C52);
             background-image: linear-gradient(right, #3E2229, #C43C52); */
         }
+
+
 
         h1 {
             position: absolute;
