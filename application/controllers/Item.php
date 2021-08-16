@@ -121,7 +121,6 @@ class Item extends Admin_Controller
 			$buttons = '';
 			$ReorderLevl = '';
 			$UnitPrice = '';
-			$stockItemGRNvalue = '';
 
 			if ($this->isAdmin) {
 				$buttons .= '<button type="button" class="btn btn-default" onclick="editItem(' . $value['intItemID'] . ')" data-toggle="modal" data-target="#editItemModal"><i class="fas fa-edit"></i></button>';
@@ -138,12 +137,11 @@ class Item extends Admin_Controller
 
 			$ReorderLevl =  '<p class="text-right">' . $value['decReOrderLevel'] . '</p>';
 			$UnitPrice =  '<p class="text-right">' . $value['decUnitPrice'] . '</p>';
-			$stockItemGRNvalue = '<p class="text-right">' . $value['stockItemGRNvalue'] . '</p>';
 
 			$result['data'][$key] = array(
 				$value['vcItemName'],
 				$value['decStockInHand'],
-				$stockItemGRNvalue,
+				$value['stockItemGRNvalue'],
 				$UnitPrice,
 				$value['vcMeasureUnit'],
 				$value['vcMainCategory'],

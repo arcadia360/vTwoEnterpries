@@ -2,17 +2,32 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script> -->
 
 <style>
-  div.dt-top-container {
-        display: grid;
-        grid-template-columns: auto auto auto;
+	div.dt-top-container {
+		display: grid;
+		grid-template-columns: auto auto auto;
+	}
+
+	div.dt-center-in-div {
+		margin: 0 auto;
+	}
+
+	div.dt-filter-spacer {
+		margin: 10px 0;
+	}
+
+	table.dataTable tbody th,
+    table.dataTable tbody td {
+        padding: 5px 10px !important;
     }
 
-    div.dt-center-in-div {
-        margin: 0 auto;
+    th.tableHeader {
+        background-color: #263238;
+        color: #FFFFFF;
     }
 
-    div.dt-filter-spacer {
-        margin: 10px 0;
+    th.tableFooter {
+        background-color: #6B6F70;
+        color: #FFFFFF;
     }
 </style>
 
@@ -75,7 +90,19 @@
 									<th>Action</th>
 								</tr>
 							</thead>
-
+							<tfoot>
+								<tr>
+									<th class="tableFooter"></th>
+									<th class="tableFooter"></th>
+									<th class="tableFooter" style="text-align: right;"></th>
+									<th class="tableFooter"></th>
+									<th class="tableFooter"></th>
+									<th class="tableFooter"></th>
+									<th class="tableFooter"></th>
+									<th class="tableFooter"></th>
+									<th class="tableFooter"></th>
+								</tr>
+							</tfoot>
 						</table>
 					</div>
 				</div>
@@ -192,7 +219,7 @@
 						<div class="form-group">
 							<label>Sub Categories</label>
 							<select class="form-control select2" style="width: 100%;" id="edit_sub_cat" name="edit_sub_cat">
-							<option value='0'>Select Sub Categorie</option>
+								<option value='0'>Select Sub Categorie</option>
 							</select>
 						</div>
 
@@ -212,7 +239,7 @@
 					</div>
 
 					<div class="modal-footer">
-						<button type="submit" id="btnUpdateItem"  class="btn btn-success btn-flat"><i class="fas fa-download" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Update Item</button>
+						<button type="submit" id="btnUpdateItem" class="btn btn-success btn-flat"><i class="fas fa-download" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Update Item</button>
 					</div>
 
 				</form>

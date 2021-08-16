@@ -1,5 +1,5 @@
 var manageTable;
-
+var GRNItemValueTotal = 0;
 $(document).ready(function () {
 
     $('#main_cat').on('change', function () {
@@ -48,6 +48,7 @@ $(document).ready(function () {
     });
 
     manageTable = $('#manageTable').DataTable({
+
         dom: '<"dt-top-container"<l><"dt-center-in-div"B><f>r>t<ip>',
         buttons: [
             'copy', 'csv', 'excel', 'pdf', 'print'
@@ -56,8 +57,29 @@ $(document).ready(function () {
         'order': [],
         "bDestroy": true,
         "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+            $(nRow.childNodes[2]).css('text-align', 'right');
             $(nRow.childNodes[7]).css('text-align', 'center');
             $(nRow.childNodes[8]).css('text-align', 'center');
+
+            var api = this.api(), data;
+            // converting to interger to find total
+            var intVal = function ( i ) {
+                return typeof i === 'string' ?
+                    i.replace(/[\$,]/g, '')*1 :
+                    typeof i === 'number' ?
+                        i : 0;
+            };
+
+            var GRNItemValueTotal = api
+            .column( 2 )
+            .data()
+            .reduce( function (a, b) {
+                return intVal(a) + intVal(b);
+            }, 0 );
+
+            $( api.column( 0 ).footer() ).html('Total');
+            $(api.column(2).footer()).html(parseFloat(Math.round(GRNItemValueTotal * 100) / 100).toFixed(2));
+
         }
     });
 
