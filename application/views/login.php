@@ -505,7 +505,7 @@
                     <p class="text">
                         BUSINESS MANAGEMENT SYSTEM <br>
                     </p>
-                    <a href="#" target="new" class="web">www.arcadia360.lk</a>
+                    <a href="https://www.arcadia360.lk/" target="new" class="web">www.arcadia360.lk</a>
                 </div>
                 <div class="acceptContainer">
                     <form action="<?= base_url('auth/login') ?>" method="post">
