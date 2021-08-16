@@ -37,7 +37,7 @@
 	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.6.5/css/buttons.dataTables.min.css">
 
 
-<!-- <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.flash.min.js"></script> -->
+	<!-- <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.flash.min.js"></script> -->
 
 	<!-- Tempusdominus Bbootstrap 4 -->
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url('resources/tempcss/tempusdominus-bootstrap-4.min.css') ?>">
@@ -62,7 +62,7 @@
 
 </head>
 
-<body onload="Preloader()" class="hold-transition sidebar-mini" style="font-size: 0.8rem !important;">
+<body onload="Preloader()" class="hold-transition sidebar-mini sidebar-collapse" style="font-size: 0.8rem !important;">
 	<!-- Preloader Start-->
 	<div id="Preloader">
 		<div class="dl">
