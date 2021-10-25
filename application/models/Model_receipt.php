@@ -51,10 +51,12 @@ class Model_receipt extends CI_Model
         $sql = "SELECT 
                 IH.decGrandTotal,
                 SUM(IFNULL(RD.decPaidAmount,0)) AS decPaidAmount,
+                IFNULL(IRH.decTotal,0) AS ReturnTotal,
                 REPLACE(IH.rv,' ','-') AS rv
             FROM 
                 IssueHeader AS IH
                 LEFT OUTER JOIN ReceiptDetail AS RD ON IH.intIssueHeaderID = RD.intIssueHeaderID
+                LEFT OUTER JOIN issuereturnheader AS IRH ON IH.intIssueHeaderID = IRH.intIssueHeaderID
             WHERE 
                 IH.intIssueHeaderID = ?";
 
@@ -303,11 +305,12 @@ class Model_receipt extends CI_Model
     public function getSettlementDetailsToModal($ReceiptHeaderID)
     {
         if ($ReceiptHeaderID) {
-            $sql = "SELECT RD.intReceiptHeaderID, RD.intIssueHeaderID, IH.vcIssueNo , PY.vcPaymentType,  IH.decGrandTotal  , RD.decPaidAmount , sum(IH.decGrandTotal) - fnGetCustomerIssueWiseReceiptBalance(RD.intIssueHeaderID) as TotalAmountDue
+            $sql = "SELECT RD.intReceiptHeaderID, RD.intIssueHeaderID, IH.vcIssueNo , PY.vcPaymentType,  IH.decGrandTotal  , RD.decPaidAmount , sum(IH.decGrandTotal - IFNULL(IR.decTotal,0)) - fnGetCustomerIssueWiseReceiptBalance(RD.intIssueHeaderID) as TotalAmountDue, IFNULL(IR.decTotal,0) AS decReturnAmount
             FROM receiptdetail AS RD
             INNER JOIN receiptheader AS RH ON RD.intReceiptHeaderID = RH.intReceiptHeaderID
             INNER JOIN issueheader AS IH ON RD.intIssueHeaderID = IH.intIssueHeaderID
             INNER JOIN paymenttype AS PY ON IH.intPaymentTypeID = PY.intPaymentTypeID
+            LEFT OUTER JOIN issuereturnheader AS IR ON IH.intIssueHeaderID = IR.intIssueHeaderID
             WHERE RD.intReceiptHeaderID = ?
             GROUP BY  RD.intIssueHeaderID";
             $query = $this->db->query($sql, array($ReceiptHeaderID));

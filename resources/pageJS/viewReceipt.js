@@ -1,12 +1,11 @@
-
 // var manageTable;
 
-var Receipt = function () {
+var Receipt = function() {
     this.intReceiptHeaderID = 0;
 }
 
 
-$(document).ready(function () {
+$(document).ready(function() {
 
     $('[data-toggle="tooltip"]').tooltip();
 
@@ -23,13 +22,13 @@ $(document).ready(function () {
         startDate: new Date(date.getFullYear(), date.getMonth(), 1),
         endDate: date,
         maxDate: new Date()
-    }, function (start, end) {
+    }, function(start, end) {
         selectedFromDate = start.format('YYYY-MM-DD');
         selectedToDate = end.format('YYYY-MM-DD');
         FilterItems(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'))
     });
 
-    $('#cmbPayMode').on('change', function () {
+    $('#cmbPayMode').on('change', function() {
         if (selectedFromDate == "" && selectedToDate == "") {
             FilterItems(convertToShortDate(monthStartDate), convertToShortDate(date));
         } else {
@@ -37,7 +36,7 @@ $(document).ready(function () {
         }
     });
 
-    $('#cmbcustomer').on('change', function () {
+    $('#cmbcustomer').on('change', function() {
         if (selectedFromDate == "" && selectedToDate == "") {
             FilterItems(convertToShortDate(monthStartDate), convertToShortDate(date));
         } else {
@@ -48,8 +47,8 @@ $(document).ready(function () {
 
 });
 
-function customerChequeRealized(CustomerChequeID,ReceiptHeaderID){
-    arcadiaConfirmAlert("You want to be able to realized Cheque !", function (button) {
+function customerChequeRealized(CustomerChequeID, ReceiptHeaderID) {
+    arcadiaConfirmAlert("You want to be able to realized Cheque !", function(button) {
         // var model = new Receipt();
         // model.intCustomerChequeID = $CustomerChequeID;
         // model.intReceiptHeaderID = $ReceiptHeaderID;
@@ -62,23 +61,22 @@ function customerChequeRealized(CustomerChequeID,ReceiptHeaderID){
                 intReceiptHeaderID: ReceiptHeaderID
             },
             dataType: 'json',
-            success: function (response) {
+            success: function(response) {
                 if (response.success == true) {
                     arcadiaSuccessMessage("Realized Cheque !", "Receipt/ViewReceipt");
                 } else {
                     toastr["error"](response.messages);
                 }
             },
-            error: function (request, status, error) {
+            error: function(request, status, error) {
                 arcadiaErrorMessage(error);
             }
         });
     }, this);
 }
 
-function customerCancelReceipt(ReceiptHeaderID)
-{
-    arcadiaConfirmAlert("You want to be able to Cancel Receipt !", function (button) {
+function customerCancelReceipt(ReceiptHeaderID) {
+    arcadiaConfirmAlert("You want to be able to Cancel Receipt !", function(button) {
         // var model = new Receipt();
         // model.intCustomerChequeID = $CustomerChequeID;
         // model.intReceiptHeaderID = $ReceiptHeaderID;
@@ -90,22 +88,22 @@ function customerCancelReceipt(ReceiptHeaderID)
                 intReceiptHeaderID: ReceiptHeaderID
             },
             dataType: 'json',
-            success: function (response) {
+            success: function(response) {
                 if (response.success == true) {
                     arcadiaSuccessMessage("Cancelled Receipt !", "Receipt/ViewReceipt");
                 } else {
                     toastr["error"](response.messages);
                 }
             },
-            error: function (request, status, error) {
+            error: function(request, status, error) {
                 arcadiaErrorMessage(error);
             }
         });
     }, this);
 }
 
-function customerReturnCheque(CustomerChequeID,ReceiptHeaderID){
-    arcadiaConfirmAlert("You want to be able to Return Cheque !", function (button) {
+function customerReturnCheque(CustomerChequeID, ReceiptHeaderID) {
+    arcadiaConfirmAlert("You want to be able to Return Cheque !", function(button) {
         // var model = new Receipt();
         // model.intCustomerChequeID = $CustomerChequeID;
         // model.intReceiptHeaderID = $ReceiptHeaderID;
@@ -118,22 +116,22 @@ function customerReturnCheque(CustomerChequeID,ReceiptHeaderID){
                 intReceiptHeaderID: ReceiptHeaderID
             },
             dataType: 'json',
-            success: function (response) {
+            success: function(response) {
                 if (response.success == true) {
                     arcadiaSuccessMessage("Returned Cheque !", "Receipt/ViewReceipt");
                 } else {
                     toastr["error"](response.messages);
                 }
             },
-            error: function (request, status, error) {
+            error: function(request, status, error) {
                 arcadiaErrorMessage(error);
             }
         });
     }, this);
 }
 
-function customerCancelCheque(CustomerChequeID,ReceiptHeaderID){
-    arcadiaConfirmAlert("You want to be able to Cancel Cheque !", function (button) {
+function customerCancelCheque(CustomerChequeID, ReceiptHeaderID) {
+    arcadiaConfirmAlert("You want to be able to Cancel Cheque !", function(button) {
         //    var model = new Receipt();
         // model.intCustomerChequeID = $CustomerChequeID;
         // model.intReceiptHeaderID = $ReceiptHeaderID;
@@ -147,23 +145,22 @@ function customerCancelCheque(CustomerChequeID,ReceiptHeaderID){
                 intReceiptHeaderID: ReceiptHeaderID
             },
             dataType: 'json',
-            success: function (response) {
+            success: function(response) {
                 if (response.success == true) {
                     arcadiaSuccessMessage("Cancelled Cheque !", "Receipt/ViewReceipt");
                 } else {
                     toastr["error"](response.messages);
                 }
             },
-            error: function (request, status, error) {
+            error: function(request, status, error) {
                 arcadiaErrorMessage(error);
             }
         });
     }, this);
 }
 
-function customerCancelRealized(CustomerChequeID,ReceiptHeaderID)
-{
-    arcadiaConfirmAlert("You want to be able to Cancel Realized !", function (button) {
+function customerCancelRealized(CustomerChequeID, ReceiptHeaderID) {
+    arcadiaConfirmAlert("You want to be able to Cancel Realized !", function(button) {
         //    var model = new Receipt();
         // model.intCustomerChequeID = $CustomerChequeID;
         // model.intReceiptHeaderID = $ReceiptHeaderID;
@@ -177,14 +174,14 @@ function customerCancelRealized(CustomerChequeID,ReceiptHeaderID)
                 intReceiptHeaderID: ReceiptHeaderID
             },
             dataType: 'json',
-            success: function (response) {
+            success: function(response) {
                 if (response.success == true) {
                     arcadiaSuccessMessage("Cancelled Realized !", "Receipt/ViewReceipt");
                 } else {
                     toastr["error"](response.messages);
                 }
             },
-            error: function (request, status, error) {
+            error: function(request, status, error) {
                 arcadiaErrorMessage(error);
             }
         });
@@ -199,14 +196,15 @@ function viewSettlementDetails($ReceiptHeaderID) {
         var model = new Receipt();
         model.intReceiptHeaderID = $ReceiptHeaderID;
 
-        ajaxCall('Receipt/ViewSettlementDetailsToModal', model, function (response) {
+        ajaxCall('Receipt/ViewSettlementDetailsToModal', model, function(response) {
             // debugger;
             for (let index = 0; index < response.length; index++) {
                 $("#IssueItemTable tbody").append('<tr>' +
-                    '<td><input type="text" class="form-control" name="txtIssueNo[]" id="txtIssueNo" style="text-align:center;" value="' + response[index].vcIssueNo +'" disabled></td>' +
-                    '<td><input type="text" class="form-control" name="txtBalance[]" id="txtBalance" style="text-align:right;" value="'  + response[index].TotalAmountDue + '" disabled></td>' +
+                    '<td><input type="text" class="form-control" name="txtIssueNo[]" id="txtIssueNo" style="text-align:center;" value="' + response[index].vcIssueNo + '" disabled></td>' +
+                    '<td><input type="text" class="form-control" name="txtBalance[]" id="txtBalance" style="text-align:right;" value="' + response[index].TotalAmountDue + '" disabled></td>' +
                     '<td><input type="text" class="form-control" name="txtGrandTotal[]" id="txtGrandTotal" style="text-align:right;" value="' + response[index].decGrandTotal + '" disabled></td>' +
                     '<td><input type="text" class="form-control" name="txtReceivedQty[]" id="txtReceivedQty" style="text-align:right;" value="' + response[index].decPaidAmount + '" disabled></td>' +
+                    '<td><input type="text" class="form-control" name="txtRetunrAmount[]" id="txtRetunrAmount" style="text-align:right;" value="' + response[index].decReturnAmount + '" disabled></td>' +
                     '</tr>');
             }
 
@@ -215,8 +213,7 @@ function viewSettlementDetails($ReceiptHeaderID) {
 
 }
 
-function viewCancelledReceiptDetailsHis($ReceiptHeaderID)
-{
+function viewCancelledReceiptDetailsHis($ReceiptHeaderID) {
     if ($ReceiptHeaderID > 0) {
 
         $('#IssueItemTable tbody').empty();
@@ -224,12 +221,12 @@ function viewCancelledReceiptDetailsHis($ReceiptHeaderID)
         var model = new Receipt();
         model.intReceiptHeaderID = $ReceiptHeaderID;
 
-        ajaxCall('Receipt/viewCancelledReceiptDetailsHis', model, function (response) {
+        ajaxCall('Receipt/viewCancelledReceiptDetailsHis', model, function(response) {
             // debugger;
             for (let index = 0; index < response.length; index++) {
                 $("#IssueItemTable tbody").append('<tr>' +
-                    '<td><input type="text" class="form-control" name="txtIssueNo[]" id="txtIssueNo" style="text-align:center;" value="' + response[index].vcIssueNo +'" disabled></td>' +
-                    '<td><input type="text" class="form-control" name="txtBalance[]" id="txtBalance" style="text-align:right;" value="'  + response[index].TotalAmountDue + '" disabled></td>' +
+                    '<td><input type="text" class="form-control" name="txtIssueNo[]" id="txtIssueNo" style="text-align:center;" value="' + response[index].vcIssueNo + '" disabled></td>' +
+                    '<td><input type="text" class="form-control" name="txtBalance[]" id="txtBalance" style="text-align:right;" value="' + response[index].TotalAmountDue + '" disabled></td>' +
                     '<td><input type="text" class="form-control" name="txtGrandTotal[]" id="txtGrandTotal" style="text-align:right;" value="' + response[index].decGrandTotal + '" disabled></td>' +
                     '<td><input type="text" class="form-control" name="txtReceivedQty[]" id="txtReceivedQty" style="text-align:right;" value="' + response[index].decPaidAmount + '" disabled></td>' +
                     '</tr>');
@@ -257,7 +254,7 @@ function FilterItems(FromDate, ToDate) {
         'ajax': 'FilterCustomerReceiptHeaderData/' + PayModeID + '/' + CustomerID + '/' + '/' + FromDate + '/' + ToDate,
         'order': [],
         "bDestroy": true,
-        "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+        "fnRowCallback": function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
             // if (aData[12] == 1) { // Cancel Receipt
             //     $('td', nRow).css('background-color', '#dc3545');
             // } else if (aData[12] == 2) { // Return Cheque

@@ -206,6 +206,7 @@
                         <th style="width: 100px; text-align:center;">Outstanding</th>
                         <th style="width: 100px; text-align:center;">Total Amount</th>
                         <th style="width: 100px; text-align:center;">Paid Amount</th>
+                        <th style="width: 100px; text-align:center;">Return Amount</th>
                     </tr>
                 </thead>
                 <tbody>

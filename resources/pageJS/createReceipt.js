@@ -2,10 +2,10 @@ var totalAllocatedAmount = 0;
 var totalPayAmount = 0;
 var totalAvailableAmount = 0;
 
-var Customer = function () {
+var Customer = function() {
     this.intCustomerID = 0;
 }
-var Issue = function () {
+var Issue = function() {
     this.intIssueHeaderID = 0;
 }
 
@@ -13,7 +13,7 @@ var row_id = 1;
 
 
 
-$(document).ready(function () {
+$(document).ready(function() {
     $("#btnSubmit").prop('disabled', true);
     $("#cmbPayMode").prop('disabled', true);
     $("#txtAmount").prop('disabled', true);
@@ -26,12 +26,12 @@ $(document).ready(function () {
     $("#txtRemark").prop('disabled', true);
     $("#txtRemark").css('background-color', '#eee');
 
-    $('#cmbCustomer').on('select2:close', function (e) {
+    $('#cmbCustomer').on('select2:close', function(e) {
         ResetGrid();
         setCustomerIssueDetails();
     });
 
-    $('#cmbPayMode').on('select2:close', function (e) {
+    $('#cmbPayMode').on('select2:close', function(e) {
         ResetGrid();
         $("#txtAmount").val("");
 
@@ -71,7 +71,7 @@ $(document).ready(function () {
         }
     });
 
-    $('#txtAmount').on('keyup', function (e) {
+    $('#txtAmount').on('keyup', function(e) {
         ResetGrid();
         if (parseFloat($("#txtTotalOutstanding").val()) < parseFloat($("#txtAmount").val())) {
             $("#txtAmount").val("");
@@ -80,20 +80,20 @@ $(document).ready(function () {
         calculateTotalAllocatedAndAvailableAmount();
     });
 
-    $('#cmbBank').on('select2:close', function (e) {
+    $('#cmbBank').on('select2:close', function(e) {
         $("#txtChequeNo").focus();
     });
 
-    $('#cmbIssueNo').on('select2:close', function (e) {
+    $('#cmbIssueNo').on('select2:close', function(e) {
         if ($('#cmbCustomer').val() > 0) {
             if ($("#cmbIssueNo").val() > 0) {
                 if (checkPayModeSelected()) {
                     var model = new Issue();
                     model.intIssueHeaderID = $('#cmbIssueNo').val();
-                    ajaxCall('Receipt/getIssueNotePaymentDetails', model, function (response) {
+                    ajaxCall('Receipt/getIssueNotePaymentDetails', model, function(response) {
                         $("#txtTotalAmount").val(parseFloat(response.decGrandTotal).toFixed(2));
                         $("#txtPaidAmount").val(parseFloat(response.decPaidAmount).toFixed(2));
-                        $("#txtOutstrandingAmount").val((parseFloat(response.decGrandTotal) - parseFloat(response.decPaidAmount)).toFixed(2));
+                        $("#txtOutstrandingAmount").val((parseFloat(response.decGrandTotal) - parseFloat(response.ReturnTotal) - parseFloat(response.decPaidAmount)).toFixed(2));
                         $("#txtRv").val(response.rv);
 
                         $("#txtPayAmount").focus();
@@ -106,7 +106,7 @@ $(document).ready(function () {
         }
     });
 
-    $('#txtPayAmount').on('keyup', function (e) {
+    $('#txtPayAmount').on('keyup', function(e) {
         if ($("#cmbIssueNo option:selected").val() == 0) {
             toastr["error"]("Please select issue no !");
             $("#txtPayAmount").val("");
@@ -122,7 +122,7 @@ $(document).ready(function () {
         }
     });
 
-    $('.add-item').keypress(function (event) {
+    $('.add-item').keypress(function(event) {
         var keycode = (event.keyCode ? event.keyCode : event.which);
         if (keycode == '13') {
             if ($("#cmbIssueNo option:selected").val() == 0) {
@@ -138,7 +138,7 @@ $(document).ready(function () {
     });
 
 
-    $("#btnAddToGrid").click(function () {
+    $("#btnAddToGrid").click(function() {
         if ($("#cmbIssueNo option:selected").val() == 0) {
             toastr["error"]("Please select issue no !");
         } else if ($("#txtPayAmount").val() == "") {
@@ -150,11 +150,11 @@ $(document).ready(function () {
 
 
 
-  
+
 
 });
 
-$('#btnSubmit').click(function () {
+$('#btnSubmit').click(function() {
     if (totalAvailableAmount > 0) {
         toastr["error"]("You have available amount, Please allocate total amount and try again !");
         return;
@@ -168,10 +168,10 @@ $('#btnSubmit').click(function () {
         toastr["error"]("Please allocate pay amount into issue numbers !");
         $("#cmbIssueNo").focus();
         return;
-    } 
+    }
     if (checkPayModeSelected()) {
 
-        arcadiaConfirmAlert("You want to be able to create this !", function (button) {
+        arcadiaConfirmAlert("You want to be able to create this !", function(button) {
             var form = $("#createReceipt");
 
             $.ajax({
@@ -180,7 +180,7 @@ $('#btnSubmit').click(function () {
                 url: form.attr('action'),
                 data: form.serialize(),
                 dataType: 'json',
-                success: function (response) {
+                success: function(response) {
                     if (response.success == true) {
                         // alert(response.messages);
                         arcadiaSuccessMessage(response.messages, "Receipt/CreateReceipt");
@@ -198,7 +198,7 @@ $('#btnSubmit').click(function () {
 function setCustomerIssueDetails() {
     var model = new Customer();
     model.intCustomerID = $('#cmbCustomer').val();
-    ajaxCall('Receipt/getCustomerToBeSettleIssueNos', model, function (response) {
+    ajaxCall('Receipt/getCustomerToBeSettleIssueNos', model, function(response) {
         $("#cmbPayMode").prop('disabled', false);
         $("#txtAmount").prop('disabled', false);
         $("#txtAmount").css('background-color', '#FFFFFF');
@@ -223,7 +223,7 @@ function setCustomerIssueDetails() {
 }
 
 function checkPayModeSelected() {
-    if ($("#cmbPayMode").val() == 1) {  // Cash
+    if ($("#cmbPayMode").val() == 1) { // Cash
         if ($("#txtAmount").val() == "") {
             $("#txtAmount").val("");
             $("#txtAmount").focus();
@@ -292,7 +292,7 @@ function calculateTotalAllocatedAndAvailableAmount() {
         totalPayAmount = parseFloat($("#txtAmount").val());
     }
     totalAllocatedAmount = 0;
-    $('#receiptTable tbody tr').each(function () {
+    $('#receiptTable tbody tr').each(function() {
         var value = parseFloat($(this).closest("tr").find('.total').val());
         if (!isNaN(value)) {
             totalAllocatedAmount += value;
@@ -376,14 +376,14 @@ function AddToGrid() {
 }
 
 function remove() {
-    $(".red").click(function () {
+    $(".red").click(function() {
 
         var issueHeaderID = $(this).closest("tr").find('.issueHeaderID').val();
         var issueNo = $(this).closest("tr").find('.issueNo').val();
 
         var IsAlreadyIncluded = false;
 
-        $("#cmbIssueNo option").each(function () {
+        $("#cmbIssueNo option").each(function() {
             if (issueHeaderID == $(this).val()) {
                 IsAlreadyIncluded = true;
                 return false;
@@ -414,6 +414,6 @@ function CalculateItemCount() {
 
 
 // on first focus (bubbles up to document), open the menu
-$(document).on('focus', '.select2-selection.select2-selection--single', function (e) {
+$(document).on('focus', '.select2-selection.select2-selection--single', function(e) {
     $(this).closest(".select2-container").siblings('select:enabled').select2('open');
 });
