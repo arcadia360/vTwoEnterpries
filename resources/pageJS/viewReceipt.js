@@ -21,7 +21,10 @@ $(document).ready(function() {
         opens: 'center',
         startDate: new Date(date.getFullYear(), date.getMonth(), 1),
         endDate: date,
-        maxDate: new Date()
+        maxDate: new Date(),
+        locale: {
+            format: 'DD/MM/YYYY'
+        }
     }, function(start, end) {
         selectedFromDate = start.format('YYYY-MM-DD');
         selectedToDate = end.format('YYYY-MM-DD');
