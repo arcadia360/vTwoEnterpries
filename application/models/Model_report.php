@@ -76,12 +76,30 @@ class Model_report extends CI_Model
             SELECT  
             0 AS decGrandTotal,
             0 AS decIssueTotal,
-            (SUM(ID.decDiscountedPrice) - SUM((IFNULL(IRD.decUnitPrice,0) * IFNULL(IRD.decReturnQty,0)))) - SUM(ID.decIssueQty  * GD.decUnitPrice) AS decProfitTotal
-            FROM IssueDetail AS ID
-            INNER JOIN IssueHeader AS IH ON ID.intIssueHeaderID = IH.intIssueHeaderID
-            LEFT OUTER JOIN IssueReturnDetail AS IRD ON ID.intIssueDetailID = IRD.intIssueDetailID
-            INNER JOIN GRNDetail AS GD ON ID.intGRNDetailID = GD.intGRNDetailID
-            WHERE CAST(IH.dtCreatedDate AS DATE) between '" . $FromDate . "' AND  '" . $ToDate . "' 
+            SUM(ProfitAmount) AS decProfitTotal
+			FROM (
+			  SELECT 
+				IH.vcIssueNo,
+				IT.vcItemName,
+				GD.decUnitPrice AS GRNValue,
+				ID.decUnitPrice AS IssuedValue,
+				FLOOR(ID.decIssueQty) AS IssuedQty,
+				FLOOR(ID.decDiscountPercentage) AS IssuedDiscountPercentage,
+				ID.decDiscountedPrice AS IssuedAmount,
+				(IFNULL(IRD.decReturnQty,0) * IFNULL(IRD.decUnitPrice,0)) AS ReturnedAmount,
+				(GD.decUnitPrice * (ID.decIssueQty - IFNULL(IRD.decReturnQty,0))) AS GRNAmount, 
+				((ID.decDiscountedPrice - (IFNULL(IRD.decReturnQty,0) * IFNULL(IRD.decUnitPrice,0))) - (GD.decUnitPrice * (ID.decIssueQty - IFNULL(IRD.decReturnQty,0)))) AS ProfitAmount
+			  FROM 
+				Issueheader AS IH 
+				INNER JOIN IssueDetail AS ID ON IH.intIssueHeaderID = ID.intIssueHeaderID
+				LEFT OUTER JOIN IssueReturnDetail AS IRD ON ID.intIssueDetailID = IRD.intIssueDetailID
+				INNER JOIN GrnDetail AS GD ON ID.intGRNDetailID = GD.intGRNDetailID
+				INNER JOIN Item AS IT ON ID.intItemID = IT.intItemID
+				INNER JOIN PaymentType AS PY ON IH.intPaymentTypeID = PY.intPaymentTypeID
+				INNER JOIN Salesrep AS SR ON IH.intSalesRepID = SR.intSalesRepID
+			  WHERE 
+				  CAST(IH.dtCreatedDate AS DATE) between '" . $FromDate . "' AND  '" . $ToDate . "' 
+          		) AS subquery 
     ) AS A
     ";
         $query = $this->db->query($sql);
