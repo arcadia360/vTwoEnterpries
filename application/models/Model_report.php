@@ -140,4 +140,33 @@ class Model_report extends CI_Model
         $query = $this->db->query($sql);
         return $query->result_array();
     }
+
+    public function getCustomerWiseSalesReport($CustomerID,$FromDate,$ToDate)
+    {
+        $sql = "SELECT 
+                IH.vcIssueNo,
+                IT.vcItemName,
+                GD.decUnitPrice AS GRNValue,
+                ID.decUnitPrice AS IssuedValue,
+                FLOOR(ID.decIssueQty) AS IssuedQty,
+                FLOOR(ID.decDiscountPercentage) AS IssuedDiscountPercentage,
+                ID.decDiscountedPrice AS IssuedAmount,
+                (IFNULL(IRD.decReturnQty,0) * IFNULL(IRD.decUnitPrice,0)) AS ReturnedAmount,
+                (GD.decUnitPrice * (ID.decIssueQty - IFNULL(IRD.decReturnQty,0))) AS GRNAmount, 
+                ((ID.decDiscountedPrice - (IFNULL(IRD.decReturnQty,0) * IFNULL(IRD.decUnitPrice,0))) - (GD.decUnitPrice * (ID.decIssueQty - IFNULL(IRD.decReturnQty,0)))) AS ProfitAmount
+            FROM Issueheader AS IH 
+            INNER JOIN IssueDetail AS ID ON IH.intIssueHeaderID = ID.intIssueHeaderID
+            LEFT OUTER JOIN IssueReturnDetail AS IRD ON ID.intIssueDetailID = IRD.intIssueDetailID
+            INNER JOIN GrnDetail AS GD ON ID.intGRNDetailID = GD.intGRNDetailID
+            INNER JOIN Item AS IT ON ID.intItemID = IT.intItemID
+            INNER JOIN PaymentType AS PY ON IH.intPaymentTypeID = PY.intPaymentTypeID
+            INNER JOIN Salesrep AS SR ON IH.intSalesRepID = SR.intSalesRepID
+            INNER JOIN customer AS C ON IH.intCustomerID = C.intCustomerID
+            WHERE C.intCustomerID = '" . $CustomerID . "' AND CAST(IH.dtCreatedDate AS DATE) between '" . $FromDate . "' AND  '" . $ToDate . "' 
+            ORDER BY IH.vcIssueNo";
+            
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
 }

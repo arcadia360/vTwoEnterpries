@@ -427,6 +427,15 @@
                             </a>
                         </li>
 
+                        <li class="nav-item">
+                            <a href="<?php echo base_url('Report/CustomerWiseSalesReport') ?>" class="nav-link <?php if ($this->uri->segment(2) == "CustomerWiseSalesReport") {
+                                                                                                                echo 'active';
+                                                                                                            } ?>">
+                                <i class="fas fa-hand-holding-usd"></i>
+                                <p>&nbsp;&nbsp;Customer Wise Sales Report</p>
+                            </a>
+                        </li>
+
                     </ul>
                 </li>
                 <li class="nav-item">

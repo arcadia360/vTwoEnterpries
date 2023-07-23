@@ -123,4 +123,48 @@ class Report extends Admin_Controller
 
 		echo json_encode($result);
     }
+
+    public function CustomerWiseSalesReport(){
+        if (!$this->isAdmin) {
+            if (!in_array('customerWiseSalesReport', $this->permission)) {
+                redirect('dashboard', 'refresh');
+            }
+        }
+
+        $customer_Data = $this->model_customer->getCustomerData();
+        $this->data['customer_Data'] = $customer_Data;
+
+        $this->render_template('report/customerWiseSalesReport', 'Customer Wise Sales Report', $this->data);
+    }
+
+    public function getCustomerWiseSalesReport($CustomerID,$FromDate,$ToDate)
+    {
+        if (!$this->isAdmin) {
+			if (!in_array('customerWiseSalesReport', $this->permission)) {
+				redirect('dashboard', 'refresh');
+			}
+		}
+		$result = array('data' => array());
+
+		$data = $this->model_report->getCustomerWiseSalesReport($CustomerID,$FromDate,$ToDate);
+		foreach ($data as $key => $value) {
+
+			$buttons = '';
+
+			$result['data'][$key] = array(
+                $value['vcIssueNo'],
+				$value['vcItemName'],
+				$value['GRNValue'],
+				$value['IssuedValue'],
+				$value['IssuedQty'],
+				$value['IssuedDiscountPercentage'],
+                number_format((float)$value['IssuedAmount'], 2, '.', ''),
+                number_format((float)$value['ReturnedAmount'], 2, '.', ''),
+                number_format((float)$value['GRNAmount'], 2, '.', ''),
+                number_format((float)$value['ProfitAmount'], 2, '.', ''),
+			);
+		}
+
+		echo json_encode($result);
+    }
 }
